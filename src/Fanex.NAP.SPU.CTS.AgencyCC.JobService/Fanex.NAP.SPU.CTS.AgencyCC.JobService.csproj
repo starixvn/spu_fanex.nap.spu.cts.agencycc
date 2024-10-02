@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,7 +13,6 @@
     <Folder Include="App_Data\UAT\" />
     <Folder Include="App_Data\SIT\" />
     <Folder Include="App_Data\PROD\" />
-    <Folder Include="Controllers\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -71,18 +71,18 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
-            });            
-
             //app.UseEndpoints(endpoints =>
             //{
-            //    endpoints.MapControllers();
+            //    endpoints.MapGet("/", async context =>
+            //    {
+            //        await context.Response.WriteAsync("Hello World!");
+            //    });
             //});
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
 
         private void FanexDataConfig(IAppSettings appSettings)

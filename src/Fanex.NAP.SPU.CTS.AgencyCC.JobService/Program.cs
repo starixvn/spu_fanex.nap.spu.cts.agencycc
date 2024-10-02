@@ -14,7 +14,9 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder
+                        .UseSentry()
+                        .UseStartup<Startup>();
                 });
     }
 }
