@@ -46,13 +46,13 @@
 
         public IRealtimeClassificationAgencyService GetCustomerCategory(int batchSize)
         {
-            if (_customers != null && _customers.CustIds.IsNotNullOrEmpty())
+            if (_customers != null && _customers.CustomerNewPlaceBets.IsNotNullOrEmpty())
             {
-                var customerChunks = _customers.CustIds.Chunk(batchSize);
+                var customerChunks = _customers.CustomerNewPlaceBets.Chunk(batchSize);
 
                 foreach (var custBatch in customerChunks)
                 {
-                    var custIDs = string.Join(",", custBatch.Distinct());
+                    var custIDs = string.Join(",", custBatch.Select(x => x.CustId).Distinct());
 
                     var custCategory = _dataAccess.GetCustomerCategory(custIDs);
 

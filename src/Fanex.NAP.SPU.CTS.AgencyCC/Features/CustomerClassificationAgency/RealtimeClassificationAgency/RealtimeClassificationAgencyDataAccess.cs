@@ -2,6 +2,7 @@
 {
     using Fanex.Data.Repository;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RealtimeClassificationAgency.Criteria;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RealtimeClassificationAgency.Entities;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RealtimeClassificationAgency.Model;
     using System.Linq;
 
@@ -29,11 +30,11 @@
         {
             var criteria = new GetChangeCustomerAgencyRealtimeCriteria();
 
-            var data = _repository.Fetch<long>(criteria);
+            var data = _repository.Fetch<GetNewPlaceBetCustomerAgencyEntity>(criteria);
 
             return new GetNewPlaceBetCustomerAgencyModel
             {
-                CustIds = data,
+                CustomerNewPlaceBets = data,
                 ScannedMaxId = criteria.ScannedMaxId
             };
         }

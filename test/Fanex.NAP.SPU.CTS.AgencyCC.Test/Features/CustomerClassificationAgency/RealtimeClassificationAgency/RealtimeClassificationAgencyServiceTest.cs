@@ -1,6 +1,7 @@
 ﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.CustomerClassificationAgency.RealtimeClassificationAgency
 {
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RealtimeClassificationAgency;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RealtimeClassificationAgency.Entities;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RealtimeClassificationAgency.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Test.Infrastructure.Extensions;
     using NSubstitute;
@@ -14,22 +15,51 @@
     {
         private readonly IRealtimeClassificationAgencyDataAccess _dataAccess;
         private readonly IRealtimeClassificationAgencyService _service;
+        private GetNewPlaceBetCustomerAgencyModel _customer;
 
         public RealtimeClassificationAgencyServiceTest()
         {
             _dataAccess = Substitute.For<IRealtimeClassificationAgencyDataAccess>();
             _service = new RealtimeClassificationAgencyService(_dataAccess);
+
+            InitialData();
+        }
+
+        private void InitialData()
+        {
+            _customer = new GetNewPlaceBetCustomerAgencyModel
+            {
+                CustomerNewPlaceBets = new List<GetNewPlaceBetCustomerAgencyEntity> {
+                    new GetNewPlaceBetCustomerAgencyEntity
+                    {
+                        CustId = 1,
+                        RoleId = 2
+                    },
+                    new GetNewPlaceBetCustomerAgencyEntity
+                    {
+                        CustId = 2,
+                        RoleId = 3
+                    },
+                    new GetNewPlaceBetCustomerAgencyEntity
+                    {
+                        CustId = 3,
+                        RoleId = 4
+                    },
+                    new GetNewPlaceBetCustomerAgencyEntity
+                    {
+                        CustId = 4,
+                        RoleId = 2
+                    }
+                },
+                ScannedMaxId = 1234
+            };
         }
 
         [Fact]
         public void GetNewPlaceBetCustomers_WhenSuccess()
         {
             // Arrange
-            var customers = new GetNewPlaceBetCustomerAgencyModel
-            {
-                CustIds = new List<long> { 1, 2, 3, 4 },
-                ScannedMaxId = 1234
-            };
+            var customers = _customer;
 
             var customersPrivateField = TestExtension.GetPrivateFieldInfo(typeof(RealtimeClassificationAgencyService), PrivateFieldName.GetNewPlaceBetSMACustomerModel);
 
@@ -66,11 +96,7 @@
         public void GetCustomerCategory_WhenSuccess()
         {
             // Arrange
-            var customers = new GetNewPlaceBetCustomerAgencyModel
-            {
-                CustIds = new List<long> { 1, 2, 3, 4 },
-                ScannedMaxId = 1234
-            };
+            var customers = _customer;
 
             var customersPrivateField = TestExtension.GetPrivateFieldInfo(typeof(RealtimeClassificationAgencyService), PrivateFieldName.GetNewPlaceBetSMACustomerModel);
             var customerCategoriesPrivateField = TestExtension.GetPrivateFieldInfo(typeof(RealtimeClassificationAgencyService), PrivateFieldName.GetSMACustomerCategoryRealtimeModel);
@@ -98,11 +124,7 @@
         public void GetCustomerCategory_ThrowException()
         {
             // Arrange
-            var customers = new GetNewPlaceBetCustomerAgencyModel
-            {
-                CustIds = new List<long> { 1, 2, 3, 4 },
-                ScannedMaxId = 1234
-            };
+            var customers = _customer;
 
             var customersPrivateField = TestExtension.GetPrivateFieldInfo(typeof(RealtimeClassificationAgencyService), PrivateFieldName.GetNewPlaceBetSMACustomerModel);
 
