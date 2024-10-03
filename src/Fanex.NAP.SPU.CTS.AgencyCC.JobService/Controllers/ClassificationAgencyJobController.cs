@@ -14,17 +14,20 @@
         private readonly IRealtimeClassificationAgencyJobService _realtimeClassification;
         private readonly IDailyNormalClassificationAgencyJobService _dailyNormalClassification;
         private readonly INormalAccountClassificationAgencyJobService _normalAccountClassification;
+        private readonly INormalAccountInsertAgencyJobService _normalAccountInsert;
 
         public ClassificationAgencyJobController(
             ISentryClient sentryClient,
             IRealtimeClassificationAgencyJobService realtimeClassification,
             IDailyNormalClassificationAgencyJobService dailyNormalClassification,
-            INormalAccountClassificationAgencyJobService normalAccountClassification)
+            INormalAccountClassificationAgencyJobService normalAccountClassification,
+            INormalAccountInsertAgencyJobService normalAccountInsert)
         {
             _sentryClient = sentryClient;
             _realtimeClassification = realtimeClassification;
             _dailyNormalClassification = dailyNormalClassification;
             _normalAccountClassification = normalAccountClassification;
+            _normalAccountInsert = normalAccountInsert;
         }
 
         [HttpPost("scanningRealtimeClassificationAgency")]
@@ -44,6 +47,12 @@
         public async Task<bool> NormalAccountClassification([FromForm] int batchInternalSize)
         {
             return await _normalAccountClassification.Execute(batchInternalSize);
+        }
+
+        [HttpPost("normalAccountInsertAgency")]
+        public async Task<bool> NormalAccountInsert([FromForm] int batchExternalSize, [FromForm] int batchInternalSize)
+        {
+            return await _normalAccountInsert.Execute(batchExternalSize, batchInternalSize);
         }
     }
 }
