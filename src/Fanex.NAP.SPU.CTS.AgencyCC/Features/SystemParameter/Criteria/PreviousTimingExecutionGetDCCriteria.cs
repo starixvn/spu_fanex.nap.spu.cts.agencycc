@@ -9,7 +9,9 @@
         public int ParamID { get; set; }
 
         public override string GetSettingKey()
-               => "CTS_DC_SystemParameter_Get";
+        {
+            return "CTS_DC_SystemParameter_Get";
+        }
 
         public override bool IsValid()
             => true;

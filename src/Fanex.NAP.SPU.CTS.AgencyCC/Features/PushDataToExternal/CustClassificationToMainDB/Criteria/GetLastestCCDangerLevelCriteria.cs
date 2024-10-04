@@ -9,7 +9,9 @@
         public string CustIds { get; set; }
 
         public override string GetSettingKey()
-            => "CTS_DC_CustClassification_GetCCAndDangerLevel";
+        {
+            return "CTS_DC_CustClassification_GetCCAndDangerLevel";
+        }
 
         public override bool IsValid()
             => true;
