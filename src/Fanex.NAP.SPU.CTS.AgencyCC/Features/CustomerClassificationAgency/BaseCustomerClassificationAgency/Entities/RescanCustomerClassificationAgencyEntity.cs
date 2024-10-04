@@ -1,0 +1,57 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Entities
+{
+    public class RescanCustomerClassificationAgencyEntity
+    {
+        public long CTSCustID { get; set; }
+
+        public long CustID { get; set; }
+
+        public int CategoryID { get; set; }
+
+        //public int TVSReasonID { get; set; }
+
+        //public int? RobotCounter { get; set; }
+
+        //public int? TVSRequestID { get; set; }
+
+        //public bool? IsParlay { get; set; }
+
+        public int? SportType { get; set; }
+
+        public int? IssueTypeID { get; set; }
+
+        public int RoleID { get; set; }
+
+        public int SubscriberID { get; set; }
+
+        public bool IsLicensee { get; set; }
+
+        public string Remark { get; set; }
+
+        public long CreatedBy { get; set; }
+
+        public bool IsMarkedDirectly { get; set; }
+
+        //public bool IsFromTVS { get; set; }
+
+        //public bool IsFromTW { get; set; }
+
+        public bool IsFromCTS { get; set; }
+
+        //public bool IsFromAI { get; set; }
+
+        //public bool IsFromImperva { get; set; }
+
+        public DateTime LastModifiedDate { get; set; }
+
+        public int InputFlowID { get; set; }
+
+        public DateTime? CreatedDate { get; set; }
+    }
+}

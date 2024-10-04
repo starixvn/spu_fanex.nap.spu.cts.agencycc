@@ -9,6 +9,8 @@
     public interface IBaseCustomerClassificationAgencyDataAccess
     {
         ResultInsertCustomerClassificationAgencyModel InsertCustomerClassification(AgencyCCInputFlow inputFlow, InsertCustomerClassificationAgencyModel model);
+
+        GetRescanCustomerClassificationAgencyModel GetRescanCustomerClassificationAgency(string custIDs);
     }
 
     public class BaseCustomerClassificationAgencyDataAccess : IBaseCustomerClassificationAgencyDataAccess
@@ -36,6 +38,18 @@
             var custInfos = _repository.Fetch<CustInfoClassificationAgencyEntity>(criteria);
 
             return new ResultInsertCustomerClassificationAgencyModel { CustInfos = custInfos, ErrorMessage = criteria.ErrorMessage };
+        }
+
+        public GetRescanCustomerClassificationAgencyModel GetRescanCustomerClassificationAgency(string custIDs)
+        {
+            var criteria = new GetRescanCustomerClassificationAgencyCriteria
+            {
+                CustIDs = custIDs
+            };
+
+            var custInfos = _repository.Fetch<RescanCustomerClassificationAgencyEntity>(criteria);
+
+            return new GetRescanCustomerClassificationAgencyModel { CustInfos = custInfos };
         }
     }
 }

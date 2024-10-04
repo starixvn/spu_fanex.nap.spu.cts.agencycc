@@ -1,5 +1,7 @@
 ﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency
 {
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Criteria;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Entities;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Shares;
     using Sentry;
@@ -9,6 +11,8 @@
     public interface IBaseCustomerClassificationAgencyService
     {
         ResultInsertCustomerClassificationAgencyModel InsertCustomerClassification(AgencyCCInputFlow inputFlow, InsertCustomerClassificationAgencyModel model, string serviceName);
+
+        GetRescanCustomerClassificationAgencyModel GetRescanCustomerClassificationAgency(string custIDs);
     }
 
     public class BaseCustomerClassificationAgencyService : IBaseCustomerClassificationAgencyService
@@ -32,6 +36,11 @@
             }
 
             return result;
+        }
+
+        public GetRescanCustomerClassificationAgencyModel GetRescanCustomerClassificationAgency(string custIDs)
+        {
+            return _dataAccess.GetRescanCustomerClassificationAgency(custIDs);
         }
     }
 }

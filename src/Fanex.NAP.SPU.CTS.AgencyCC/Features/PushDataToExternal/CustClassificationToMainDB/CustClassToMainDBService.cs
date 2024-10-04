@@ -3,15 +3,19 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.AntiFraudCenter;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Entities;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Shares;
     using Sentry;
+    using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
 
     public interface ICustClassToMainDBService
     {
         #region Agency General
         bool PushExternalPackageByCustId(IEnumerable<long> custIds, PushDataToExternalModel paras);
+
+        bool PushExternalProblemAcountPackage(IEnumerable<long> custIds, PushDataToExternalModel parameters);
 
         public bool PushCustomerClassification(IEnumerable<LatestClassificationModel> customerClassifications, int retryTime, string serviceName);
         #endregion
@@ -21,11 +25,13 @@
     {
         private readonly ICustClassToMainDBDataAccess _dataAccess;
         private readonly ISentryClient _sentryClient;
+        private readonly IAntiFraudCenterServices _antiFraudCenterServices;
 
-        public CustClassToMainDBService(ICustClassToMainDBDataAccess dataAccess, ISentryClient sentryClient)
+        public CustClassToMainDBService(ICustClassToMainDBDataAccess dataAccess, ISentryClient sentryClient, IAntiFraudCenterServices antiFraudCenterServices)
         {
             _dataAccess = dataAccess;
             _sentryClient = sentryClient;
+            _antiFraudCenterServices = antiFraudCenterServices;
         }
 
         #region Agency General
@@ -96,6 +102,20 @@
             }
 
             return true;
+        }
+
+        public bool PushExternalProblemAcountPackage(IEnumerable<long> custIds, PushDataToExternalModel parameters)
+        {
+            var isSuccess = true;
+
+            if (custIds != null && custIds.Any())
+            {
+                isSuccess = PushExternalPackageByCustId(custIds.Distinct(), parameters);
+
+                _antiFraudCenterServices.InsertAFCAccounts(custIds.Distinct(), FromFlow.CTSServices, parameters.IsSyncAFCData, parameters.AFCInsertAccountURL);
+            }
+
+            return isSuccess;
         }
         #endregion
 

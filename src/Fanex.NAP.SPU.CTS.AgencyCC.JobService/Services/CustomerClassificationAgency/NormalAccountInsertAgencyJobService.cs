@@ -1,10 +1,10 @@
 ﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CustomerClassificationAgency
 {
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.AntiFraudCenter;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.NormalAccountInsertAgency;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.NormalAccountInsertAgency.Entities;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Model;
-    using Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.AntiFraudCenter;
     using Fanex.NAP.SPU.CTS.AgencyCC.Shares;
     using Sentry;
     using System;

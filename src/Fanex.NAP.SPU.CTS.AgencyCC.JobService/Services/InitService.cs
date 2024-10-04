@@ -7,15 +7,20 @@
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RealtimeClassificationAgency;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.SystemParameter;
-    using Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.AntiFraudCenter;
     using Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CustomerClassificationAgency;
     using Microsoft.Extensions.DependencyInjection;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.AntiFraudCenter;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CTSCustomer;
+    using Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CTSCustomerAgency;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RescanCustomerClassificationAgency;
 
     public static class InitService
     {
         public static void RegisterService(this IServiceCollection services)
         {
             RegisterDataAccesLayer(services);
+
+            RegisterCustomerAgency(services);
 
             RegisterRealtimeClassificationAgency(services);
 
@@ -28,6 +33,13 @@
             RegisterWrapperCustomerClassificaton(services);
         }
 
+        private static void RegisterCustomerAgency(IServiceCollection services)
+        {
+            services.AddSingleton<ICTSCustomerAgencyDataAccess, CTSCustomerAgencyDataAccess>();
+            services.AddSingleton<ICTSCustomerAgencyService, CTSCustomerAgencyService>();
+            services.AddSingleton<ICTSCustomerAgencyJobService, CTSCustomerAgencyJobService>();
+        }
+
         private static void RegisterDataAccesLayer(this IServiceCollection services)
         {
             services.AddSingleton<ISystemParameterServices, SystemParameterServices>();
@@ -35,6 +47,9 @@
 
             services.AddSingleton<ICustClassToMainDBDataAccess, CustClassToMainDBDataAccess>();
             services.AddSingleton<ICustClassToMainDBService, CustClassToMainDBService>();
+
+            services.AddSingleton<IRescanCustClassificationAgencyDataAccess, RescanCustClassificationAgencyDataAccess>();
+            services.AddSingleton<IRescanCustClassificationAgencyService, RescanCustClassificationAgencyService>();
 
             services.AddSingleton<IAntiFraudCenterServices, AntiFraudCenterServices>();
         }

@@ -1,7 +1,7 @@
-﻿using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB;
+﻿using Fanex.NAP.SPU.CTS.AgencyCC.Features.AntiFraudCenter;
+using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB;
 using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Entities;
 using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Model;
-using Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.AntiFraudCenter;
 using Fanex.NAP.SPU.CTS.AgencyCC.Test.Infrastructure.Extensions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -18,17 +18,16 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.PushDataToExternal
     public class CustClassificationToMainDBTests
     {
         private readonly ICustClassToMainDBDataAccess _dataAccess;
-
         private readonly ISentryClient _sentryClient;
-
+        private readonly IAntiFraudCenterServices _antiFraudCenterServices;
         private readonly ICustClassToMainDBService _service;
 
         public CustClassificationToMainDBTests()
         {
             _sentryClient = Substitute.For<ISentryClient>();
-
             _dataAccess = Substitute.For<ICustClassToMainDBDataAccess>();
-            _service = new CustClassToMainDBService(_dataAccess, _sentryClient);
+            _antiFraudCenterServices = Substitute.For<IAntiFraudCenterServices>();
+            _service = new CustClassToMainDBService(_dataAccess, _sentryClient, _antiFraudCenterServices);
         }
 
         [Fact]
@@ -64,6 +63,26 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.PushDataToExternal
             _dataAccess.UpdateCustomerClassification(customerClass).Returns(new Shares.Models.DBResult());
 
             var exception = Record.Exception(() => _service.PushCustomerClassification(customerClass, 1, "Test"));
+
+            // Assert
+            Assert.Null(exception);
+        }
+
+        [Fact]
+        public void PushExternalProblemAcountPackage_WhenSuccess_DoesNotThrowException()
+        {
+            // Arrange
+            var custIDs = new List<long>() { 1, 2, 3 };
+            var parameter = new PushDataToExternalModel
+            {
+                ExternalBatchSize = 50,
+                IsUpdateDangerToMainDB = true,
+                IsWriteLog = false,
+                ServiceName = "Test"
+            };
+
+            // Act           
+            var exception = Record.Exception(() => _service.PushExternalProblemAcountPackage(custIDs, parameter));
 
             // Assert
             Assert.Null(exception);

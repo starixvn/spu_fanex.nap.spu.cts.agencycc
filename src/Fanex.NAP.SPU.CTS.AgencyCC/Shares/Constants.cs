@@ -9,7 +9,9 @@
         public enum CTS_SystemParameters
         {
             DailyScan_Agency_Normal_LastCategoryID = 176,
-            DailyScan_Agency_Normal_LastCustID = 177
+            DailyScan_Agency_Normal_LastCustID = 177,
+            InactiveNewAgency_LastCategoryID = 178,
+            InactiveNewAgency_LastCustID = 179
         };
 
         public enum Main_SystemParameters
@@ -65,5 +67,39 @@
             [Description("BySportRemoveSpecialCC")]
             BySportRemoveSpecialCC = 442
         }
+
+        public enum FunctionIdAgency
+        {
+            InactivateNewCustomer = 11,
+        }
+
+        public enum RescanNormalType
+        {
+            Manual = 4,
+            Auto_Customer = 5,
+            Auto_AfftectedDownline = 6
+        }
+
+        public enum CCInputFlowAgency
+        {
+            [Description("VVIP")]
+            VVIP = 1,
+            [Description("InsertPACategory")]
+            InsertPACategory = 5,
+            [Description("RescanNormal")]
+            RescanNormal = 9,
+            [Description("RemoveVVIP")]
+            RemoveVVIP = 221,
+            [Description("RemovePACategory")]
+            RemovePACategory = 225,
+        }
+
+        public enum CustomerRole
+        {
+            Member = 1,
+            Agent = 2,
+            Master = 3,
+            Super = 4
+        };
     }
 }

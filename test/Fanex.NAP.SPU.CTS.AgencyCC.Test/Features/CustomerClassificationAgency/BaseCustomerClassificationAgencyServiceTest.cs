@@ -21,7 +21,23 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.CustomerClassificationAgency
             baseService = new BaseCustomerClassificationAgencyService(baseDataAccess, sentryClient);
         }
 
-        
+
+        [Fact]
+        public void GetRescanCustomerClassification_WhenSuccess_ReturnData()
+        {
+            // Arrange
+            var custIDs = "1,2";
+            var expectedData = new GetRescanCustomerClassificationAgencyModel();
+
+            // Act
+            baseDataAccess.GetRescanCustomerClassificationAgency(custIDs).Returns(expectedData);
+
+            var result = baseService.GetRescanCustomerClassificationAgency(custIDs);
+
+            // Assert
+            result.Should().NotBeNull();
+        }
+
         [Fact]
         public void InsertCustomerClassification_WhenSuccess_ReturnData()
         {
