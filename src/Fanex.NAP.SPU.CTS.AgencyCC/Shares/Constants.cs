@@ -29,43 +29,21 @@
         public enum AgencyCCInputFlow
         {
             [Description("VVIP")]
-            VVIP = 1,
-            [Description("SpecialCC")]
-            SpecialCC = 2,
-            [Description("LicVIP")]
-            LicVIP = 3,
-            [Description("LicBA")]
-            LicBA = 4,
+            VVIP = 1001,
             [Description("InsertPACategory")]
-            InsertPACategory = 5,
+            InsertPACategory = 1005,
             [Description("InsertPAReason")]
             InsertPAReason = 6,
-            [Description("Potential")]
-            Potential = 8,
             [Description("Normal")]
-            Normal = 9,
-            [Description("RescanPACategory")]
-            RescanPACategory = 115,
-            [Description("RescanPotential")]
-            RescanPotential = 118,
-            [Description("RescanNormal")]
-            RescanNormal = 9,
-            [Description("RemoveVVIP")]
-            RemoveVVIP = 221,
-            [Description("RemoveSpecialCC")]
-            RemoveSpecialCC = 222,
-            [Description("RemoveLicVIP")]
-            RemoveLicVIP = 223,
-            [Description("RemoveLicBA")]
-            RemoveLicBA = 224,
+            Normal = 1009,
+            //[Description("RescanPACategory")]
+            //RescanPACategory = 1115,
             [Description("RemovePACategory")]
-            RemovePACategory = 225,
-            [Description("BySportInsertSpecialCC")]
-            BySportInsertSpecialCC = 332,
-            [Description("BySportInsertNormal")]
-            BySportInsertNormal = 339,
-            [Description("BySportRemoveSpecialCC")]
-            BySportRemoveSpecialCC = 442
+            RemovePACategory = 1225,
+            [Description("RescanNormal")]
+            RescanNormal = 1009,
+            [Description("RemoveVVIP")]
+            RemoveVVIP = 1221,
         }
 
         public enum FunctionIdAgency
@@ -78,20 +56,6 @@
             Manual = 4,
             Auto_Customer = 5,
             Auto_AfftectedDownline = 6
-        }
-
-        public enum CCInputFlowAgency
-        {
-            [Description("VVIP")]
-            VVIP = 1,
-            [Description("InsertPACategory")]
-            InsertPACategory = 5,
-            [Description("RescanNormal")]
-            RescanNormal = 9,
-            [Description("RemoveVVIP")]
-            RemoveVVIP = 221,
-            [Description("RemovePACategory")]
-            RemovePACategory = 225,
         }
 
         public enum CustomerRole
