@@ -6,7 +6,12 @@
     {
         public InsertNormalAccountAgencyEntity(GetNormalAccountAgencyEntity model)
         {
-            ActiveDays = model.ActiveDays;
+            LastXDaysBetCount = model.LastXDaysBetCount;
+            LastXDaysTurnoverRM = model.LastXDaysTurnoverRM;
+            LastXDaysWinlossRM = model.LastXDaysWinlossRM;
+            LastYDaysBetCount = model.LastYDaysBetCount;
+            LastYDaysTurnoverRM = model.LastYDaysTurnoverRM;
+            LastYDaysWinlossRM = model.LastYDaysWinlossRM;
             BetCount = model.BetCount;
             CategoryGroupID = model.CategoryGroupId;
             CategoryID = model.CategoryId;

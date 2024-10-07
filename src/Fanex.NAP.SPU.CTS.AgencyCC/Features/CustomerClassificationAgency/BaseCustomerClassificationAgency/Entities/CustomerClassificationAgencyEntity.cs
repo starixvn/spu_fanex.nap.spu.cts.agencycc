@@ -16,7 +16,17 @@
 
         public Int64? BetCount { get; set; }
 
-        public int? ActiveDays { get; set; }
+        public decimal? LastXDaysTurnoverRM { get; set; }
+
+        public decimal? LastXDaysWinlossRM { get; set; }
+
+        public Int64? LastXDaysBetCount { get; set; }
+
+        public decimal? LastYDaysTurnoverRM { get; set; }
+
+        public decimal? LastYDaysWinlossRM { get; set; }
+
+        public Int64? LastYDaysBetCount { get; set; }
 
         public DateTime? PerformanceTime { get; set; }
     }
