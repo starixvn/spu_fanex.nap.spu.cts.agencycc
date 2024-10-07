@@ -41,14 +41,17 @@
 
         public GetCustomerCategoryAgencyRealtimeModel GetCustomerCategory(string custIdList)
         {
-            var criteria = new GetCustomerCategoryAgencyRealtimeCriteria();
+            var criteria = new GetCustomerCategoryAgencyRealtimeCriteria
+            {
+                CustIdList = custIdList
+            };
 
-            (var normalCusts, var paCusts) = _repository.FetchMultiple<long, long>(criteria);
+            var normalCusts = _repository.Fetch<long>(criteria);
 
             return new GetCustomerCategoryAgencyRealtimeModel
             {
                 CustomerCategory = normalCusts.ToList(),
-                CustomerPADailyScan = paCusts.ToList()
+                //CustomerPADailyScan = paCusts.ToList()
             };
         }
 

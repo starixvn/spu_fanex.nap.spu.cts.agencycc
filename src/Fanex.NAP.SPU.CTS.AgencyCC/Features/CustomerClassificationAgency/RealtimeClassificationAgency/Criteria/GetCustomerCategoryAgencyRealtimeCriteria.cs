@@ -10,7 +10,7 @@
 
         public override string GetSettingKey()
         {
-            return "CTS_DC_CustClassificationAgency_Realtime_GetCategory"; // new
+            return "CTS_DC_CustClassificationAgency_Realtime_GetCategory";
         }
 
         public override bool IsValid()
