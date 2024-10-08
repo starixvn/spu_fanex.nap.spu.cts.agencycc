@@ -6,42 +6,43 @@
 		<Setting Key="CTS_DC_SystemParameter_Update" SpName="CTS_DC_SystemParameter_Update" DbName="MySQL.CTS_DataCenter.ctsServiceAdmin" />
 		<Setting Key="CTS_SystemParameter_Get" SpName="CTS_SystemParameter_Get" DbName="SQL.WASAVerse.bodbSPUNet" />
 		<Setting Key="CTS_SystemParameter_Update" SpName="CTS_SystemParameter_Update" DbName="SQL.WASAVerse.bodbSPUNet" />
-		<Setting Key="Acc_CustomerUpdateCustomerClass" SpName="Acc_CustomerUpdateCustomerClass_xpre" DbName="SQL.CustDB.bodbAdminNet" TimeOut="600" />
+		<Setting Key="Acc_CustomerUpdateCustomerClass" SpName="Acc_CustomerUpdateCustomerClass" DbName="SQL.CustDB.bodbAdminNet" TimeOut="600" />
 	</Function>
 	<Function Name="Rescan">
 		<Setting Key="CTS_DC_CustInfo_GetCustIDsRole" SpName="CTS_DC_CustInfo_GetCustIDsRole" DbName="MySQL.CTS_DataCenter.ctsService" />
-		<Setting Key="CTS_GeneralNormalClassificationAgency_RescanNormal_Preprocess" SpName="CTS_GeneralNormalClassificationAgency_RescanNormal_Preprocess_xpre" DbName="SQL.bodbVR2Model.bodbSPUNet" />
+		<Setting Key="CTS_GeneralNormalClassificationAgency_RescanNormal_Preprocess" SpName="CTS_GeneralNormalClassificationAgency_RescanNormal_Preprocess" DbName="SQL.bodbVR2Model.bodbSPUNet" />
 	</Function>
 	<Function Name="CustomerClassification">
 		<Setting Key="CTS_DC_CustClassification_GetCCAndDangerLevel" SpName="CTS_DC_CustClassification_GetCCAndDangerLevel" DbName="MySQL.CTS_DataCenter.ctsService" />
 	</Function>
 	<Function Name="RealtimeClassification">
-		<Setting Key="CTS_DC_CustClassificationAgency_Realtime_GetCategory" SpName="CTS_DC_CustClassificationAgency_Realtime_GetCategory_xpre" DbName="MySQL.CTS_DataCenter.ctsService" />
-		<Setting Key="CTS_GeneralNormalClassificationAgency_RealTime_GetChanges" SpName="CTS_GeneralNormalClassificationAgency_RealTime_GetChanges_xpre" DbName="SQL.bodbVR2Model.bodbSPUNet" />
-		<Setting Key="CTS_GeneralNormalClassificationAgency_Realtime_Preprocess" SpName="CTS_GeneralNormalClassificationAgency_Realtime_Preprocess_xpre" DbName="SQL.bodbVR2Model.bodbSPUNet" />
-		<Setting Key="CTS_GeneralNormalClassificationAgency_RealTime_Complete" SpName="CTS_GeneralNormalClassificationAgency_RealTime_Complete_xpre" DbName="SQL.bodbVR2Model.bodbSPUNet" />
+		<Setting Key="CTS_DC_CustClassificationAgency_Realtime_GetCategory" SpName="CTS_DC_CustClassificationAgency_Realtime_GetCategory" DbName="MySQL.CTS_DataCenter.ctsService" />
+		<Setting Key="CTS_GeneralNormalClassificationAgency_RealTime_GetChanges" SpName="CTS_GeneralNormalClassificationAgency_RealTime_GetChanges" DbName="SQL.bodbVR2Model.bodbSPUNet" />
+		<Setting Key="CTS_GeneralNormalClassificationAgency_Realtime_Preprocess" SpName="CTS_GeneralNormalClassificationAgency_Realtime_Preprocess" DbName="SQL.bodbVR2Model.bodbSPUNet" />
+		<Setting Key="CTS_GeneralNormalClassificationAgency_RealTime_Complete" SpName="CTS_GeneralNormalClassificationAgency_RealTime_Complete" DbName="SQL.bodbVR2Model.bodbSPUNet" />
 	</Function>
 	<Function Name="NormalClassification">
-		<Setting Key="CTS_DC_CustClassificationAgency_Normal_GetCurrentCategory" SpName="CTS_DC_CustClassificationAgency_Normal_GetCurrentCategory_xpre" DbName="MySQL.CTS_DataCenter.ctsService" />
-		<Setting Key="CTS_GeneralNormalClassificationAgency_NormalPool_Get" SpName="CTS_GeneralNormalClassificationAgency_NormalPool_Get_xpre" DbName="SQL.bodbVR2Model.bodbSPUNet" />
-		<Setting Key="CTS_GeneralNormalClassificationAgency_NormalPool_Classify" SpName="CTS_GeneralNormalClassificationAgency_RealTime_Complete_xpre" DbName="SQL.bodbVR2Model.bodbSPUNet" />
-		<Setting Key="CTS_GeneralNormalClassificationAgency_NormalPool_Clear" SpName="CTS_GeneralNormalClassificationAgency_NormalPool_Clear_xpre" DbName="SQL.bodbVR2Model.bodbSPUNet" />
+		<Setting Key="CTS_DC_CustClassificationAgency_Normal_GetCurrentCategory" SpName="CTS_DC_CustClassificationAgency_Normal_GetCurrentCategory" DbName="MySQL.CTS_DataCenter.ctsService" />
+		<Setting Key="CTS_GeneralNormalClassificationAgency_NormalPool_Get" SpName="CTS_GeneralNormalClassificationAgency_NormalPool_Get" DbName="SQL.bodbVR2Model.bodbSPUNet" />
+		<Setting Key="CTS_GeneralNormalClassificationAgency_NormalPool_Classify" SpName="CTS_GeneralNormalClassificationAgency_RealTime_Complete" DbName="SQL.bodbVR2Model.bodbSPUNet" />
+		<Setting Key="CTS_GeneralNormalClassificationAgency_NormalPool_Clear" SpName="CTS_GeneralNormalClassificationAgency_NormalPool_Clear" DbName="SQL.bodbVR2Model.bodbSPUNet" />
 	</Function>
 	<Function Name="InactivateNewCustomer">
 		<Setting Key="CTS_DC_CustClassification_DailyScan_GetInactiveNewMember" SpName="CTS_DC_CustClassification_DailyScan_GetInactiveNewMember" DbName="MySQL.CTS_DataCenter.ctsService" />
 	</Function>
 	<Function Name="CustomerClassification">
-		<Setting Key="CTS_DC_CustClassificationAgency_Rescan_Get" SpName="CTS_DC_CustClassificationAgency_Rescan_Get_xpre" DbName="MySQL.CTS_DataCenter.ctsService" />
-		<Setting Key="CTS_DC_CustClassificationAgency_Insert" SpName="CTS_DC_CustClassificationAgency_Insert_xpre" DbName="MySQL.CTS_DataCenter.ctsServiceAdmin" TimeOut="600" />
+		<Setting Key="CTS_DC_CustClassificationAgency_Rescan_Get" SpName="CTS_DC_CustClassificationAgency_Rescan_Get" DbName="MySQL.CTS_DataCenter.ctsService" />
+		<Setting Key="CTS_DC_CustClassificationAgency_Insert" SpName="CTS_DC_CustClassificationAgency_Insert" DbName="MySQL.CTS_DataCenter.ctsServiceAdmin" TimeOut="600" />
+		<Setting Key="CTS_DC_CustInfo_CheckCategoryInfoNewCustAgency" SpName="CTS_DC_CustInfo_CheckCategoryInfoNewCustAgency" DbName="MySQL.CTS_DataCenter.ctsService" />
 	</Function>
 	<Function Name="DailyNormalClassification">
-		<Setting Key="CTS_GeneralNormalClassificationAgency_Daily_Preprocess" SpName="CTS_GeneralNormalClassificationAgency_Daily_Preprocess_xpre" DbName="SQL.bodbVR2Model.bodbSPUNet" TimeOut="1200" />
+		<Setting Key="CTS_GeneralNormalClassificationAgency_Daily_Preprocess" SpName="CTS_GeneralNormalClassificationAgency_Daily_Preprocess" DbName="SQL.bodbVR2Model.bodbSPUNet" TimeOut="1200" />
 	</Function>
 	<Function Name="DailyNormalClassification">
-		<Setting Key="CTS_DC_CustClassificationAgency_DailyScan_GetNormal" SpName="CTS_DC_CustClassificationAgency_DailyScan_GetNormal_xpre" DbName="MySQL.CTS_DataCenter.ctsService" />
+		<Setting Key="CTS_DC_CustClassificationAgency_DailyScan_GetNormal" SpName="CTS_DC_CustClassificationAgency_DailyScan_GetNormal" DbName="MySQL.CTS_DataCenter.ctsService" />
 	</Function>
 	<Function Name="NormalAccount">
-		<Setting Key="CTS_GeneralNormalClassificationAgency_NormalAccount_Get" SpName="CTS_GeneralNormalClassificationAgency_NormalAccount_Get_xpre" DbName="SQL.bodbVR2Model.bodbSPUNet" TimeOut="300" />
-		<Setting Key="CTS_GeneralNormalClassificationAgency_NormalAccount_Complete" SpName="CTS_GeneralNormalClassificationAgency_NormalAccount_Complete_xpre" DbName="SQL.bodbVR2Model.bodbSPUNet" TimeOut="300" />
+		<Setting Key="CTS_GeneralNormalClassificationAgency_NormalAccount_Get" SpName="CTS_GeneralNormalClassificationAgency_NormalAccount_Get" DbName="SQL.bodbVR2Model.bodbSPUNet" TimeOut="300" />
+		<Setting Key="CTS_GeneralNormalClassificationAgency_NormalAccount_Complete" SpName="CTS_GeneralNormalClassificationAgency_NormalAccount_Complete" DbName="SQL.bodbVR2Model.bodbSPUNet" TimeOut="300" />
 	</Function>
 </Functions>

@@ -58,7 +58,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CTSCustomerAgency
                         var rescanConfig = new RescanParametersModel()
                         {
                             IsToQueue = false,
-                            FunctionId = FunctionIdAgency.InactivateNewCustomer,
+                            FunctionId = FunctionId.InactivateNewCustomer,
                             RescanNormalType = RescanNormalType.Auto_Customer,
                             InternalBatchSize = batchSize,
                             ServiceName = "InactiveNewCustomerAgency",

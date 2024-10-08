@@ -12,7 +12,7 @@
 
         public bool IsToQueue { get; set; }
 
-        public FunctionIdAgency FunctionId { get; set; }
+        public FunctionId FunctionId { get; set; }
 
         public RescanNormalType RescanNormalType { get; set; }
 

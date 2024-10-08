@@ -1,6 +1,7 @@
 ﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService.Controllers
 {
     using Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CustomerClassificationAgency;
+    using Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CustomerClassificationAgency.AffectDownlineCustomerClassification;
     using Microsoft.AspNetCore.Mvc;
     using Sentry;
     using System;
@@ -15,19 +16,22 @@
         private readonly IDailyNormalClassificationAgencyJobService _dailyNormalClassification;
         private readonly INormalAccountClassificationAgencyJobService _normalAccountClassification;
         private readonly INormalAccountInsertAgencyJobService _normalAccountInsert;
+        private readonly INewCustomerClassificationAgencyJobService _newCustomerClassification;
 
         public ClassificationAgencyJobController(
             ISentryClient sentryClient,
             IRealtimeClassificationAgencyJobService realtimeClassification,
             IDailyNormalClassificationAgencyJobService dailyNormalClassification,
             INormalAccountClassificationAgencyJobService normalAccountClassification,
-            INormalAccountInsertAgencyJobService normalAccountInsert)
+            INormalAccountInsertAgencyJobService normalAccountInsert, 
+            INewCustomerClassificationAgencyJobService newCustomerClassification)
         {
             _sentryClient = sentryClient;
             _realtimeClassification = realtimeClassification;
             _dailyNormalClassification = dailyNormalClassification;
             _normalAccountClassification = normalAccountClassification;
             _normalAccountInsert = normalAccountInsert;
+            _newCustomerClassification = newCustomerClassification;
         }
 
         [HttpPost("scanningRealtimeClassificationAgency")]
@@ -53,6 +57,12 @@
         public async Task<bool> NormalAccountInsert([FromForm] int batchExternalSize, [FromForm] int batchInternalSize)
         {
             return await _normalAccountInsert.Execute(batchExternalSize, batchInternalSize);
+        }
+
+        [HttpPost("newCustomerClassificationAgency")]
+        public async Task<bool> NewCustomerClassification([FromForm] int batchSize)
+        {
+            return await _newCustomerClassification.Execute(batchSize);
         }
     }
 }

@@ -13,6 +13,10 @@
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CTSCustomer;
     using Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CTSCustomerAgency;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RescanCustomerClassificationAgency;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.AffectDownlineCustomerClassification.NewCustomerClassificationAgency;
+    using Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CustomerClassificationAgency.AffectDownlineCustomerClassification;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.DataLogTracking;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.ProblemAccountAgencyInsert;
 
     public static class InitService
     {
@@ -30,7 +34,32 @@
 
             RegisterNormalAccountInsertAgency(services);
 
+            RegisterNewCustomerClassificationAgency(services);
+
+            RegisterProblemAccount(services);
+
+            RegisterDataLogTracking(services);
+
             RegisterWrapperCustomerClassificaton(services);
+        }
+
+        private static void RegisterProblemAccount(IServiceCollection services)
+        {
+            services.AddSingleton<IProblemAccountAgencyDataAccess, ProblemAccountAgencyDataAccess>();
+            services.AddSingleton<IProblemAccountAgencyService, ProblemAccountAgencyService>();
+        }
+
+        private static void RegisterDataLogTracking(IServiceCollection services)
+        {
+            services.AddSingleton<IDataLogTrackingDataAccess, DataLogTrackingDataAccess>();
+            services.AddSingleton<IDataLogTrackingServices, DataLogTrackingServices>();
+        }
+
+        private static void RegisterNewCustomerClassificationAgency(IServiceCollection services)
+        {
+            services.AddSingleton<INewCustomerClassificationAgencyDataAccess, NewCustomerClassificationAgencyDataAccess>();
+            services.AddSingleton<INewCustomerClassificationAgencyService, NewCustomerClassificationAgencyService>();
+            services.AddSingleton<INewCustomerClassificationAgencyJobService, NewCustomerClassificationAgencyJobService>();
         }
 
         private static void RegisterCustomerAgency(IServiceCollection services)
@@ -40,7 +69,7 @@
             services.AddSingleton<ICTSCustomerAgencyJobService, CTSCustomerAgencyJobService>();
         }
 
-        private static void RegisterDataAccesLayer(this IServiceCollection services)
+        private static void RegisterDataAccesLayer(IServiceCollection services)
         {
             services.AddSingleton<ISystemParameterServices, SystemParameterServices>();
             services.AddSingleton<ISystemParameterDataAccess, SystemParameterDataAccess>();

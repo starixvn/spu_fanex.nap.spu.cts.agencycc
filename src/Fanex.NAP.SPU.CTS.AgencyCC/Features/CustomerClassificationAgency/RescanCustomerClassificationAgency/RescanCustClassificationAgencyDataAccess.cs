@@ -10,7 +10,7 @@
     {
         IEnumerable<RoleCustomerEntity> GetRoleCustomer(string custIds);
 
-        int PreNormalClassification(string custList, FunctionIdAgency functionId, RescanNormalType type);
+        int PreNormalClassification(string custList, FunctionId functionId, RescanNormalType type);
     }
 
     public class RescanCustClassificationAgencyDataAccess : IRescanCustClassificationAgencyDataAccess
@@ -32,7 +32,7 @@
             return _repository.Fetch<RoleCustomerEntity>(criteria);
         }
 
-        public int PreNormalClassification(string custList, FunctionIdAgency functionId, RescanNormalType type)
+        public int PreNormalClassification(string custList, FunctionId functionId, RescanNormalType type)
         {
             var criteria = new NormalClassificationAgencyRescanCriteria
             {

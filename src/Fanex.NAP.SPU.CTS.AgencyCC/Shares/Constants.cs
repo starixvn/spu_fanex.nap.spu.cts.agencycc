@@ -11,7 +11,8 @@
             DailyScan_Agency_Normal_LastCategoryID = 176,
             DailyScan_Agency_Normal_LastCustID = 177,
             InactiveNewAgency_LastCategoryID = 178,
-            InactiveNewAgency_LastCustID = 179
+            InactiveNewAgency_LastCustID = 179,
+            ReScanNewMemberAgency_LastCTSCustID = 180
         };
 
         public enum Main_SystemParameters
@@ -33,7 +34,7 @@
             [Description("InsertPACategory")]
             InsertPACategory = 1005,
             [Description("InsertPAReason")]
-            InsertPAReason = 6,
+            InsertPAReason = 1006,
             [Description("Normal")]
             Normal = 1009,
             //[Description("RescanPACategory")]
@@ -46,9 +47,10 @@
             RemoveVVIP = 1221,
         }
 
-        public enum FunctionIdAgency
+        public enum FunctionId
         {
             InactivateNewCustomer = 11,
+            InsertNewCustJob = 4,
         }
 
         public enum RescanNormalType
