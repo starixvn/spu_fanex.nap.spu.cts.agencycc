@@ -1,6 +1,7 @@
 ﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CustomerClassificationAgency
 {
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.NormalAccountClassificationAgency;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.NormalAccountClassificationAgency.Entities;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.NormalAccountClassificationAgency.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Shares;
     using Sentry;
@@ -19,6 +20,12 @@
         private readonly string _serviceName = "NormalAccountClassificationAgencyService";
         private readonly ISentryClient _sentryClient;
         private readonly INormalAccountClassificationAgencyService _service;
+
+        public NormalAccountClassificationAgencyJobService(INormalAccountClassificationAgencyService service, ISentryClient sentryClient)
+        {
+            _service = service;
+            _sentryClient = sentryClient;
+        }
 
         public Task<bool> Execute(int batchInternalSize)
         {
@@ -65,19 +72,21 @@
             }
         }
 
-        private void ClassifyNormalAccount(IEnumerable<long> normalPoolCustomers, long scannedMaxID)
+        private void ClassifyNormalAccount(IEnumerable<GetNormalPoolCustomerAgencyEntity> normalPoolCustomers, long scannedMaxID)
         {
-            var custIDList = string.Join(",", normalPoolCustomers.Distinct());
+            var custIDList = string.Join(",", normalPoolCustomers.Select(x => x.CustId).Distinct());
 
             var customerCategories = _service.GetCurrentCustomerCategory(custIDList);
 
-            var customerInfos = normalPoolCustomers.Join(customerCategories, custIdMain => custIdMain,
+            var customerInfos = normalPoolCustomers.Join(customerCategories, custMain => custMain.CustId,
                                                   custCTS => custCTS.CustID,
-                                                  (custIdMain, custCTS) => new GetCurrentCustomerCategoryAgencyModel
+                                                  (custMain, custCTS) => new GetCurrentCustomerCategoryAgencyModel
                                                   {
-                                                      CustId = custIdMain,
+                                                      CustId = custMain.CustId,
                                                       CategoryId = custCTS.CategoryID,
                                                       IsNewCreated = custCTS.IsNewCreated,
+                                                      IsRealtimeOnly = custMain.IsRealtimeOnly,
+                                                      RoleId = custCTS.RoleID
                                                   });
 
             _service.ClassifyNormalPoolCustomers(customerInfos.ToXmlString())

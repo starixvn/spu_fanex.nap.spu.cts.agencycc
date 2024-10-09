@@ -30,7 +30,7 @@
         {
             var criteria = new GetNormalPoolCustomerAgencyCriteria();
 
-            var data = _repository.Fetch<long>(criteria);
+            var data = _repository.Fetch<GetNormalPoolCustomerAgencyEntity>(criteria);
 
             return new GetNormalPoolCustomerAgencyModel
             {

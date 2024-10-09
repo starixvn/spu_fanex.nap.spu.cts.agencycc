@@ -3,14 +3,14 @@
     using Fanex.Data;
     using Fanex.Data.Repository;
 
-    class ClassifyNormalPoolCustomerAgencyCriteria : NonQueryCommand
+    public class ClassifyNormalPoolCustomerAgencyCriteria : NonQueryCommand
     {
         [SpParam(SqlParamName = "CustomersXML")]
         public string CustomersXML { get; set; }
 
         public override string GetSettingKey()
         {
-            return "CTS_GeneralNormalClassificationAgency_NormalPool_Classify ";
+            return "CTS_GeneralNormalClassificationAgency_NormalPool_Classify";
         }
 
         public override bool IsValid()
