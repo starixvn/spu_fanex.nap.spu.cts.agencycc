@@ -1,6 +1,10 @@
-﻿using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.AffectDownlineCustomerClassification.NewCustomerClassificationAgency;
+﻿using Fanex.NAP.SPU.CTS.AgencyCC.Features.AntiFraudCenter;
+using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.AffectDownlineCustomerClassification.NewCustomerClassificationAgency;
 using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.AffectDownlineCustomerClassification.NewCustomerClassificationAgency.Entitites;
 using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.AffectDownlineCustomerClassification.NewCustomerClassificationAgency.Model;
+using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency;
+using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Entities;
+using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Model;
 using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.ProblemAccountAgencyInsert;
 using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.ProblemAccountAgencyInsert.Model;
 using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RescanCustomerClassificationAgency;
@@ -11,6 +15,7 @@ using Fanex.NAP.SPU.CTS.AgencyCC.Features.SystemParameter;
 using Fanex.NAP.SPU.CTS.AgencyCC.Test.Infrastructure.Extensions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
+using Sentry;
 using System;
 using System.Collections.Generic;
 using Xunit;
@@ -26,6 +31,8 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.CustomerClassificationAgency.
         private readonly ICustClassToMainDBService _custClassToMainDBService;
         private readonly IRescanCustClassificationAgencyService _rescanCustClassificationAgencyService;
         private readonly ISystemParameterServices _systemParameterServices;
+        private readonly IAntiFraudCenterServices _antiFraudCenterServices;
+        private readonly IBaseCustomerClassificationAgencyService _baseCustomerClassificationAgencyService;
 
         private readonly INewCustomerClassificationAgencyService _service;
 
@@ -36,7 +43,14 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.CustomerClassificationAgency.
             _custClassToMainDBService = Substitute.For<ICustClassToMainDBService>();
             _rescanCustClassificationAgencyService = Substitute.For<IRescanCustClassificationAgencyService>();
             _systemParameterServices = Substitute.For<ISystemParameterServices>();
-            _service = new NewCustomerClassificationAgencyService(_dataAccess, _problemAccountAgencyService, _custClassToMainDBService, _rescanCustClassificationAgencyService, _systemParameterServices);
+            _antiFraudCenterServices = Substitute.For<IAntiFraudCenterServices>();
+            _baseCustomerClassificationAgencyService = Substitute.For<IBaseCustomerClassificationAgencyService>();
+
+            _service = new NewCustomerClassificationAgencyService(
+                                _baseCustomerClassificationAgencyService,
+                                _dataAccess, _problemAccountAgencyService, _custClassToMainDBService,
+                                _rescanCustClassificationAgencyService, _systemParameterServices,
+                                _antiFraudCenterServices);
         }
 
         #region GetCategoryForNewCTCustomerAgency
@@ -83,6 +97,94 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.CustomerClassificationAgency.
             Assert.Throws<Exception>(action);
         }
         #endregion GetCategoryForNewCTCustomerAgency
+
+        #region InsertVVIPForNewCustomerAgency
+        [Fact]
+        public void InsertVVIPForNewCustomerAgency_WhenSuccess()
+        {
+            // Arrange
+            var newCustomerClassificationAgencyModel = new NewCustomerClassificationAgencyModel
+            {
+                VVIPClassification = new List<VVIPCategoryAgencyEntity>()
+                {
+                    new VVIPCategoryAgencyEntity()
+                }
+            };
+
+            var isSuccessField = TestExtension.GetPrivateFieldInfo(typeof(NewCustomerClassificationAgencyService), PrivateFieldName.IsSuccess);
+
+            var newCustomerClassificationAgencyModelField = TestExtension.GetPrivateFieldInfo(typeof(NewCustomerClassificationAgencyService), PrivateFieldName.NewCustomerClassificationAgencyModel);
+
+            // Act
+            isSuccessField.SetValue(_service, true);
+
+            newCustomerClassificationAgencyModelField.SetValue(_service, newCustomerClassificationAgencyModel);
+
+            _baseCustomerClassificationAgencyService
+                .InsertCustomerClassification(Arg.Any<AgencyCCInputFlow>(), Arg.Any<InsertCustomerClassificationAgencyModel>(), Arg.Any<string>())
+                .Returns(new ResultInsertCustomerClassificationAgencyModel()
+                {
+                    CustInfos = new List<CustInfoClassificationAgencyEntity>
+                    {
+                        new CustInfoClassificationAgencyEntity()
+                    }
+                });
+
+            _custClassToMainDBService.PushExternalPackageByCustId(Arg.Any<IEnumerable<long>>(), Arg.Any<PushDataToExternalModel>()).Returns(true);
+
+            _service.InsertVVIPForNewCustomerAgency(new RescanParametersModel()
+            {
+                PushDataExternal = new PushDataToExternalModel()
+            });
+
+            // Assert
+            _baseCustomerClassificationAgencyService.Received(1).InsertCustomerClassification(Arg.Any<AgencyCCInputFlow>(), Arg.Any<InsertCustomerClassificationAgencyModel>(), Arg.Any<string>());
+
+            _custClassToMainDBService.Received(1).PushExternalPackageByCustId(Arg.Any<IEnumerable<long>>(), Arg.Any<PushDataToExternalModel>());
+
+            _antiFraudCenterServices.Received(1).DeleteAFCAccounts(Arg.Any<IEnumerable<long>>(), Arg.Any<FromFlow>(), Arg.Any<bool>(), Arg.Any<string>());
+        }
+
+        [Fact]
+        public void InsertVVIPForNewCustomerAgency_ThrowException()
+        {
+            // Arrange
+            var newCustomerClassificationAgencyModel = new NewCustomerClassificationAgencyModel
+            {
+                VVIPClassification = new List<VVIPCategoryAgencyEntity>()
+                {
+                    new VVIPCategoryAgencyEntity()
+                }
+            };
+
+            var isSuccessField = TestExtension.GetPrivateFieldInfo(typeof(NewCustomerClassificationAgencyService), PrivateFieldName.IsSuccess);
+
+            var newCustomerClassificationAgencyModelField = TestExtension.GetPrivateFieldInfo(typeof(NewCustomerClassificationAgencyService), PrivateFieldName.NewCustomerClassificationAgencyModel);
+
+            // Act
+            isSuccessField.SetValue(_service, true);
+
+            newCustomerClassificationAgencyModelField.SetValue(_service, newCustomerClassificationAgencyModel);
+
+            _baseCustomerClassificationAgencyService
+                .InsertCustomerClassification(Arg.Any<AgencyCCInputFlow>(), Arg.Any<InsertCustomerClassificationAgencyModel>(), Arg.Any<string>())
+                .Throws<Exception>();
+
+            Action action = () => _service.InsertVVIPForNewCustomerAgency(new RescanParametersModel()
+                                    {
+                                        PushDataExternal = new PushDataToExternalModel()
+                                    });
+
+            // Assert
+            _baseCustomerClassificationAgencyService.Received(0).InsertCustomerClassification(Arg.Any<AgencyCCInputFlow>(), Arg.Any<InsertCustomerClassificationAgencyModel>(), Arg.Any<string>());
+
+            _custClassToMainDBService.Received(0).PushExternalPackageByCustId(Arg.Any<IEnumerable<long>>(), Arg.Any<PushDataToExternalModel>());
+
+            _antiFraudCenterServices.Received(0).DeleteAFCAccounts(Arg.Any<IEnumerable<long>>(), Arg.Any<FromFlow>(), Arg.Any<bool>(), Arg.Any<string>());
+
+            Assert.Throws<Exception>(action);
+        }
+        #endregion
 
         #region InsertPAForNewCustomerAgency
         [Fact]
