@@ -14,7 +14,7 @@
 
         public override string GetSettingKey()
         {
-            return "CTS_DC_CustClassification_DailyScan_GetInactiveNewMember";
+            return "CTS_DC_CustClassificationAgency_DailyScan_GetCateNew";
         }
 
         public override bool IsValid()
