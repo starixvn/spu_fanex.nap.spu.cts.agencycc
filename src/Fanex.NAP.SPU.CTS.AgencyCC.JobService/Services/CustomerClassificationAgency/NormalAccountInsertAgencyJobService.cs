@@ -104,6 +104,7 @@
                 {
                     var isPushCCSuccess = _custClassToMainDBService.PushExternalPackageByCustId(custIDs, new PushDataToExternalModel
                     {
+                        RoleGroup = RoleGroupType.Agency,
                         ExternalBatchSize = batchExternalSize,
                         IsUpdateDangerToMainDB = false, // --> Not Update
                         IsWriteLog = _appSettings.NormalAccountIsWriteLog,

@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Xunit;
+using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
 using static Fanex.NAP.SPU.CTS.AgencyCC.Test.Infrastructure.Consts.PushDataToExternal.CustClassificationToMainDBConsts;
 
 namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.PushDataToExternal
@@ -60,9 +61,9 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.PushDataToExternal
             };
 
             // Act   
-            _dataAccess.UpdateCustomerClassification(customerClass).Returns(new Shares.Models.DBResult());
+            _dataAccess.UpdateCustomerClassification(customerClass, RoleGroupType.Agency).Returns(new Shares.Models.DBResult());
 
-            var exception = Record.Exception(() => _service.PushCustomerClassification(customerClass, 1, "Test"));
+            var exception = Record.Exception(() => _service.PushCustomerClassification(customerClass, RoleGroupType.Agency, 1, "Test"));
 
             // Assert
             Assert.Null(exception);
@@ -102,11 +103,11 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.PushDataToExternal
 
 
             // Act
-            _dataAccess.UpdateCustomerClassification(Arg.Any<IEnumerable<LatestClassificationModel>>()).Returns(new Shares.Models.DBResult());
+            _dataAccess.UpdateCustomerClassification(Arg.Any<IEnumerable<LatestClassificationModel>>(), Arg.Any<RoleGroupType>()).Returns(new Shares.Models.DBResult());
 
-            var result = pushCustClassificationToMainDBMethod.Invoke(_service, new object[] { data, string.Empty });
+            var result = pushCustClassificationToMainDBMethod.Invoke(_service, new object[] { data, RoleGroupType.Agency, string.Empty });
             // Assert
-            _dataAccess.Received(1).UpdateCustomerClassification(Arg.Any<IEnumerable<LatestClassificationModel>>());
+            _dataAccess.Received(1).UpdateCustomerClassification(Arg.Any<IEnumerable<LatestClassificationModel>>(), Arg.Any<RoleGroupType>());
 
             Assert.True((bool)result);
         }
@@ -123,9 +124,10 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.PushDataToExternal
 
 
             // Act
-            var result = pushCustClassificationToMainDBMethod.Invoke(_service, new object[] { data, string.Empty });
+            var result = pushCustClassificationToMainDBMethod.Invoke(_service, new object[] { data, RoleGroupType.Agency, string.Empty });
+
             // Assert
-            _dataAccess.Received(0).UpdateCustomerClassification(Arg.Any<IEnumerable<LatestClassificationModel>>());
+            _dataAccess.Received(0).UpdateCustomerClassification(Arg.Any<IEnumerable<LatestClassificationModel>>(), Arg.Any<RoleGroupType>());
 
             Assert.True((bool)result);
         }
@@ -143,11 +145,11 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.PushDataToExternal
 
 
             // Act
-            _dataAccess.UpdateCustomerClassification(Arg.Any<IEnumerable<LatestClassificationModel>>()).Throws<Exception>();
+            _dataAccess.UpdateCustomerClassification(Arg.Any<IEnumerable<LatestClassificationModel>>(), Arg.Any<RoleGroupType>()).Throws<Exception>();
 
-            var result = pushCustClassificationToMainDBMethod.Invoke(_service, new object[] { data, string.Empty});
+            var result = pushCustClassificationToMainDBMethod.Invoke(_service, new object[] { data, RoleGroupType.Agency, string.Empty });
             // Assert
-            _dataAccess.Received(4).UpdateCustomerClassification(Arg.Any<IEnumerable<LatestClassificationModel>>());
+            _dataAccess.Received(4).UpdateCustomerClassification(Arg.Any<IEnumerable<LatestClassificationModel>>(), Arg.Any<RoleGroupType>());
 
             Assert.False((bool)result);
         }
@@ -225,7 +227,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.PushDataToExternal
             var isPushExternalSuccessMethod = TestExtension.GetPrivateMethod(typeof(CustClassToMainDBService), PrivateMethodName.IsPushExternalSuccess);
 
             // Act
-            _dataAccess.UpdateCustomerClassification(Arg.Any<IEnumerable<LatestClassificationModel>>()).Returns(new Shares.Models.DBResult());
+            _dataAccess.UpdateCustomerClassification(Arg.Any<IEnumerable<LatestClassificationModel>>(), Arg.Any<RoleGroupType>()).Returns(new Shares.Models.DBResult());
 
             //_dataAccess.UpdateDangerLevelToMainDB(Arg.Any<IEnumerable<DangerLevelEntity>>(), Arg.Any<int>()).Returns(new Shares.Models.DBResult());
 
@@ -233,7 +235,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.PushDataToExternal
             // Assert
             //_dataAccess.Received(1).UpdateDangerLevelToMainDB(Arg.Any<IEnumerable<DangerLevelEntity>>(), Arg.Any<int>());
 
-            _dataAccess.Received(1).UpdateCustomerClassification(Arg.Any<IEnumerable<LatestClassificationModel>>());
+            _dataAccess.Received(1).UpdateCustomerClassification(Arg.Any<IEnumerable<LatestClassificationModel>>(), Arg.Any<RoleGroupType>());
 
             Assert.True((bool)result);
         }
@@ -248,13 +250,13 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.PushDataToExternal
             var isPushExternalSuccessMethod = TestExtension.GetPrivateMethod(typeof(CustClassToMainDBService), PrivateMethodName.IsPushExternalSuccess);
 
             // Act
-            _dataAccess.UpdateCustomerClassification(Arg.Any<IEnumerable<LatestClassificationModel>>()).Returns(new Shares.Models.DBResult());
+            _dataAccess.UpdateCustomerClassification(Arg.Any<IEnumerable<LatestClassificationModel>>(), Arg.Any<RoleGroupType>()).Returns(new Shares.Models.DBResult());
 
             var result = isPushExternalSuccessMethod.Invoke(_service, new object[] { Enumerable.Empty<LatestCCDangerLevelEntity>(), paras });
             // Assert
             //_dataAccess.Received(0).UpdateDangerLevelToMainDB(Arg.Any<IEnumerable<DangerLevelEntity>>(), Arg.Any<int>());
 
-            _dataAccess.Received(0).UpdateCustomerClassification(Arg.Any<IEnumerable<LatestClassificationModel>>());
+            _dataAccess.Received(0).UpdateCustomerClassification(Arg.Any<IEnumerable<LatestClassificationModel>>(), Arg.Any<RoleGroupType>());
 
             Assert.True((bool)result);
         }

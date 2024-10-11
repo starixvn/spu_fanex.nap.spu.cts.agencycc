@@ -67,5 +67,11 @@
             Master = 3,
             Super = 4
         };
+
+        public enum RoleGroupType
+        {
+            Member = 1,
+            Agency = 2
+        }
     }
 }

@@ -17,7 +17,7 @@
 
         bool PushExternalProblemAcountPackage(IEnumerable<long> custIds, PushDataToExternalModel parameters);
 
-        public bool PushCustomerClassification(IEnumerable<LatestClassificationModel> customerClassifications, int retryTime, string serviceName);
+        public bool PushCustomerClassification(IEnumerable<LatestClassificationModel> customerClassifications, RoleGroupType roleGroup, int retryTime, string serviceName);
         #endregion
     }
 
@@ -62,7 +62,7 @@
             return true;
         }
 
-        public bool PushCustomerClassification(IEnumerable<LatestClassificationModel> customerClassifications, int retryTime, string serviceName)
+        public bool PushCustomerClassification(IEnumerable<LatestClassificationModel> customerClassifications, RoleGroupType roleGroup, int retryTime, string serviceName)
         {
             if (customerClassifications == null || !customerClassifications.Any())
             {
@@ -73,7 +73,7 @@
             {
                 try
                 {
-                    var result = _dataAccess.UpdateCustomerClassification(customerClassifications);
+                    var result = _dataAccess.UpdateCustomerClassification(customerClassifications, roleGroup);
 
                     if (result.ErrorCode != 0 && retryTime == 0)
                     {
@@ -136,7 +136,7 @@
 
             if (lastestClassifications != null && lastestClassifications.Any())
             {
-                isSuccess = PushCustClassificationToMainDB(lastestClassifications, paras.ServiceName);
+                isSuccess = PushCustClassificationToMainDB(lastestClassifications, paras.RoleGroup, paras.ServiceName);
 
                 //if (paras.IsUpdateDangerToMainDB && isSuccess)
                 //{
@@ -147,7 +147,7 @@
             return isSuccess;
         }
 
-        private bool PushCustClassificationToMainDB(IEnumerable<LatestCCDangerLevelEntity> lastestClassifications, string serviceName)
+        private bool PushCustClassificationToMainDB(IEnumerable<LatestCCDangerLevelEntity> lastestClassifications, RoleGroupType roleGroup, string serviceName)
         {
             if (lastestClassifications != null && lastestClassifications.Any())
             {
@@ -158,7 +158,7 @@
                     CustomerClass = c.CustomerClass
                 });
 
-                return PushCustomerClassification(custClassification, Constants.RetryPushCCToExternal, serviceName);
+                return PushCustomerClassification(custClassification, roleGroup, Constants.RetryPushCCToExternal, serviceName);
             }
 
             return true;

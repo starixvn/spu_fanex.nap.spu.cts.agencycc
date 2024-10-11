@@ -63,6 +63,7 @@
                 ServiceName = _serviceName,
                 PushDataExternal = new PushDataToExternalModel
                 {
+                    RoleGroup = RoleGroupType.Agency,
                     IsUpdateDangerToMainDB = false, // not update for sma
                     ExternalBatchSize = batchSize,
                     ServiceName = _serviceName,

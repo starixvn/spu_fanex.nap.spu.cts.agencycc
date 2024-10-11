@@ -1,5 +1,7 @@
 ﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Model
 {
+    using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
+
     public class PushDataToExternalModel
     {
         public PushDataToExternalModel()
@@ -23,6 +25,6 @@
 
         public string AFCDeleteAccountURL { get; set; }
 
-        public bool IsSMACustomer { get; set; }
+        public RoleGroupType RoleGroup { get; set; }
     }
 }

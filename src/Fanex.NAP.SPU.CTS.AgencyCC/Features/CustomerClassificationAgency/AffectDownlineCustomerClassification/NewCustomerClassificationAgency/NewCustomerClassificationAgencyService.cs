@@ -158,6 +158,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.Affec
 
                     isSuccess = _custClassToMainDBService.PushExternalPackageByCustId(custIDs, new PushDataToExternalModel
                     {
+                        RoleGroup = RoleGroupType.Agency,
                         ExternalBatchSize = parameters.PushDataExternal.ExternalBatchSize,
                         IsUpdateDangerToMainDB = false,
                         IsSyncAFCData = false,

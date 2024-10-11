@@ -64,6 +64,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CTSCustomerAgency
                             ServiceName = "InactiveNewCustomerAgency",
                             PushDataExternal = new PushDataToExternalModel
                             {
+                                RoleGroup = RoleGroupType.Agency,
                                 IsUpdateDangerToMainDB = false, // not update for agency
                                 ExternalBatchSize = batchSize,
                                 ServiceName = "InactiveNewCustomerAgency",
