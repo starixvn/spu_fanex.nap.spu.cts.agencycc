@@ -33,7 +33,9 @@
 	<Function Name="CustomerClassification">
 		<Setting Key="CTS_DC_CustClassificationAgency_Rescan_Get" SpName="CTS_DC_CustClassificationAgency_Rescan_Get_xpre" DbName="MySQL.CTS_DataCenter.ctsService" />
 		<Setting Key="CTS_DC_CustClassificationAgency_Insert" SpName="CTS_DC_CustClassificationAgency_Insert_xpre" DbName="MySQL.CTS_DataCenter.ctsServiceAdmin" TimeOut="600" />
-	</Function>
+		<Setting Key="CTS_DC_CustInfo_CheckCategoryInfoNewCustAgency" SpName="CTS_DC_CustInfo_CheckCategoryInfoNewCustAgency_xpre" DbName="MySQL.CTS_DataCenter.ctsService" />
+   		 <Setting Key="CTS_DC_CustClassificationAgency_Remove" SpName="CTS_DC_CustClassificationAgency_Remove_xpre" DbName="MySQL.CTS_DataCenter.ctsServiceAdmin" TimeOut="600" />
+  </Function>
 	<Function Name="DailyNormalClassification">
 		<Setting Key="CTS_GeneralNormalClassificationAgency_Daily_Preprocess" SpName="CTS_GeneralNormalClassificationAgency_Daily_Preprocess_xpre" DbName="SQL.bodbVR2Model.bodbSPUNet" TimeOut="1200" />
 	</Function>

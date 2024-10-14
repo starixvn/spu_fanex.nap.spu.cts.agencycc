@@ -15,6 +15,8 @@
 
         GetRescanCustomerClassificationAgencyModel GetRescanCustomerClassificationAgency(string custIDs);
 
+        ResultRemoveCustomerClassificationAgencyModel RemoveCustomerClassificationAgency(AgencyCCInputFlow inputFlow, RemoveCustomerClassificationAgencyModel model);
+
         DBResult UpdateBetLimitOfFlaggedCustomer(string custIDs);
 
         DBResult UpdateBetLimitOfUnflaggedCustomer(string custIDs);
@@ -46,6 +48,11 @@
         public GetRescanCustomerClassificationAgencyModel GetRescanCustomerClassificationAgency(string custIDs)
         {
             return _dataAccess.GetRescanCustomerClassificationAgency(custIDs);
+        }
+
+        public ResultRemoveCustomerClassificationAgencyModel RemoveCustomerClassificationAgency(AgencyCCInputFlow inputFlow, RemoveCustomerClassificationAgencyModel model)
+        {
+            return _dataAccess.RemoveCustomerClassificationAgency(inputFlow, model);
         }
 
         //public IEnumerable<ProblemAccountLosingClassificationEntity> GetProblemAccountLosingClassification(IEnumerable<long> custIds, FunctionId funcId)

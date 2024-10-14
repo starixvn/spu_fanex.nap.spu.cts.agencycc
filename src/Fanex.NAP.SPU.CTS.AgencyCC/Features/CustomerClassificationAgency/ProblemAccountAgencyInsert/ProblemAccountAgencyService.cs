@@ -2,8 +2,7 @@
 {
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Entities;
-    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Model;
-    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.ProblemAccountAgencyInsert.Model;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Model;   
     using Newtonsoft.Json;
     using Sentry;
     using System.Collections.Generic;
@@ -15,6 +14,8 @@
         IEnumerable<long> RescanCustomerClassification(IEnumerable<RescanCustomerClassificationAgencyEntity> custRescans, FunctionId funcId, AgencyCCInputFlow ccInputFlow, bool isToQueue, string serviceName);
 
         IEnumerable<long> InsertProblemAccountsAgencyPackage(IEnumerable<InsertProblemAccountEntity> problemAccounts, FunctionId funcId, AgencyCCInputFlow ccInputFlow, bool isToQueue, string serviceName);
+
+        ResultRemoveCustomerClassificationAgencyModel RemoveProblemAccount(IEnumerable<RemoveProblemAccountEntity> problemAccounts, bool isFromQueue);
     }
 
     public class ProblemAccountAgencyService : BaseCustomerClassificationAgencyService, IProblemAccountAgencyService
@@ -58,6 +59,25 @@
             return Enumerable.Empty<long>();
         }
 
+        public ResultRemoveCustomerClassificationAgencyModel RemoveProblemAccount(IEnumerable<RemoveProblemAccountEntity> problemAccounts, bool isFromQueue)
+        {
+            var modelRemove = new RemoveCustomerClassificationAgencyModel()
+            {
+                CustClassificationJson = JsonConvert.SerializeObject(problemAccounts),
+                IsFromQueue = isFromQueue,
+                FromAction = (int)FromFlow.CTSWEB
+            };
+
+            var removePaResult = RemoveCustomerClassificationAgency(AgencyCCInputFlow.RemovePACategory, modelRemove);
+
+            if (string.IsNullOrEmpty(removePaResult.ErrorMessage))
+            {
+                RemovePALogics(removePaResult.CustInfos);
+            }            
+
+            return removePaResult;
+        }
+
         private void InsertPALogicsAgency(IEnumerable<CustInfoEntity> customerInfo)
         {
             if (customerInfo != null && customerInfo.Any())
@@ -68,6 +88,16 @@
                 //CheckNewPAAssociationCustomerForRollback(JsonConvert.SerializeObject(custPas));
 
                 UpdateBetLimitOfFlaggedCustomer(custPas.Select(x => x.CustID));
+            }
+        }
+
+        private void RemovePALogics(IEnumerable<ResultRemoveCustomerClassificationEntity> customerInfo)
+        {
+            if (customerInfo != null && customerInfo.Any())
+            {
+                var custIds = customerInfo.Where(c => c.IsCleanPA).Select(x => x.CustID).Distinct();
+
+                UpdateBetLimitOfUnflaggedCustomer(custIds);
             }
         }
 

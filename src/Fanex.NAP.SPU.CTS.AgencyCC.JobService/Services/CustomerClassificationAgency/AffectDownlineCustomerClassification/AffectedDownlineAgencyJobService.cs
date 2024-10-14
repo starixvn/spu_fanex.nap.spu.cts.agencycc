@@ -2,6 +2,7 @@
 {
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.AffectDownlineCustomerClassification;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.ProblemAccountAgencyInsert;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RescanCustomerClassificationAgency;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.DataLogTracking;
     using Fanex.NAP.SPU.CTS.AgencyCC.Shares;
     using Newtonsoft.Json;
@@ -24,11 +25,13 @@
         private readonly IAppSettings _appSettings;
         private readonly IProblemAccountAgencyService _problemAccountAgencyService;
         private readonly IAffectedDownlineAgencyService _affectedDownlineAgency;
+        private readonly IRescanCustClassificationAgencyService _rescanCustClassificationService;
         private readonly IDataLogTrackingServices _dataLogTrackingServices;
 
         public AffectedDownlineAgencyJobService(ISentryClient sentryClient,
             IAppSettings appSettings,
             IProblemAccountAgencyService problemAccountAgencyService,
+            IRescanCustClassificationAgencyService _rescanCustClassificationService,
             IAffectedDownlineAgencyService affectedDownlineAgency,
             IDataLogTrackingServices dataLogTrackingServices)
         {
@@ -37,6 +40,7 @@
             this._dataLogTrackingServices = dataLogTrackingServices;
             this._problemAccountAgencyService = problemAccountAgencyService;
             this._affectedDownlineAgency = affectedDownlineAgency;
+            this._rescanCustClassificationService = _rescanCustClassificationService;
             this.serviceName = "AffectedDownlineCustClassificationAgency";
         }
 
@@ -71,7 +75,7 @@
                     }
                 case (int)DownlineClassification_ActionType.RemoveVVIP:
                     {
-                        //isSuccess = _problemAccountAgencyService.RemoveVVIP();
+                        isSuccess = RemoveVVIP(agencyInfos);
 
                         break;
                     }
@@ -83,7 +87,7 @@
                     }
                 case (int)DownlineClassification_ActionType.RemovePA:
                     {
-                        //isSuccess = _problemAccountAgencyService.RemoveProblem();
+                        isSuccess = RemovePA(agencyInfos);
 
                         break;
                     }
@@ -113,9 +117,45 @@
                     CreatedBy = c.CreatedBy
                 });
 
-                var result = _problemAccountAgencyService.InsertProblemAccountsAgencyPackage(probAccounts, FunctionId.DownlineCustomerClassification, AgencyCCInputFlow.InsertPACategory, agencyInfos.IsToQueue, serviceName);
+                var result = _problemAccountAgencyService.InsertProblemAccountsAgencyPackage(probAccounts, 
+                    FunctionId.DownlineCustomerClassification, 
+                    AgencyCCInputFlow.InsertPACategory, 
+                    agencyInfos.RescanParameters.IsToQueue, serviceName);
 
                 //return custClassToMainDBService.PushExternalProblemAcountPackage(result, agencyInfos.PushDataExternal);
+            }
+
+            return true;
+        }
+
+        private bool RemovePA(CustClassificationFromQueueModel agencyInfos)
+        {
+            var isSuccess = true;
+
+            if (agencyInfos != null && agencyInfos.AgencyQueue.Any())
+            {
+                var custIds = agencyInfos.AgencyQueue.Select(c => c.CustID).Distinct();
+
+                var probAccounts = agencyInfos.AgencyQueue.Select(c => new RemoveProblemAccountEntity
+                {
+                    CustID = c.CustID,
+                    CTSCustID = c.CTSCustID,
+                    RoleID = c.RoleID,
+                    SubscriberID = c.SubscriberID,
+                    Remark = c.Remark,
+                    IsMarkedDirectly = false,
+                    IsExceptDirectDownline = c.IsExceptDirectDownline,
+                    CreatedBy = c.CreatedBy
+                });
+
+                var result = _problemAccountAgencyService.RemoveProblemAccount(probAccounts, true);
+
+                isSuccess = string.IsNullOrEmpty(result.ErrorMessage);
+
+                if (string.IsNullOrEmpty(result.ErrorMessage) && result.CustInfos != null && result.CustInfos.Any())
+                {
+                    isSuccess = _rescanCustClassificationService.RescanCustomerClassificationAgency(result.CustInfos.Select(c => c.CustID).Distinct(), agencyInfos.RescanParameters);
+                }               
             }
 
             return true;
@@ -125,10 +165,25 @@
         {
             var isSuccess = true;
 
-            _affectedDownlineAgency.InsertVVIP(agencyInfos, FunctionId.DownlineCustomerClassification, AgencyCCInputFlow.InsertVVIP);
+            _affectedDownlineAgency.InsertVVIP(agencyInfos, FunctionId.DownlineCustomerClassification, AgencyCCInputFlow.InsertVVIP, agencyInfos.RescanParameters.IsToQueue);
 
             return isSuccess;
         }
 
+        public bool RemoveVVIP(CustClassificationFromQueueModel agencyInfos)
+        {
+            var isSuccess = true;
+
+            var result = _affectedDownlineAgency.RemoveVVIP(agencyInfos);
+
+            isSuccess = string.IsNullOrEmpty(result.ErrorMessage);
+
+            if (string.IsNullOrEmpty(result.ErrorMessage) && result.CustInfos != null && result.CustInfos.Any())
+            {
+                isSuccess = _rescanCustClassificationService.RescanCustomerClassificationAgency(result.CustInfos.Select(c => c.CustID).Distinct(), agencyInfos.RescanParameters);
+            }
+
+            return isSuccess;
+        }
     }
 }

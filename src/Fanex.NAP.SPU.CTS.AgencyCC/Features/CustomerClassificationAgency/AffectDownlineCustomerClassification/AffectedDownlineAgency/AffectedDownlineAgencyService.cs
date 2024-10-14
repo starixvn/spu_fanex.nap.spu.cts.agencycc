@@ -2,6 +2,7 @@
 {
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Model;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RescanCustomerClassificationAgency.Model;
     using Newtonsoft.Json;
     using Sentry;
     using System;
@@ -11,7 +12,9 @@
 
     public interface IAffectedDownlineAgencyService
     {
-        IEnumerable<long> InsertVVIP(CustClassificationFromQueueModel agencyInfos, FunctionId funcId, AgencyCCInputFlow ccInputFlow);
+        IEnumerable<long> InsertVVIP(CustClassificationFromQueueModel agencyInfos, FunctionId funcId, AgencyCCInputFlow ccInputFlow, bool isToQueue);
+
+        ResultRemoveCustomerClassificationAgencyModel RemoveVVIP(CustClassificationFromQueueModel agencyInfos);
     }
 
     public class AffectedDownlineAgencyService : BaseCustomerClassificationAgencyService, IAffectedDownlineAgencyService
@@ -23,7 +26,7 @@
             this.serviceName = "AffectedDownlineAgencyService";
         }
 
-        public IEnumerable<long> InsertVVIP(CustClassificationFromQueueModel agencyInfos, FunctionId funcId, AgencyCCInputFlow ccInputFlow)
+        public IEnumerable<long> InsertVVIP(CustClassificationFromQueueModel agencyInfos, FunctionId funcId, AgencyCCInputFlow ccInputFlow, bool isToQueue)
         {
             var custInfo = MappingVVIPModel(agencyInfos);
 
@@ -34,7 +37,7 @@
                 UplineRoleID = custInfo.UplineRoleID,
                 QueueID = custInfo.QueueID,
                 IsAffectDownline = custInfo.IsAffectDownline,
-                IsToQueue = agencyInfos.IsToQueue
+                IsToQueue = isToQueue
             };
 
             var result = base.InsertCustomerClassification(ccInputFlow, modelInsert, serviceName);
@@ -55,6 +58,33 @@
             }
 
             return Enumerable.Empty<long>();
+        }
+
+        public ResultRemoveCustomerClassificationAgencyModel RemoveVVIP(CustClassificationFromQueueModel agencyInfos)
+        { 
+            var custInfo = MappingVVIPModel(agencyInfos);
+
+            if (custInfo != null && custInfo.CustInfo.Any())
+            {
+                var modelRemove = new RemoveCustomerClassificationAgencyModel()
+                {
+                    CustClassificationJson = JsonConvert.SerializeObject(custInfo.CustInfo.Select(c => new RemoveCustomerClassificationEntity
+                    {
+                        CustID = c.CustID,
+                        CTSCustID = c.CTSCustID,
+                        CreatedBy = c.CreatedBy
+                    })),
+                    FromAction = (int)custInfo.FromFlow,
+                    UplineRoleID = agencyInfos.UplineRoleID,
+                    QueueID = custInfo.QueueID,
+                    IsAffectDownline = custInfo.IsAffectDownline,
+                    IsFromQueue = false
+                };
+
+                return base.RemoveCustomerClassificationAgency(AgencyCCInputFlow.RemoveVVIP, modelRemove);                
+            }
+
+            return new ResultRemoveCustomerClassificationAgencyModel();
         }
 
         private VVIPCustomerInsertEntity MappingVVIPModel(CustClassificationFromQueueModel agencyInfo)

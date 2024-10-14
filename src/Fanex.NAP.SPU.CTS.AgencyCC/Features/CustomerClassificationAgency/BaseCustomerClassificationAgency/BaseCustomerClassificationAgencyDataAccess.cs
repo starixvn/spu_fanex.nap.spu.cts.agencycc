@@ -13,6 +13,8 @@
 
         GetRescanCustomerClassificationAgencyModel GetRescanCustomerClassificationAgency(string custIDs);
 
+        ResultRemoveCustomerClassificationAgencyModel RemoveCustomerClassificationAgency(AgencyCCInputFlow inputFlow, RemoveCustomerClassificationAgencyModel model);
+
         DBResult UpdateBetLimitOfFlaggedCustomer(string custIDs);
 
         DBResult UpdateBetLimitOfUnflaggedCustomer(string custIDs);
@@ -55,6 +57,24 @@
             var custInfos = _repository.Fetch<RescanCustomerClassificationAgencyEntity>(criteria);
 
             return new GetRescanCustomerClassificationAgencyModel { CustInfos = custInfos };
+        }
+
+        public ResultRemoveCustomerClassificationAgencyModel RemoveCustomerClassificationAgency(AgencyCCInputFlow inputFlow, RemoveCustomerClassificationAgencyModel model)
+        {
+            var criteria = new RemoveCustomerClassificationAgencyCriteria
+            {
+                InputFlowID = (int)inputFlow,
+                FromAction = model.FromAction,
+                UplineRoleID = model.UplineRoleID,
+                QueueID = model.QueueID,
+                IsAffectDownline = model.IsAffectDownline,
+                IsFromQueue = model.IsFromQueue,
+                CustClassificationJson = model.CustClassificationJson
+            };
+
+            var custInfos = _repository.Fetch<ResultRemoveCustomerClassificationEntity>(criteria);
+
+            return new ResultRemoveCustomerClassificationAgencyModel { CustInfos = custInfos, ErrorMessage = criteria.ErrorMessage };
         }
 
         public DBResult UpdateBetLimitOfFlaggedCustomer(string custIDs)
