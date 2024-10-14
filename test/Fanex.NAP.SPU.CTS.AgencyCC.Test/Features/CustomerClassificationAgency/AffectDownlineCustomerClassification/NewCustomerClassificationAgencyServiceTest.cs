@@ -26,11 +26,9 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.CustomerClassificationAgency.
 {
     public class NewCustomerClassificationAgencyServiceTest
     {
-        private readonly INewCustomerClassificationAgencyDataAccess _dataAccess;
         private readonly IProblemAccountAgencyService _problemAccountAgencyService;
         private readonly ICustClassToMainDBService _custClassToMainDBService;
         private readonly IRescanCustClassificationAgencyService _rescanCustClassificationAgencyService;
-        private readonly ISystemParameterServices _systemParameterServices;
         private readonly IAntiFraudCenterServices _antiFraudCenterServices;
         private readonly IBaseCustomerClassificationAgencyService _baseCustomerClassificationAgencyService;
 
@@ -38,65 +36,19 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.CustomerClassificationAgency.
 
         public NewCustomerClassificationAgencyServiceTest()
         {
-            _dataAccess = Substitute.For<INewCustomerClassificationAgencyDataAccess>();
             _problemAccountAgencyService = Substitute.For<IProblemAccountAgencyService>();
             _custClassToMainDBService = Substitute.For<ICustClassToMainDBService>();
             _rescanCustClassificationAgencyService = Substitute.For<IRescanCustClassificationAgencyService>();
-            _systemParameterServices = Substitute.For<ISystemParameterServices>();
             _antiFraudCenterServices = Substitute.For<IAntiFraudCenterServices>();
             _baseCustomerClassificationAgencyService = Substitute.For<IBaseCustomerClassificationAgencyService>();
 
             _service = new NewCustomerClassificationAgencyService(
                                 _baseCustomerClassificationAgencyService,
-                                _dataAccess, _problemAccountAgencyService, _custClassToMainDBService,
-                                _rescanCustClassificationAgencyService, _systemParameterServices,
+                                _problemAccountAgencyService,
+                                _custClassToMainDBService,
+                                _rescanCustClassificationAgencyService,
                                 _antiFraudCenterServices);
         }
-
-        #region GetCategoryForNewCTCustomerAgency
-        [Fact]
-        public void GetCategoryForNewCTCustomerAgency_WhenSuccess()
-        {
-            // Arrange
-            var newCustomerClassificationAgencyModel = new NewCustomerClassificationAgencyModel
-            {
-                VVIPClassification = new List<VVIPCategoryAgencyEntity>(),
-                PAClassification = new List<InsertProblemAccountEntity>(),
-                NormalClassification = new List<NormalRescanAgencyEntity>(),
-                LastCTSCustID = 999
-            };
-
-            var newCustomerClassificationAgencyModelField = TestExtension.GetPrivateFieldInfo(typeof(NewCustomerClassificationAgencyService), PrivateFieldName.NewCustomerClassificationAgencyModel);
-
-            // Act
-            _dataAccess.GetNewCTSCustomerCategoryAgency().Returns(newCustomerClassificationAgencyModel);
-
-            _service.GetCategoryForNewCTSCustomerAgency();
-
-            var result = newCustomerClassificationAgencyModelField.GetValue(_service);
-
-            // Assert
-            _dataAccess.Received(1).GetNewCTSCustomerCategoryAgency();
-
-            Assert.Equal(result, newCustomerClassificationAgencyModel);
-        }
-
-        [Fact]
-        public void GetCategoryForNewCTCustomerAgency_ThrowException()
-        {
-            // Arrange
-
-            // Act
-            _dataAccess.GetNewCTSCustomerCategoryAgency().Throws<Exception>();
-
-            Action action = () => _service.GetCategoryForNewCTSCustomerAgency();
-
-            // Assert
-            _dataAccess.Received(0).GetNewCTSCustomerCategoryAgency();
-
-            Assert.Throws<Exception>(action);
-        }
-        #endregion GetCategoryForNewCTCustomerAgency
 
         #region InsertVVIPForNewCustomerAgency
         [Fact]
@@ -327,56 +279,6 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.CustomerClassificationAgency.
 
             // Assert
             _rescanCustClassificationAgencyService.Received(0).RescanCustomerClassificationAgency(Arg.Any<IEnumerable<long>>(), Arg.Any<RescanParametersModel>());
-
-            Assert.Throws<Exception>(action);
-        }
-        #endregion
-
-        #region UpdateComplete
-        [Fact]
-        public void UpdateComplete_WhenSuccess()
-        {
-            // Arrange
-            var newCustomerClassificationModelField = TestExtension.GetPrivateFieldInfo(typeof(NewCustomerClassificationAgencyService), PrivateFieldName.NewCustomerClassificationAgencyModel);
-            var isSuccessField = TestExtension.GetPrivateFieldInfo(typeof(NewCustomerClassificationAgencyService), PrivateFieldName.IsSuccess);
-
-            // Act
-            newCustomerClassificationModelField.SetValue(_service, new NewCustomerClassificationAgencyModel
-            {
-                LastCTSCustID = 999
-            });
-            isSuccessField.SetValue(_service, true);
-
-            _systemParameterServices.UpdateTimingExecution(Arg.Any<string>(), Arg.Any<CTS_SystemParameters>()).Returns(true);
-
-            var result = _service.UpdateComplete();
-
-            // Assert
-            _systemParameterServices.Received(1).UpdateTimingExecution(Arg.Any<string>(), Arg.Any<CTS_SystemParameters>());
-
-            Assert.True(result);
-        }
-
-        [Fact]
-        public void UpdateComplete_ThrowException()
-        {
-            // Arrange
-            var newCustomerClassificationModelField = TestExtension.GetPrivateFieldInfo(typeof(NewCustomerClassificationAgencyService), PrivateFieldName.NewCustomerClassificationAgencyModel);
-            var isSuccessField = TestExtension.GetPrivateFieldInfo(typeof(NewCustomerClassificationAgencyService), PrivateFieldName.IsSuccess);
-
-            // Act
-            newCustomerClassificationModelField.SetValue(_service, new NewCustomerClassificationAgencyModel
-            {
-                LastCTSCustID = 999
-            });
-            isSuccessField.SetValue(_service, true);
-
-            _systemParameterServices.UpdateTimingExecution(Arg.Any<string>(), Arg.Any<CTS_SystemParameters>()).Throws<Exception>();
-
-            Action action = () => _service.UpdateComplete();
-
-            // Assert
-            _systemParameterServices.Received(0).UpdateTimingExecution(Arg.Any<string>(), Arg.Any<CTS_SystemParameters>());
 
             Assert.Throws<Exception>(action);
         }

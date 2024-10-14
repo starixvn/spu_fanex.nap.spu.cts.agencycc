@@ -1,7 +1,9 @@
 ﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CustomerClassificationAgency.AffectDownlineCustomerClassification
 {
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.AffectDownlineCustomerClassification.NewCustomerClassificationAgency;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.AffectDownlineCustomerClassification.NewCustomerClassificationAgency.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RescanCustomerClassificationAgency.Model;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgencyAPI.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.DataLogTracking;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Shares;
@@ -12,7 +14,7 @@
 
     public interface INewCustomerClassificationAgencyJobService
     {
-        Task<bool> Execute(int batchSize);
+        Task<bool> Execute(CustomerClassificationAgencyParameterModel<NewCustomerClassificationAgencyModel> model);
     }
 
     public class NewCustomerClassificationAgencyJobService : INewCustomerClassificationAgencyJobService
@@ -35,11 +37,11 @@
             _dataLogTrackingServices = dataLogTrackingServices;
         }
 
-        public async Task<bool> Execute(int batchSize)
+        public async Task<bool> Execute(CustomerClassificationAgencyParameterModel<NewCustomerClassificationAgencyModel> model)
         {
             try
             {
-                return JobRun(batchSize);
+                return JobRun(model);
             }
             catch (Exception ex)
             {
@@ -52,20 +54,20 @@
         }
 
         #region Private Methods
-        private bool JobRun(int batchSize)
+        private bool JobRun(CustomerClassificationAgencyParameterModel<NewCustomerClassificationAgencyModel> model)
         {
             var paramaters = new RescanParametersModel()
             {
                 IsToQueue = false,
                 FunctionId = FunctionId.InsertNewCustJob,
                 RescanNormalType = RescanNormalType.Auto_Customer,
-                InternalBatchSize = batchSize,
+                InternalBatchSize = model.InternalBatchSize,
                 ServiceName = _serviceName,
                 PushDataExternal = new PushDataToExternalModel
                 {
                     RoleGroup = RoleGroupType.Agency,
                     IsUpdateDangerToMainDB = false, // not update for sma
-                    ExternalBatchSize = batchSize,
+                    ExternalBatchSize = model.ExternalBatchSize,
                     ServiceName = _serviceName,
                     IsSyncAFCData = _appSettings.IsSyncAFCData,
                     AFCInsertAccountURL = _appSettings.AFCInsertAccountURL,
@@ -74,11 +76,10 @@
             };
 
             var isSuccess = _newCustomerClassificationAgencyService.Start()
-                                .GetCategoryForNewCTSCustomerAgency()
+                                .InitialData(model.Data)
                                 .InsertVVIPForNewCustomerAgency(paramaters)
                                 .InsertPAForNewCustomerAgency(paramaters)
-                                .RescanNormalForNewCustomerAgency(paramaters)
-                                .UpdateComplete();
+                                .RescanNormalForNewCustomerAgency(paramaters);
 
             return isSuccess;
         }

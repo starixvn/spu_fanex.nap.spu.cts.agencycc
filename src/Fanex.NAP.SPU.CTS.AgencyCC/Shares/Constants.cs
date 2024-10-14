@@ -12,7 +12,6 @@
             DailyScan_Agency_Normal_LastCustID = 177,
             InactiveNewAgency_LastCategoryID = 179,
             InactiveNewAgency_LastCustID = 180,
-            ReScanNewMemberAgency_LastCTSCustID = 00000 // remove
         };
 
         public enum Main_SystemParameters

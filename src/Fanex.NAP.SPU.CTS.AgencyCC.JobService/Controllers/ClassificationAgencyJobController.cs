@@ -17,7 +17,6 @@
         private readonly IDailyNormalClassificationAgencyJobService _dailyNormalClassification;
         private readonly INormalAccountClassificationAgencyJobService _normalAccountClassification;
         private readonly INormalAccountInsertAgencyJobService _normalAccountInsert;
-        private readonly INewCustomerClassificationAgencyJobService _newCustomerClassification;
         private readonly IAffectedDownlineAgencyJobService _affectedDownlineAgencyJobService;
 
         public ClassificationAgencyJobController(
@@ -26,7 +25,6 @@
             IDailyNormalClassificationAgencyJobService dailyNormalClassification,
             INormalAccountClassificationAgencyJobService normalAccountClassification,
             INormalAccountInsertAgencyJobService normalAccountInsert, 
-            INewCustomerClassificationAgencyJobService newCustomerClassification,
             IAffectedDownlineAgencyJobService affectedDownlineAgencyJobService)
         {
             _sentryClient = sentryClient;
@@ -34,7 +32,6 @@
             _dailyNormalClassification = dailyNormalClassification;
             _normalAccountClassification = normalAccountClassification;
             _normalAccountInsert = normalAccountInsert;
-            _newCustomerClassification = newCustomerClassification;
             _affectedDownlineAgencyJobService = affectedDownlineAgencyJobService;
         }
 
@@ -61,12 +58,6 @@
         public async Task<bool> NormalAccountInsert([FromForm] int batchExternalSize, [FromForm] int batchInternalSize)
         {
             return await _normalAccountInsert.Execute(batchExternalSize, batchInternalSize);
-        }
-
-        [HttpPost("newCustomerClassificationAgency")]
-        public async Task<bool> NewCustomerClassification([FromForm] int batchSize)
-        {
-            return await _newCustomerClassification.Execute(batchSize);
         }
 
         [HttpPost("affectDownlineAgency")]

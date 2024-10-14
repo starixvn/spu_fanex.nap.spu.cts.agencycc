@@ -17,6 +17,7 @@
     using Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CustomerClassificationAgency.AffectDownlineCustomerClassification;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.DataLogTracking;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.ProblemAccountAgencyInsert;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.AffectDownlineCustomerClassification;
 
     public static class InitService
     {
@@ -47,6 +48,7 @@
 
         private static void RegisterAffectDownline(IServiceCollection services)
         {
+            services.AddSingleton<IAffectedDownlineAgencyService, AffectedDownlineAgencyService>();
             services.AddSingleton<IAffectedDownlineAgencyJobService, AffectedDownlineAgencyJobService>();
         }
 
@@ -64,7 +66,6 @@
 
         private static void RegisterNewCustomerClassificationAgency(IServiceCollection services)
         {
-            services.AddSingleton<INewCustomerClassificationAgencyDataAccess, NewCustomerClassificationAgencyDataAccess>();
             services.AddSingleton<INewCustomerClassificationAgencyService, NewCustomerClassificationAgencyService>();
             services.AddSingleton<INewCustomerClassificationAgencyJobService, NewCustomerClassificationAgencyJobService>();
         }

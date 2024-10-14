@@ -20,24 +20,20 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.Affec
     {
         INewCustomerClassificationAgencyService Start();
 
-        INewCustomerClassificationAgencyService GetCategoryForNewCTSCustomerAgency();
+        INewCustomerClassificationAgencyService InitialData(NewCustomerClassificationAgencyModel model);
 
         INewCustomerClassificationAgencyService InsertVVIPForNewCustomerAgency(RescanParametersModel parameters);
 
         INewCustomerClassificationAgencyService InsertPAForNewCustomerAgency(RescanParametersModel parameters);
 
-        INewCustomerClassificationAgencyService RescanNormalForNewCustomerAgency(RescanParametersModel parameters);
-
-        bool UpdateComplete();
+        bool RescanNormalForNewCustomerAgency(RescanParametersModel parameters);
     }
 
     public class NewCustomerClassificationAgencyService : INewCustomerClassificationAgencyService
     {
-        private readonly INewCustomerClassificationAgencyDataAccess _dataAccess;
         private readonly IProblemAccountAgencyService _problemAccountAgencyService;
         private readonly ICustClassToMainDBService _custClassToMainDBService;
         private readonly IRescanCustClassificationAgencyService _rescanCustClassificationAgencyService;
-        private readonly ISystemParameterServices _systemParameterServices;
         private readonly IAntiFraudCenterServices _antiFraudCenterServices;
         private readonly IBaseCustomerClassificationAgencyService _baseCustomerClassificationAgencyService;
         private NewCustomerClassificationAgencyModel _newCustomerClassification;
@@ -45,17 +41,14 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.Affec
 
         public NewCustomerClassificationAgencyService(
             IBaseCustomerClassificationAgencyService baseCustomerClassificationAgencyService,
-            INewCustomerClassificationAgencyDataAccess dataAccess,
             IProblemAccountAgencyService problemAccountAgencyService,
             ICustClassToMainDBService custClassToMainDBService,
             IRescanCustClassificationAgencyService rescanCustClassificationAgencyService,
-            ISystemParameterServices systemParameterServices, IAntiFraudCenterServices antiFraudCenterServices)
+            IAntiFraudCenterServices antiFraudCenterServices)
         {
-            _dataAccess = dataAccess;
             _problemAccountAgencyService = problemAccountAgencyService;
             _custClassToMainDBService = custClassToMainDBService;
             _rescanCustClassificationAgencyService = rescanCustClassificationAgencyService;
-            _systemParameterServices = systemParameterServices;
             _antiFraudCenterServices = antiFraudCenterServices;
             _baseCustomerClassificationAgencyService = baseCustomerClassificationAgencyService;
         }
@@ -68,9 +61,9 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.Affec
             return this;
         }
 
-        public INewCustomerClassificationAgencyService GetCategoryForNewCTSCustomerAgency()
+        public INewCustomerClassificationAgencyService InitialData(NewCustomerClassificationAgencyModel model)
         {
-            _newCustomerClassification = _dataAccess.GetNewCTSCustomerCategoryAgency();
+            _newCustomerClassification = model;
 
             return this;
         }
@@ -109,23 +102,13 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.Affec
             return this;
         }
 
-        public INewCustomerClassificationAgencyService RescanNormalForNewCustomerAgency(RescanParametersModel parameters)
+        public bool RescanNormalForNewCustomerAgency(RescanParametersModel parameters)
         {
             if (_isSuccess && _newCustomerClassification.NormalClassification.IsNotNullOrEmpty())
             {
                 var custIDs = _newCustomerClassification.NormalClassification.Select(x => x.CustID);
 
                 _isSuccess = _rescanCustClassificationAgencyService.RescanCustomerClassificationAgency(custIDs, parameters);
-            }
-
-            return this;
-        }
-
-        public bool UpdateComplete()
-        {
-            if (_isSuccess)
-            {
-                _isSuccess = _systemParameterServices.UpdateTimingExecution(_newCustomerClassification.LastCTSCustID.ToString(), CTS_SystemParameters.ReScanNewMemberAgency_LastCTSCustID);
             }
 
             return _isSuccess;
