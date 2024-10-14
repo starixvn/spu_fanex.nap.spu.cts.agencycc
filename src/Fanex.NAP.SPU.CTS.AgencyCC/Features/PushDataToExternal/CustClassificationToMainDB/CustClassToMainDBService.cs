@@ -149,17 +149,17 @@
 
         private bool PushCustClassificationToMainDB(IEnumerable<LatestCCDangerLevelEntity> lastestClassifications, RoleGroupType roleGroup, string serviceName)
         {
-            if (lastestClassifications != null && lastestClassifications.Any())
-            {
-                var custClassification = lastestClassifications.Select(c => new LatestClassificationModel()
-                {
-                    CustId = c.CustID,
-                    Category = c.CategoryID,
-                    CustomerClass = c.CustomerClass
-                });
+            //if (lastestClassifications != null && lastestClassifications.Any())
+            //{
+            //    var custClassification = lastestClassifications.Select(c => new LatestClassificationModel()
+            //    {
+            //        CustId = c.CustID,
+            //        Category = c.CategoryID,
+            //        CustomerClass = c.CustomerClass
+            //    });
 
-                return PushCustomerClassification(custClassification, roleGroup, Constants.RetryPushCCToExternal, serviceName);
-            }
+            //    return PushCustomerClassification(custClassification, roleGroup, Constants.RetryPushCCToExternal, serviceName);
+            //}
 
             return true;
         }
