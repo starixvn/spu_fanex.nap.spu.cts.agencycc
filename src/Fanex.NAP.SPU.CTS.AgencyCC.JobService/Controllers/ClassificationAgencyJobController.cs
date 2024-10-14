@@ -1,5 +1,6 @@
 ﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService.Controllers
 {
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.AffectDownlineCustomerClassification;
     using Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CustomerClassificationAgency;
     using Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CustomerClassificationAgency.AffectDownlineCustomerClassification;
     using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,7 @@
         private readonly INormalAccountClassificationAgencyJobService _normalAccountClassification;
         private readonly INormalAccountInsertAgencyJobService _normalAccountInsert;
         private readonly INewCustomerClassificationAgencyJobService _newCustomerClassification;
+        private readonly IAffectedDownlineAgencyJobService _affectedDownlineAgencyJobService;
 
         public ClassificationAgencyJobController(
             ISentryClient sentryClient,
@@ -24,7 +26,8 @@
             IDailyNormalClassificationAgencyJobService dailyNormalClassification,
             INormalAccountClassificationAgencyJobService normalAccountClassification,
             INormalAccountInsertAgencyJobService normalAccountInsert, 
-            INewCustomerClassificationAgencyJobService newCustomerClassification)
+            INewCustomerClassificationAgencyJobService newCustomerClassification,
+            IAffectedDownlineAgencyJobService affectedDownlineAgencyJobService)
         {
             _sentryClient = sentryClient;
             _realtimeClassification = realtimeClassification;
@@ -32,6 +35,7 @@
             _normalAccountClassification = normalAccountClassification;
             _normalAccountInsert = normalAccountInsert;
             _newCustomerClassification = newCustomerClassification;
+            _affectedDownlineAgencyJobService = affectedDownlineAgencyJobService;
         }
 
         [HttpPost("scanningRealtimeClassificationAgency")]
@@ -64,5 +68,12 @@
         {
             return await _newCustomerClassification.Execute(batchSize);
         }
+
+        [HttpPost("affectDownlineAgency")]
+        public async Task<bool> AffectDownlineAgency([FromBody] CustClassificationFromQueueModel agencyInfos)
+        {
+            return await _affectedDownlineAgencyJobService.Execute(agencyInfos);
+        }
+
     }
 }

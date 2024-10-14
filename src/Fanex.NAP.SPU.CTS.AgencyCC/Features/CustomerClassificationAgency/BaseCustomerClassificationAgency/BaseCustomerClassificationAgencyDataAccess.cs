@@ -4,6 +4,7 @@
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Criteria;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Entities;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Model;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Shares.Models;
     using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
 
     public interface IBaseCustomerClassificationAgencyDataAccess
@@ -11,11 +12,15 @@
         ResultInsertCustomerClassificationAgencyModel InsertCustomerClassification(AgencyCCInputFlow inputFlow, InsertCustomerClassificationAgencyModel model);
 
         GetRescanCustomerClassificationAgencyModel GetRescanCustomerClassificationAgency(string custIDs);
+
+        DBResult UpdateBetLimitOfFlaggedCustomer(string custIDs);
+
+        DBResult UpdateBetLimitOfUnflaggedCustomer(string custIDs);
     }
 
     public class BaseCustomerClassificationAgencyDataAccess : IBaseCustomerClassificationAgencyDataAccess
     {
-        private readonly IDynamicRepository _repository;
+        protected readonly IDynamicRepository _repository;
 
         public BaseCustomerClassificationAgencyDataAccess()
         {
@@ -51,5 +56,38 @@
 
             return new GetRescanCustomerClassificationAgencyModel { CustInfos = custInfos };
         }
+
+        public DBResult UpdateBetLimitOfFlaggedCustomer(string custIDs)
+        {
+            var criteria = new BetLimitByEvidenceUpdateCriteria
+            {
+                CustIDList = custIDs
+            };
+
+            _repository.Execute(criteria);
+
+            return new DBResult
+            {
+                ErrorCode = string.IsNullOrEmpty(criteria.ErrorMessage) ? 0 : -1,
+                ErrorMsg = criteria.ErrorMessage
+            };
+        }
+
+        public DBResult UpdateBetLimitOfUnflaggedCustomer(string custIDs)
+        {
+            var criteria = new BetLimitByEvidenceRemoveCriteria
+            {
+                CustIDList = custIDs
+            };
+
+            _repository.Execute(criteria);
+
+            return new DBResult
+            {
+                ErrorCode = string.IsNullOrEmpty(criteria.ErrorMessage) ? 0 : -1,
+                ErrorMsg = criteria.ErrorMessage
+            };
+        }
+
     }
 }

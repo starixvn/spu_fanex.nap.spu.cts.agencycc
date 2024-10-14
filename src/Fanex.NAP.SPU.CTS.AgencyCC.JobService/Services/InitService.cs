@@ -41,6 +41,13 @@
             RegisterDataLogTracking(services);
 
             RegisterWrapperCustomerClassificaton(services);
+
+            RegisterAffectDownline(services);
+        }
+
+        private static void RegisterAffectDownline(IServiceCollection services)
+        {
+            services.AddSingleton<IAffectedDownlineAgencyJobService, AffectedDownlineAgencyJobService>();
         }
 
         private static void RegisterProblemAccount(IServiceCollection services)

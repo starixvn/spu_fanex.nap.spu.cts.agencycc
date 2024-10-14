@@ -4,6 +4,7 @@
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Entities;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.ProblemAccountAgencyInsert.Model;
+    using Newtonsoft.Json;
     using Sentry;
     using System.Collections.Generic;
     using System.Linq;
@@ -13,7 +14,7 @@
     {
         IEnumerable<long> RescanCustomerClassification(IEnumerable<RescanCustomerClassificationAgencyEntity> custRescans, FunctionId funcId, AgencyCCInputFlow ccInputFlow, bool isToQueue, string serviceName);
 
-        IEnumerable<long> InsertProblemAccountsAgencyPackage(IEnumerable<InsertProblemAccountAgencyModel> problemAccounts, FunctionId funcId, AgencyCCInputFlow ccInputFlow, bool isToQueue, string serviceName);
+        IEnumerable<long> InsertProblemAccountsAgencyPackage(IEnumerable<InsertProblemAccountEntity> problemAccounts, FunctionId funcId, AgencyCCInputFlow ccInputFlow, bool isToQueue, string serviceName);
     }
 
     public class ProblemAccountAgencyService : BaseCustomerClassificationAgencyService, IProblemAccountAgencyService
@@ -24,14 +25,79 @@
 
         public IEnumerable<long> RescanCustomerClassification(IEnumerable<RescanCustomerClassificationAgencyEntity> custRescans, FunctionId funcId, AgencyCCInputFlow ccInputFlow, bool isToQueue, string serviceName)
         {
-            var pas = custRescans.Select(x => new InsertProblemAccountAgencyModel(x));
+            var pas = custRescans.Select(x => new InsertProblemAccountEntity(x));
 
-            return InsertProblemAccountsAgencyPackage(pas, funcId, ccInputFlow, isToQueue, serviceName);
+            return InsertProblemAccountsAgencyPackage(pas, funcId, ccInputFlow, isToQueue, serviceName);          
         }
 
-        public IEnumerable<long> InsertProblemAccountsAgencyPackage(IEnumerable<InsertProblemAccountAgencyModel> problemAccounts, FunctionId funcId, AgencyCCInputFlow ccInputFlow, bool isToQueue, string serviceName)
+        public IEnumerable<long> InsertProblemAccountsAgencyPackage(IEnumerable<InsertProblemAccountEntity> problemAccounts, FunctionId funcId, AgencyCCInputFlow ccInputFlow, bool isToQueue, string serviceName)
         {
-            throw new System.NotImplementedException();
+            if (problemAccounts != null && problemAccounts.Any())
+            {
+                var paClassification = CombinePAWithLosingPerformace(problemAccounts, funcId);
+
+                var modelInsert = new InsertCustomerClassificationAgencyModel()
+                {
+                    CustInfoJson = JsonConvert.SerializeObject(paClassification),
+                    IsToQueue = isToQueue,
+                    FromAction = (int)FromFlow.CTSServices
+                };
+
+                var insertPaResult = base.InsertCustomerClassification(ccInputFlow, modelInsert, serviceName);
+
+                if (insertPaResult.CustInfos != null && insertPaResult.CustInfos.Any())
+                {
+                    var custUpdatePALogics = insertPaResult.CustInfos.Select(x => new CustInfoEntity { CustID = x.CustID, CTSCustID = x.CTSCustID, IsPA = x.IsPA });
+
+                    InsertPALogicsAgency(custUpdatePALogics);
+
+                    return insertPaResult.CustInfos.Select(x => x.CustID).Distinct();
+                }
+            }
+
+            return Enumerable.Empty<long>();
+        }
+
+        private void InsertPALogicsAgency(IEnumerable<CustInfoEntity> customerInfo)
+        {
+            if (customerInfo != null && customerInfo.Any())
+            {
+                var custPas = customerInfo.Where(x => x.IsPA).Distinct();
+
+                // not handle for SMA
+                //CheckNewPAAssociationCustomerForRollback(JsonConvert.SerializeObject(custPas));
+
+                UpdateBetLimitOfFlaggedCustomer(custPas.Select(x => x.CustID));
+            }
+        }
+
+        private void UpdateBetLimitOfFlaggedCustomer(IEnumerable<long> custId)
+        {
+            if (custId != null && custId.Any())
+            {
+                UpdateBetLimitOfFlaggedCustomer(string.Join(",", custId));
+            }
+        }
+
+        private void UpdateBetLimitOfUnflaggedCustomer(IEnumerable<long> custId)
+        {
+            if (custId != null && custId.Any())
+            {
+                UpdateBetLimitOfUnflaggedCustomer(custId);
+            }
+        }       
+
+        private IEnumerable<InsertProblemAccountEntity> CombinePAWithLosingPerformace(IEnumerable<InsertProblemAccountEntity> problemAccounts, FunctionId funcId)
+        {
+            return problemAccounts.Select(x => {
+                var y = x;
+                y.WinlossStatus = 2;
+                y.TurnoverRM = 0;
+                y.WinlossRM = 0;
+                y.BetCount = 0;
+                y.PerformanceTime = null;
+                return y;
+            });
         }
     }
 }

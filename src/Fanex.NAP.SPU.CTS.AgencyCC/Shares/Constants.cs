@@ -19,6 +19,14 @@
         {
         }
 
+        public enum DownlineClassification_ActionType
+        {
+            InsertVVIP = 1,
+            RemoveVVIP = 2,
+            InsertPA = 3,
+            RemovePA = 4,
+        }
+
         public enum FromFlow
         {
             CTSWEB = 1,
@@ -29,8 +37,8 @@
 
         public enum AgencyCCInputFlow
         {
-            [Description("VVIP")]
-            VVIP = 1001,
+            [Description("InsertVVIP")]
+            InsertVVIP = 1001,
             [Description("InsertPACategory")]
             InsertPACategory = 1005,
             [Description("InsertPAReason")]
@@ -51,6 +59,7 @@
         {
             InactivateNewCustomer = 11,
             InsertNewCustJob = 4,
+            DownlineCustomerClassification = 52
         }
 
         public enum RescanNormalType

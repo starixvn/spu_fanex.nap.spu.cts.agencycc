@@ -20,7 +20,6 @@
   <ItemGroup>
     <Folder Include="Features\CTSCustomer\Entities\" />
     <Folder Include="Features\CustomerClassificationAgency\ProblemAccountAgencyInsert\Criteria\" />
-    <Folder Include="Features\CustomerClassificationAgency\ProblemAccountAgencyInsert\Entities\" />
   </ItemGroup>
 
 </Project>

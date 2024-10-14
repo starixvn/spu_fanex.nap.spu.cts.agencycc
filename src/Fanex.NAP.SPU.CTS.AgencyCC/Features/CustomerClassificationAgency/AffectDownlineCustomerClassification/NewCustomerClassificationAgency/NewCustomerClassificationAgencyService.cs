@@ -148,7 +148,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.Affec
                     IsToQueue = parameters.IsToQueue
                 };
 
-                var result = _baseCustomerClassificationAgencyService.InsertCustomerClassification(AgencyCCInputFlow.VVIP, modelInsert, parameters.ServiceName);
+                var result = _baseCustomerClassificationAgencyService.InsertCustomerClassification(AgencyCCInputFlow.InsertVVIP, modelInsert, parameters.ServiceName);
 
                 isSuccess = string.IsNullOrEmpty(result.ErrorMessage);
 

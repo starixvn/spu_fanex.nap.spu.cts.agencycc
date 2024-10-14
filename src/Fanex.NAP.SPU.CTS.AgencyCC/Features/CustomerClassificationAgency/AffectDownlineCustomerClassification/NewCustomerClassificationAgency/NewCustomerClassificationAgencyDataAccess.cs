@@ -4,6 +4,7 @@
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.AffectDownlineCustomerClassification.NewCustomerClassificationAgency.Criteria;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.AffectDownlineCustomerClassification.NewCustomerClassificationAgency.Entitites;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.AffectDownlineCustomerClassification.NewCustomerClassificationAgency.Model;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.ProblemAccountAgencyInsert;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.ProblemAccountAgencyInsert.Model;
 
     public interface INewCustomerClassificationAgencyDataAccess
@@ -24,7 +25,7 @@
         {
             var criteria = new NewCustomerCategoryAgencyGetCriteria();
 
-            (var vvipClassification, var paClassification, var normalClassification) = _repository.FetchMultiple<VVIPCategoryAgencyEntity, InsertProblemAccountAgencyModel, NormalRescanAgencyEntity>(criteria);
+            (var vvipClassification, var paClassification, var normalClassification) = _repository.FetchMultiple<VVIPCategoryAgencyEntity, InsertProblemAccountEntity, NormalRescanAgencyEntity>(criteria);
 
             return new NewCustomerClassificationAgencyModel
             {

@@ -61,7 +61,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.CustomerClassificationAgency.
             var newCustomerClassificationAgencyModel = new NewCustomerClassificationAgencyModel
             {
                 VVIPClassification = new List<VVIPCategoryAgencyEntity>(),
-                PAClassification = new List<InsertProblemAccountAgencyModel>(),
+                PAClassification = new List<InsertProblemAccountEntity>(),
                 NormalClassification = new List<NormalRescanAgencyEntity>(),
                 LastCTSCustID = 999
             };
@@ -191,9 +191,9 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.CustomerClassificationAgency.
         public void InsertPAForNewCustomerAgency_WhenSuccess()
         {
             // Arrange
-            var paClassification = new List<InsertProblemAccountAgencyModel>
+            var paClassification = new List<InsertProblemAccountEntity>
             {
-                new InsertProblemAccountAgencyModel()
+                new InsertProblemAccountEntity(new RescanCustomerClassificationAgencyEntity())
             };
 
             var isSuccssField = TestExtension.GetPrivateFieldInfo(typeof(NewCustomerClassificationAgencyService), PrivateFieldName.IsSuccess);
@@ -207,7 +207,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.CustomerClassificationAgency.
             });
 
             _problemAccountAgencyService.InsertProblemAccountsAgencyPackage(
-                                                Arg.Any<List<InsertProblemAccountAgencyModel>>(),
+                                                Arg.Any<List<InsertProblemAccountEntity>>(),
                                                 Arg.Any<FunctionId>(),
                                                 Arg.Any<AgencyCCInputFlow>(),
                                                 Arg.Any<bool>(), Arg.Any<string>()).Returns(new List<long> { 1, 2, 3, 4 });
@@ -220,7 +220,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.CustomerClassificationAgency.
 
             // Assert
             _problemAccountAgencyService.Received(1).InsertProblemAccountsAgencyPackage(
-                                                Arg.Any<List<InsertProblemAccountAgencyModel>>(),
+                                                Arg.Any<List<InsertProblemAccountEntity>>(),
                                                 Arg.Any<FunctionId>(),
                                                 Arg.Any<AgencyCCInputFlow>(),
                                                 Arg.Any<bool>(), Arg.Any<string>());
@@ -234,9 +234,9 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.CustomerClassificationAgency.
         public void InsertPAForNewCustomerAgency_ThrowException()
         {
             // Arrange
-            var paClassification = new List<InsertProblemAccountAgencyModel>
+            var paClassification = new List<InsertProblemAccountEntity>
             {
-                new InsertProblemAccountAgencyModel()
+                new InsertProblemAccountEntity(new RescanCustomerClassificationAgencyEntity())
             };
 
             var isSuccssField = TestExtension.GetPrivateFieldInfo(typeof(NewCustomerClassificationAgencyService), PrivateFieldName.IsSuccess);
@@ -250,7 +250,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.CustomerClassificationAgency.
             });
 
             _problemAccountAgencyService.InsertProblemAccountsAgencyPackage(
-                                                Arg.Any<List<InsertProblemAccountAgencyModel>>(),
+                                                Arg.Any<List<InsertProblemAccountEntity>>(),
                                                 Arg.Any<FunctionId>(),
                                                 Arg.Any<AgencyCCInputFlow>(),
                                                 Arg.Any<bool>(), Arg.Any<string>()).Throws<Exception>();
@@ -259,7 +259,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.CustomerClassificationAgency.
 
             // Assert
             _problemAccountAgencyService.Received(0).InsertProblemAccountsAgencyPackage(
-                                                Arg.Any<List<InsertProblemAccountAgencyModel>>(),
+                                                Arg.Any<List<InsertProblemAccountEntity>>(),
                                                 Arg.Any<FunctionId>(),
                                                 Arg.Any<AgencyCCInputFlow>(),
                                                 Arg.Any<bool>(), Arg.Any<string>());
