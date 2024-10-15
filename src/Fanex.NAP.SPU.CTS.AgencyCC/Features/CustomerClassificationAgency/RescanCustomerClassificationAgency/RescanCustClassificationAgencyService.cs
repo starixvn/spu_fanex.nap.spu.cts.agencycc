@@ -94,11 +94,11 @@
                 }
             }
 
-            smaCustIds.Except(custIdsToRescan);
+            var custToRemovePA = smaCustIds.Except(custIdsToRescan);
 
-            if (smaCustIds.Any())
+            if (custToRemovePA.IsNotNullOrEmpty())
             {
-                isSuccess = _custClassToMainDBService.PushExternalProblemAcountPackage(smaCustIds.Distinct(), paras.PushDataExternal);
+                isSuccess = _custClassToMainDBService.PushExternalProblemAcountPackage(custToRemovePA.Distinct(), paras.PushDataExternal);
             }
 
             return isSuccess;
