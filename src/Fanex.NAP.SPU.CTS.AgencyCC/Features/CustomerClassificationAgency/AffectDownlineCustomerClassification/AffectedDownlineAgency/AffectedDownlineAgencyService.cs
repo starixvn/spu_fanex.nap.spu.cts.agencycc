@@ -12,7 +12,7 @@
 
     public interface IAffectedDownlineAgencyService
     {
-        IEnumerable<long> InsertVVIP(CustClassificationFromQueueModel agencyInfos, FunctionId funcId, AgencyCCInputFlow ccInputFlow, bool isToQueue);
+        ResultInsertCustomerClassificationAgencyModel InsertVVIP(CustClassificationFromQueueModel agencyInfos, FunctionId funcId, AgencyCCInputFlow ccInputFlow, bool isToQueue);
 
         ResultRemoveCustomerClassificationAgencyModel RemoveVVIP(CustClassificationFromQueueModel agencyInfos);
     }
@@ -26,7 +26,7 @@
             this.serviceName = "AffectedDownlineAgencyService";
         }
 
-        public IEnumerable<long> InsertVVIP(CustClassificationFromQueueModel agencyInfos, FunctionId funcId, AgencyCCInputFlow ccInputFlow, bool isToQueue)
+        public ResultInsertCustomerClassificationAgencyModel InsertVVIP(CustClassificationFromQueueModel agencyInfos, FunctionId funcId, AgencyCCInputFlow ccInputFlow, bool isToQueue)
         {
             var custInfo = MappingVVIPModel(agencyInfos);
 
@@ -40,24 +40,7 @@
                 IsToQueue = isToQueue
             };
 
-            var result = base.InsertCustomerClassification(ccInputFlow, modelInsert, serviceName);
-          
-            if (result.CustInfos != null && result.CustInfos.Any())
-            {
-                var custIDs = result.CustInfos.Select(c => c.CustID).Distinct();
-
-                //isSuccess = custClassToMainDBService.PushExternalPackageByCustId(custIDs, new PushDataToExternalEntity
-                //{
-                //    ExternalBatchSize = parameters.PushDataExternal.ExternalBatchSize,
-                //    IsUpdateDangerToMainDB = false,
-                //    IsSyncAFCData = false,
-                //    ServiceName = parameters.ServiceName
-                //});
-
-                //antiFraudCenterServices.DeleteAFCAccounts(custIDs, FromFlow.CTSServices, parameters.PushDataExternal.IsSyncAFCData, parameters.PushDataExternal.AFCDeleteAccountURL);
-            }
-
-            return Enumerable.Empty<long>();
+            return base.InsertCustomerClassification(ccInputFlow, modelInsert, serviceName);          
         }
 
         public ResultRemoveCustomerClassificationAgencyModel RemoveVVIP(CustClassificationFromQueueModel agencyInfos)

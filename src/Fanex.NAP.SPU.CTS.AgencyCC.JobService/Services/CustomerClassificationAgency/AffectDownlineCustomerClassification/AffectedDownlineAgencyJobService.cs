@@ -165,8 +165,25 @@
         {
             var isSuccess = true;
 
-            _affectedDownlineAgency.InsertVVIP(agencyInfos, FunctionId.DownlineCustomerClassification, AgencyCCInputFlow.InsertVVIP, agencyInfos.RescanParameters.IsToQueue);
+            var result = _affectedDownlineAgency.InsertVVIP(agencyInfos, FunctionId.DownlineCustomerClassification, AgencyCCInputFlow.InsertVVIP, agencyInfos.RescanParameters.IsToQueue);
 
+            isSuccess = string.IsNullOrEmpty(result.ErrorMessage);
+
+            if (isSuccess && result.CustInfos != null && result.CustInfos.Any())
+            {
+                var custIDs = result.CustInfos.Select(c => c.CustID).Distinct();
+
+                //isSuccess = custClassToMainDBService.PushExternalPackageByCustId(custIDs, new PushDataToExternalEntity
+                //{
+                //    ExternalBatchSize = parameters.PushDataExternal.ExternalBatchSize,
+                //    IsUpdateDangerToMainDB = false,
+                //    IsSyncAFCData = false,
+                //    ServiceName = parameters.ServiceName
+                //});
+
+                //antiFraudCenterServices.DeleteAFCAccounts(custIDs, FromFlow.CTSServices, parameters.PushDataExternal.IsSyncAFCData, parameters.PushDataExternal.AFCDeleteAccountURL);
+            }
+            
             return isSuccess;
         }
 
@@ -178,7 +195,7 @@
 
             isSuccess = string.IsNullOrEmpty(result.ErrorMessage);
 
-            if (string.IsNullOrEmpty(result.ErrorMessage) && result.CustInfos != null && result.CustInfos.Any())
+            if (isSuccess && result.CustInfos != null && result.CustInfos.Any())
             {
                 isSuccess = _rescanCustClassificationService.RescanCustomerClassificationAgency(result.CustInfos.Select(c => c.CustID).Distinct(), agencyInfos.RescanParameters);
             }

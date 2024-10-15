@@ -42,7 +42,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseUrls("http://*:5000");
+                    webBuilder.UseUrls("http://*:5001");
 
                     webBuilder
                     .UseSentry()
