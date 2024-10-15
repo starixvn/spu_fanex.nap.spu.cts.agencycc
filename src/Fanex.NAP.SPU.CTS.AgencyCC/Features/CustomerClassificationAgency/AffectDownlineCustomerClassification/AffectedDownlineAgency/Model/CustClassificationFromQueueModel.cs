@@ -21,7 +21,7 @@
 
         public long QueueID { get; set; }
 
-        public long LastDownlineCTSCustID { get; set; }     
+        public long LastDownlineCTSCustID { get; set; }
 
         public RescanParametersModel RescanParameters { get; set; }
     }

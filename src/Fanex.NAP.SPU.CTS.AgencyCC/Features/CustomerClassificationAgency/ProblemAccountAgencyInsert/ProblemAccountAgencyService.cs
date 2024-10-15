@@ -113,7 +113,7 @@
         {
             if (custId != null && custId.Any())
             {
-                UpdateBetLimitOfUnflaggedCustomer(custId);
+                UpdateBetLimitOfUnflaggedCustomer(string.Join(",", custId));
             }
         }       
 
