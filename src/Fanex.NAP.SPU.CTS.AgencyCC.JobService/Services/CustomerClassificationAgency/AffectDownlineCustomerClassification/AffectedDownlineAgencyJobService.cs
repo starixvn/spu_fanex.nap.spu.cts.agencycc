@@ -80,12 +80,12 @@
                 IsToQueue = false,
                 FunctionId = FunctionId.DownlineCustomerClassification,
                 RescanNormalType = RescanNormalType.Auto_AfftectedDownline,
-                InternalBatchSize = agencyInfos.RescanParameters.InternalBatchSize,
+                InternalBatchSize = agencyInfos.InternalBatchSize,
                 ServiceName = serviceName,
                 PushDataExternal = new PushDataToExternalModel
                 {
                     IsUpdateDangerToMainDB = false, // not update for sma
-                    ExternalBatchSize = agencyInfos.RescanParameters.PushDataExternal.ExternalBatchSize,
+                    ExternalBatchSize = agencyInfos.ExternalBatchSize,
                     ServiceName = serviceName,
                     IsSyncAFCData = _appSettings.IsSyncAFCData,
                     AFCInsertAccountURL = _appSettings.AFCInsertAccountURL,
