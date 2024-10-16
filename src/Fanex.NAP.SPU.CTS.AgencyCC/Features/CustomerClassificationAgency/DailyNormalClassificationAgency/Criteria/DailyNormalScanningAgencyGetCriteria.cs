@@ -14,7 +14,7 @@
 
         public override string GetSettingKey()
         {
-            return "CTS_DC_CustClassificationAgency_DailyScan_GetNormal"; // new
+            return "CTS_DC_CustClassificationAgency_DailyScan_GetNormal";
         }
 
         public override bool IsValid()

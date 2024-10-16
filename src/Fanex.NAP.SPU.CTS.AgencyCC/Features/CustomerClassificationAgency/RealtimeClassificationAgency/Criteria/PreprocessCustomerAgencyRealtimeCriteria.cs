@@ -8,7 +8,7 @@
 
         public override string GetSettingKey()
         {
-            return "CTS_GeneralNormalClassificationAgency_Realtime_Preprocess"; // new
+            return "CTS_GeneralNormalClassificationAgency_Realtime_Preprocess";
         }
 
         public override bool IsValid()
