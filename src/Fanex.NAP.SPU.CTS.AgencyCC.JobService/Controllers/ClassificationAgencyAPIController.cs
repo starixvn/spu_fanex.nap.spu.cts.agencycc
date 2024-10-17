@@ -9,7 +9,9 @@
 
     [Route("api/classificationAgencyAPI")]
     [ApiController]
+#pragma warning disable S101 // Types should be named in PascalCase
     public class ClassificationAgencyAPIController : ControllerBase
+#pragma warning restore S101 // Types should be named in PascalCase
     {
         private readonly INewCustomerClassificationAgencyJobService _newCustomerClassificationAgency;
         private readonly IAffectedDownlineAgencyJobService _affectedDownlineAgencyJobService;

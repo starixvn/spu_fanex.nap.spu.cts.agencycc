@@ -6,12 +6,16 @@
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CTSCustomer.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RescanCustomerClassificationAgency.Model;
 
+#pragma warning disable S101 // Types should be named in PascalCase
     public interface ICTSCustomerAgencyDataAccess
+#pragma warning restore S101 // Types should be named in PascalCase
     {
         InactivateNewCustomerModel GetInactivateNewCustomers();
     }
 
+#pragma warning disable S101 // Types should be named in PascalCase
     public class CTSCustomerAgencyDataAccess : ICTSCustomerAgencyDataAccess
+#pragma warning restore S101 // Types should be named in PascalCase
     {
         private readonly IDynamicRepository _repository;
 

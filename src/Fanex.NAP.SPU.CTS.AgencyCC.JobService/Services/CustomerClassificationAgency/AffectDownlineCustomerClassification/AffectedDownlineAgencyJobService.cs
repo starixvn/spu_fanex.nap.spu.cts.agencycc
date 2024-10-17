@@ -9,10 +9,8 @@
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Shares;
-    using Newtonsoft.Json;
     using Sentry;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
@@ -24,7 +22,7 @@
 
     public class AffectedDownlineAgencyJobService : IAffectedDownlineAgencyJobService
     {
-        private readonly string serviceName;
+        private readonly string _serviceName;
         private readonly ISentryClient _sentryClient;
         private readonly IAppSettings _appSettings;
         private readonly IProblemAccountAgencyService _problemAccountAgencyService;
@@ -37,19 +35,19 @@
         public AffectedDownlineAgencyJobService(ISentryClient sentryClient,
             IAppSettings appSettings,
             IProblemAccountAgencyService problemAccountAgencyService,
-            IRescanCustClassificationAgencyService _rescanCustClassificationService,
+            IRescanCustClassificationAgencyService rescanCustClassificationService,
             IAffectedDownlineAgencyService affectedDownlineAgency,
             IDataLogTrackingServices dataLogTrackingServices,
             ICustClassToMainDBService custClassToMainDBService, 
             IAntiFraudCenterServices antiFraudCenterServices)
         {
-            this._sentryClient = sentryClient;
-            this._appSettings = appSettings;
-            this._dataLogTrackingServices = dataLogTrackingServices;
-            this._problemAccountAgencyService = problemAccountAgencyService;
-            this._affectedDownlineAgency = affectedDownlineAgency;
-            this._rescanCustClassificationService = _rescanCustClassificationService;
-            this.serviceName = "AffectedDownlineCustClassificationAgency";
+            _sentryClient = sentryClient;
+            _appSettings = appSettings;
+            _dataLogTrackingServices = dataLogTrackingServices;
+            _problemAccountAgencyService = problemAccountAgencyService;
+            _affectedDownlineAgency = affectedDownlineAgency;
+            _rescanCustClassificationService = rescanCustClassificationService;
+            _serviceName = "AffectedDownlineCustClassificationAgency";
             _custClassToMainDBService = custClassToMainDBService;
             _antiFraudCenterServices = antiFraudCenterServices;
         }
@@ -62,9 +60,9 @@
             }
             catch (Exception ex)
             {
-                Utilities.LogSentryError(serviceName, ex.Message, string.Empty, ex, _sentryClient);
+                Utilities.LogSentryError(_serviceName, ex.Message, string.Empty, ex, _sentryClient);
 
-                _dataLogTrackingServices.LogErrorData(ex, serviceName);
+                _dataLogTrackingServices.LogErrorData(ex, _serviceName);
 
                 return Task.FromResult(false);
             }
@@ -81,12 +79,12 @@
                 FunctionId = FunctionId.DownlineCustomerClassification,
                 RescanNormalType = RescanNormalType.Auto_AfftectedDownline,
                 InternalBatchSize = agencyInfos.InternalBatchSize,
-                ServiceName = serviceName,
+                ServiceName = _serviceName,
                 PushDataExternal = new PushDataToExternalModel
                 {
                     IsUpdateDangerToMainDB = false, // not update for sma
                     ExternalBatchSize = agencyInfos.ExternalBatchSize,
-                    ServiceName = serviceName,
+                    ServiceName = _serviceName,
                     IsSyncAFCData = _appSettings.IsSyncAFCData,
                     AFCInsertAccountURL = _appSettings.AFCInsertAccountURL,
                     AFCDeleteAccountURL = _appSettings.AFCDeleteAccountURL
@@ -128,8 +126,6 @@
         {
             if (agencyInfos != null && agencyInfos.AgencyQueue.Any())
             {
-                var custIds = agencyInfos.AgencyQueue.Select(c => c.CustID).Distinct();
-
                 var probAccounts = agencyInfos.AgencyQueue.Select(c => new InsertProblemAccountEntity
                 {
                     CustID = c.CustID,
@@ -148,7 +144,7 @@
                 var result = _problemAccountAgencyService.InsertProblemAccountsAgencyPackage(probAccounts, 
                     FunctionId.DownlineCustomerClassification, 
                     AgencyCCInputFlow.InsertPACategory, 
-                    rescanParameters.IsToQueue, serviceName);
+                    rescanParameters.IsToQueue, _serviceName);
 
                 return _custClassToMainDBService.PushExternalProblemAcountPackage(result, rescanParameters.PushDataExternal);
             }
@@ -162,8 +158,6 @@
 
             if (agencyInfos != null && agencyInfos.AgencyQueue.Any())
             {
-                var custIds = agencyInfos.AgencyQueue.Select(c => c.CustID).Distinct();
-
                 var probAccounts = agencyInfos.AgencyQueue.Select(c => new RemoveProblemAccountEntity
                 {
                     CustID = c.CustID,
@@ -180,13 +174,13 @@
 
                 isSuccess = string.IsNullOrEmpty(result.ErrorMessage);
 
-                if (string.IsNullOrEmpty(result.ErrorMessage) && result.CustInfos != null && result.CustInfos.Any())
+                if (isSuccess && result.CustInfos != null && result.CustInfos.Any())
                 {
                     isSuccess = _rescanCustClassificationService.RescanCustomerClassificationAgency(result.CustInfos.Select(c => c.CustID).Distinct(), rescanParameters);
                 }               
             }
 
-            return true;
+            return isSuccess;
         }
 
         private bool InsertVVIP(CustClassificationFromQueueModel agencyInfos, RescanParametersModel parameters)

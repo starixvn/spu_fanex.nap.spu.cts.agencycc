@@ -56,9 +56,11 @@
 
             if (data != null && data.Any())
             {
+#pragma warning disable S2589 // Boolean expressions should not be gratuitous
                 smaCustIds = data.Where(c => c.RoleID == (int)CustomerRole.Agent
                                           || c.RoleID == (int)CustomerRole.Master
                                           || c.RoleID == (int)CustomerRole.Super).Select(c => c.CustID)?.ToList();
+#pragma warning restore S2589 // Boolean expressions should not be gratuitous
 
             }
 

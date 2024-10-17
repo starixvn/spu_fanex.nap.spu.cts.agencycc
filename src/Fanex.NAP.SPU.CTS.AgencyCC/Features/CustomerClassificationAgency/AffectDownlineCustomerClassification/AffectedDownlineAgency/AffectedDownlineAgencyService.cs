@@ -2,11 +2,8 @@
 {
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Model;
-    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RescanCustomerClassificationAgency.Model;
     using Newtonsoft.Json;
     using Sentry;
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
     using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
 

@@ -42,7 +42,7 @@
             _custClassToMainDBService = custClassToMainDBService;
         }
 
-        public async Task<bool> Execute(int batchExternalSize, int batchInternalSize)
+        public Task<bool> Execute(int batchExternalSize, int batchInternalSize)
         {
             try
             {
@@ -63,10 +63,10 @@
             {
                 Utilities.LogSentryError(_serviceName, ex.Message, string.Empty, ex, _sentryClient);
 
-                return false;
+                return Task.FromResult(false);
             }
 
-            return true;
+            return Task.FromResult(true);
         }
 
         private bool JobRun(int batchExternalSize, int batchInternalSize)

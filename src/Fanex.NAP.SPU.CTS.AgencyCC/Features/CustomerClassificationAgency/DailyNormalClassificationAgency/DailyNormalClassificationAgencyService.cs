@@ -1,11 +1,11 @@
-﻿using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.NormalClassificationAgency.Model;
-using Fanex.NAP.SPU.CTS.AgencyCC.Features.SystemParameter;
-using Fanex.NAP.SPU.CTS.AgencyCC.Shares;
-using System.Linq;
-using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
-
-namespace Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.NormalClassificationAgency
+﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.NormalClassificationAgency
 {
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.NormalClassificationAgency.Model;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.SystemParameter;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Shares;
+    using System.Linq;
+    using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
+
     public interface IDailyNormalClassificationAgencyService
     {
         IDailyNormalClassificationAgencyService Start();

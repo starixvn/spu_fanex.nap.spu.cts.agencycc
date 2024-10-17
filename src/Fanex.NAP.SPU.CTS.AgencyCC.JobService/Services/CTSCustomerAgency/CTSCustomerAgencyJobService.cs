@@ -14,12 +14,16 @@ using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
 
 namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CTSCustomerAgency
 {
+#pragma warning disable S101 // Types should be named in PascalCase
     public interface ICTSCustomerAgencyJobService
+#pragma warning restore S101 // Types should be named in PascalCase
     {
         Task<bool> InactivateNewCustomers(int batchSize);
     }
 
+#pragma warning disable S101 // Types should be named in PascalCase
     public class CTSCustomerAgencyJobService : ICTSCustomerAgencyJobService
+#pragma warning restore S101 // Types should be named in PascalCase
     {
         private readonly ISentryClient _sentryClient;
         private readonly ICTSCustomerAgencyService _service;
@@ -41,7 +45,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CTSCustomerAgency
             _appSettings = appSettings;
         }
 
-        public async Task<bool> InactivateNewCustomers(int batchSize)
+        public Task<bool> InactivateNewCustomers(int batchSize)
         {
             try
             {
@@ -89,7 +93,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CTSCustomerAgency
                     Thread.Sleep(10000);
                 } while (isContinue);
 
-                return true;
+                return Task.FromResult(true);
             }
             catch (Exception ex)
             {
@@ -99,7 +103,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CTSCustomerAgency
                       .ToString();
 
                 _sentryClient.CaptureMessage(logMessage, Sentry.Protocol.SentryLevel.Error);
-                return false;
+                return Task.FromResult(false);
             }
         }
     }

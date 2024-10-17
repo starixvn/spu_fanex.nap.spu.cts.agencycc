@@ -46,7 +46,7 @@
             return Task.FromResult(true);
         }
 
-        private bool JobRun(int batchInternalSize)
+        private void JobRun(int batchInternalSize)
         {
             var normalPoolCustomerModel = _service.GetNormalPoolCustomers();
 
@@ -56,8 +56,6 @@
             {
                 ClassifyNormalAccountWithBatch(normalPoolCustomerModel, batchInternalSize);
             }
-
-            return isExistCusts;
         }
 
         private void ClassifyNormalAccountWithBatch(GetNormalPoolCustomerAgencyModel normalPoolCustomer, int batchInternalSize)

@@ -2,7 +2,6 @@
 {
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RealtimeClassificationAgency.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Shares;
-    using System;
     using System.Linq;
 
     public interface IRealtimeClassificationAgencyService
