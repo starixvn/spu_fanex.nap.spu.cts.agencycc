@@ -1,19 +1,27 @@
 ﻿using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency;
+using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Model;
 using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.NormalAccountInsertAgency;
+using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.NormalAccountInsertAgency.Entities;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
+using System;
+using System.Collections.Generic;
 using Xunit;
+using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
 
 namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.CustomerClassificationAgency
 {
     public class NormalAccountInsertAgencyServiceTest
     {
         private readonly INormalAccountInsertAgencyDataAccess _dataAccss;
+        private readonly IBaseCustomerClassificationAgencyDataAccess _baseDataAccess;
         private readonly INormalAccountInsertAgencyService _service;
 
         public NormalAccountInsertAgencyServiceTest()
         {
             _dataAccss = Substitute.For<INormalAccountInsertAgencyDataAccess>();
-            _service = new NormalAccountInsertAgencyService(Substitute.For<IBaseCustomerClassificationAgencyDataAccess>(), null, _dataAccss);
+            _baseDataAccess = Substitute.For<IBaseCustomerClassificationAgencyDataAccess>();
+            _service = new NormalAccountInsertAgencyService(_baseDataAccess, null, _dataAccss);
         }
 
         [Fact]
@@ -39,6 +47,40 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.CustomerClassificationAgency
 
             // Assert
             _dataAccss.Received(1).CompleteNormalAccountInsert(scannedMaxId);
+        }
+
+        [Fact]
+        public void InsertNormalAccount_WhenSuccess()
+        {
+            // Arrange
+            var data = new List<InsertNormalAccountAgencyEntity> { new InsertNormalAccountAgencyEntity(new GetNormalAccountAgencyEntity()) };
+
+            // Act
+            _baseDataAccess.InsertCustomerClassification(Arg.Any<AgencyCCInputFlow>(), Arg.Any<InsertCustomerClassificationAgencyModel>()).Returns(new ResultInsertCustomerClassificationAgencyModel());
+
+            var result = _service.InsertNormalAccount(data,string.Empty, false);
+
+            // Assert
+            _baseDataAccess.Received(1).InsertCustomerClassification(Arg.Any<AgencyCCInputFlow>(), Arg.Any<InsertCustomerClassificationAgencyModel>());
+
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public void InsertNormalAccount_ThrowException()
+        {
+            // Arrange
+            var data = new List<InsertNormalAccountAgencyEntity> { new InsertNormalAccountAgencyEntity(new GetNormalAccountAgencyEntity()) };
+
+            // Act
+            _baseDataAccess.InsertCustomerClassification(Arg.Any<AgencyCCInputFlow>(), Arg.Any<InsertCustomerClassificationAgencyModel>()).Throws<Exception>();
+
+            Action action = () => _service.InsertNormalAccount(data, string.Empty, false);
+
+            // Assert
+            _baseDataAccess.Received(0).InsertCustomerClassification(Arg.Any<AgencyCCInputFlow>(), Arg.Any<InsertCustomerClassificationAgencyModel>());
+
+            Assert.Throws<Exception>(action);
         }
     }
 }
