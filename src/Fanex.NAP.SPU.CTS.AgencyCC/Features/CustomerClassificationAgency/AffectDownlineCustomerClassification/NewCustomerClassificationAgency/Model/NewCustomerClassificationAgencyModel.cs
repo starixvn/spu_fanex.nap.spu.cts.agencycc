@@ -10,14 +10,14 @@
     {
         public NewCustomerClassificationAgencyModel()
         {
-            VVIPClassification = Enumerable.Empty<VVIPCategoryAgencyEntity>();
+            VVIPClassification = Enumerable.Empty<VvipCategoryAgencyEntity>();
             PAClassification = Enumerable.Empty<InsertProblemAccountEntity>();
             NormalClassification = Enumerable.Empty<NormalRescanAgencyEntity>();
         }
 
         public UInt64 LastCTSCustID { get; set; }
 
-        public IEnumerable<VVIPCategoryAgencyEntity> VVIPClassification { get; set; }
+        public IEnumerable<VvipCategoryAgencyEntity> VVIPClassification { get; set; }
 
         public IEnumerable<InsertProblemAccountEntity> PAClassification { get; set; }
 

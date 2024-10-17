@@ -67,15 +67,15 @@
             return new ResultRemoveCustomerClassificationAgencyModel();
         }
 
-        private VVIPCustomerInsertEntity MappingVVIPModel(CustClassificationFromQueueModel agencyInfo)
+        private VvipCustomerInsertEntity MappingVVIPModel(CustClassificationFromQueueModel agencyInfo)
         {
-            return new VVIPCustomerInsertEntity
+            return new VvipCustomerInsertEntity
             {
                 FromFlow = FromFlow.CTSServices,
                 IsAffectDownline = false,
                 QueueID = agencyInfo.QueueID,
                 UplineRoleID = agencyInfo.UplineRoleID,
-                CustInfo = agencyInfo.AgencyQueue.Select(c => new VVIPCategoryEntity
+                CustInfo = agencyInfo.AgencyQueue.Select(c => new VvipCategoryEntity
                 {
                     CustID = c.CustID,
                     CTSCustID = c.CTSCustID,

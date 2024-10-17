@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
 
-    public class VVIPCustomerInsertEntity
+    public class VvipCustomerInsertEntity
     {
         public FromFlow FromFlow { get; set; }
 
@@ -14,6 +14,6 @@
 
         public bool? IsAffectDownline { get; set; }
 
-        public IEnumerable<VVIPCategoryEntity> CustInfo { get; set; }
+        public IEnumerable<VvipCategoryEntity> CustInfo { get; set; }
     }
 }

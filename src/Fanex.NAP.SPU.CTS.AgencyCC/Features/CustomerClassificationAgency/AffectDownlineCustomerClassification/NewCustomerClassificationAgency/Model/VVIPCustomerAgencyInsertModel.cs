@@ -15,6 +15,6 @@
 
         public bool? IsAffectDownline { get; set; }
 
-        public IEnumerable<VVIPCategoryAgencyEntity> CustInfo { get; set; }
+        public IEnumerable<VvipCategoryAgencyEntity> CustInfo { get; set; }
     }
 }

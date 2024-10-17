@@ -1,6 +1,6 @@
 ﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.AffectDownlineCustomerClassification.NewCustomerClassificationAgency.Entitites
 {
-    public class VVIPCategoryAgencyEntity
+    public class VvipCategoryAgencyEntity
     {
         public long CTSCustID { get; set; }
 
