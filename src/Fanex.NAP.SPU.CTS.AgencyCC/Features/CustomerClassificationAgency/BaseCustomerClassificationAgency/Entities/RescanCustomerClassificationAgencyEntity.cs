@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Entities
+﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Entities
 {
+    using System;
+
     public class RescanCustomerClassificationAgencyEntity
     {
         public long CTSCustID { get; set; }
@@ -13,14 +9,6 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseC
         public long CustID { get; set; }
 
         public int CategoryID { get; set; }
-
-        //public int TVSReasonID { get; set; }
-
-        //public int? RobotCounter { get; set; }
-
-        //public int? TVSRequestID { get; set; }
-
-        //public bool? IsParlay { get; set; }
 
         public int? SportType { get; set; }
 
@@ -38,15 +26,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseC
 
         public bool IsMarkedDirectly { get; set; }
 
-        //public bool IsFromTVS { get; set; }
-
-        //public bool IsFromTW { get; set; }
-
         public bool IsFromCTS { get; set; }
-
-        //public bool IsFromAI { get; set; }
-
-        //public bool IsFromImperva { get; set; }
 
         public DateTime LastModifiedDate { get; set; }
 

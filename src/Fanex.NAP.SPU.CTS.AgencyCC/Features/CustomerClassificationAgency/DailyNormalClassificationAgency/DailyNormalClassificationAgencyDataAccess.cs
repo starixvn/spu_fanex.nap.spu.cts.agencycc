@@ -39,7 +39,7 @@
         {
             if (custIds.IsNotNullOrEmpty())
             {
-                var criteria = new DailyNormalClassificationAgencyPreprocessCriteria()
+                var criteria = new DailyNormalClassificationAgencyPreprocessCriteria
                 {
                     ListCustId = custIds
                 };

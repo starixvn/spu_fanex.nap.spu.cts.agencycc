@@ -11,8 +11,12 @@
 
     public static class ApiHelper
     {
+#pragma warning disable S1133 // Deprecated code should be removed
         [Obsolete("Too many generic and parameter")]
+#pragma warning restore S1133 // Deprecated code should be removed
+#pragma warning disable S4136 // Method overloads should be grouped together
         public static async Task<TResult> Post<TParam, TResult>(string url, TParam param, int environment, int mailingListId)
+#pragma warning restore S4136 // Method overloads should be grouped together
         {
             using (var web = new HttpClient())
             {
@@ -45,7 +49,9 @@
 
                 if (!response.IsSuccessStatusCode)
                 {
+#pragma warning disable S112 // General or reserved exceptions should never be thrown
                     throw new Exception(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+#pragma warning restore S112 // General or reserved exceptions should never be thrown
                 }
 
                 var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -80,7 +86,9 @@
 
                 if (!response.IsSuccessStatusCode)
                 {
+#pragma warning disable S112 // General or reserved exceptions should never be thrown
                     throw new Exception(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+#pragma warning restore S112 // General or reserved exceptions should never be thrown
                 }
 
                 var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -105,7 +113,9 @@
 
                 if (!response.IsSuccessStatusCode)
                 {
+#pragma warning disable S112 // General or reserved exceptions should never be thrown
                     throw new Exception(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+#pragma warning restore S112 // General or reserved exceptions should never be thrown
                 }
 
                 var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);

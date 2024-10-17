@@ -56,7 +56,7 @@
         #region Private Methods
         private bool JobRun(CustomerClassificationAgencyParameterModel<NewCustomerClassificationAgencyModel> model)
         {
-            var paramaters = new RescanParametersModel()
+            var paramaters = new RescanParametersModel
             {
                 IsToQueue = false,
                 FunctionId = FunctionId.InsertNewCustJob,

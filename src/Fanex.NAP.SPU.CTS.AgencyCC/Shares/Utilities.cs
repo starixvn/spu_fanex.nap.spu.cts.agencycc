@@ -80,7 +80,9 @@
         {
             if (isWriteLog)
             {
+#pragma warning disable S2955 // Generic parameters not constrained to reference types should not be compared to "null"
                 var logMessage = $"{serviceName} - {message} {(data != null ? " - Data:" + JsonConvert.SerializeObject(data) : "")} - {DateTime.Now}";
+#pragma warning restore S2955 // Generic parameters not constrained to reference types should not be compared to "null"
 
                 sentryClient.CaptureMessage(logMessage);
             }
@@ -121,7 +123,9 @@
             var notificationService = new NotificationService();
             string proxy = environment == "PROD" ? "lisasqd.nebula.prod:8801" : null;
             notificationService
+#pragma warning disable S1075 // URIs should not be hardcoded
                .Config("0A40aOc7CtpzjbBSJu8KNWQRoXyjRvf9", groupId, "https://bot.nexdev.net/skynex/api/messages/forwardwithtoken", proxy)
+#pragma warning restore S1075 // URIs should not be hardcoded
                .Message(new MessageModel(systemName, DateTime.Now, environment, message))
                .SendWithoutDelay();
         }

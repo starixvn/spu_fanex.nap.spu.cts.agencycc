@@ -119,7 +119,7 @@
 
             if (custInfo != null && custInfo.CustInfo.Any())
             {
-                var modelInsert = new InsertCustomerClassificationAgencyModel()
+                var modelInsert = new InsertCustomerClassificationAgencyModel
                 {
                     CustInfoJson = JsonConvert.SerializeObject(custInfo.CustInfo),
                     FromAction = (int)custInfo.FromFlow,

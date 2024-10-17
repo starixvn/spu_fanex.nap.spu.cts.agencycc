@@ -32,7 +32,9 @@
             try
             {
                 if (batchInternalSize <= 0)
+                {
                     batchInternalSize = 5000;
+                }
 
                 JobRun(batchInternalSize);
             }

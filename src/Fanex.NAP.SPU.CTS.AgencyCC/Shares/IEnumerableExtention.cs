@@ -31,14 +31,7 @@
             bool condition,
             Func<TSource, bool> predicate)
         {
-            if (condition)
-            {
-                return source.Where(predicate);
-            }
-            else
-            {
-                return source;
-            }
+            return condition ? source.Where(predicate) : source;
         }
     }
 }

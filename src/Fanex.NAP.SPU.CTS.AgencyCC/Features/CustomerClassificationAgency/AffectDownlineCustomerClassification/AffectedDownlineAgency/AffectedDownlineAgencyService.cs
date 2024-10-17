@@ -27,7 +27,7 @@
         {
             var custInfo = MappingVVIPModel(agencyInfos);
 
-            var modelInsert = new InsertCustomerClassificationAgencyModel()
+            var modelInsert = new InsertCustomerClassificationAgencyModel
             {
                 CustInfoJson = JsonConvert.SerializeObject(custInfo.CustInfo),
                 FromAction = (int)custInfo.FromFlow,
@@ -46,7 +46,7 @@
 
             if (custInfo != null && custInfo.CustInfo.Any())
             {
-                var modelRemove = new RemoveCustomerClassificationAgencyModel()
+                var modelRemove = new RemoveCustomerClassificationAgencyModel
                 {
                     CustClassificationJson = JsonConvert.SerializeObject(custInfo.CustInfo.Select(c => new RemoveCustomerClassificationEntity
                     {

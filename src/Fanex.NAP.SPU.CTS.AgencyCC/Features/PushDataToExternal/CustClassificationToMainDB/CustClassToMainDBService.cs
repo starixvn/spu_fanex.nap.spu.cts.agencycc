@@ -15,7 +15,7 @@
         #region Agency General
         bool PushExternalPackageByCustId(IEnumerable<long> custIds, PushDataToExternalModel paras);
 
-        bool PushExternalProblemAcountPackage(IEnumerable<long> custIds, PushDataToExternalModel parameters);
+        bool PushExternalProblemAcountPackage(IEnumerable<long> custIds, PushDataToExternalModel paras);
 
         public bool PushCustomerClassification(IEnumerable<LatestClassificationModel> customerClassifications, RoleGroupType roleGroup, int retryTime, string serviceName);
         #endregion
@@ -35,14 +35,14 @@
         }
 
         #region Agency General
-        public bool PushExternalPackageByCustId(IEnumerable<long> custIds, PushDataToExternalModel parameters)
+        public bool PushExternalPackageByCustId(IEnumerable<long> custIds, PushDataToExternalModel paras)
         {
             if (custIds.IsNullOrEmpty())
             {
                 return true;
             }
 
-            var custIdsChunk = custIds.Distinct().Chunk(parameters.ExternalBatchSize);
+            var custIdsChunk = custIds.Distinct().Chunk(paras.ExternalBatchSize);
 
             foreach (var custids in custIdsChunk)
             {
@@ -50,7 +50,7 @@
 
                 if (lastestClassifications != null && lastestClassifications.Any())
                 {
-                    bool isSuccess = IsPushExternalSuccess(lastestClassifications, parameters);
+                    bool isSuccess = IsPushExternalSuccess(lastestClassifications, paras);
 
                     if (!isSuccess)
                     {
@@ -104,15 +104,15 @@
             return true;
         }
 
-        public bool PushExternalProblemAcountPackage(IEnumerable<long> custIds, PushDataToExternalModel parameters)
+        public bool PushExternalProblemAcountPackage(IEnumerable<long> custIds, PushDataToExternalModel paras)
         {
             var isSuccess = true;
 
             if (custIds != null && custIds.Any())
             {
-                isSuccess = PushExternalPackageByCustId(custIds.Distinct(), parameters);
+                isSuccess = PushExternalPackageByCustId(custIds.Distinct(), paras);
 
-                _antiFraudCenterServices.InsertAFCAccounts(custIds.Distinct(), FromFlow.CTSServices, parameters.IsSyncAFCData, parameters.AFCInsertAccountURL);
+                _antiFraudCenterServices.InsertAFCAccounts(custIds.Distinct(), FromFlow.CTSServices, paras.IsSyncAFCData, paras.AFCInsertAccountURL);
             }
 
             return isSuccess;
@@ -147,8 +147,11 @@
             return isSuccess;
         }
 
+#pragma warning disable S1172
         private bool PushCustClassificationToMainDB(IEnumerable<LatestCCDangerLevelEntity> lastestClassifications, RoleGroupType roleGroup, string serviceName)
+#pragma warning restore S1172
         {
+#pragma warning disable S125
             //if (lastestClassifications != null && lastestClassifications.Any())
             //{
             //    var custClassification = lastestClassifications.Select(c => new LatestClassificationModel()
@@ -160,6 +163,7 @@
 
             //    return PushCustomerClassification(custClassification, roleGroup, Constants.RetryPushCCToExternal, serviceName);
             //}
+#pragma warning restore S125
 
             return true;
         }

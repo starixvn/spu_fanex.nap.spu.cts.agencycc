@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanex.NAP.SPU.CTS.AgencyCC.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanex.NAP.SPU.CTS.AgencyCC", "src\Fanex.NAP.SPU.CTS.AgencyCC\Fanex.NAP.SPU.CTS.AgencyCC.csproj", "{A141BA6F-7754-48B3-9E7F-A55911A61509}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fanex.NAP.SPU.CTS.AgencyCC.Test", "test\Fanex.NAP.SPU.CTS.AgencyCC.Test\Fanex.NAP.SPU.CTS.AgencyCC.Test.csproj", "{922EAD0D-6B1B-4564-8589-B0618334DD25}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanex.NAP.SPU.CTS.AgencyCC.Tests", "test\Fanex.NAP.SPU.CTS.AgencyCC.Test\Fanex.NAP.SPU.CTS.AgencyCC.Tests.csproj", "{922EAD0D-6B1B-4564-8589-B0618334DD25}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,4 +1,5 @@
-﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.Shares
+﻿#pragma warning disable S2342
+namespace Fanex.NAP.SPU.CTS.AgencyCC.Shares
 {
     using System.ComponentModel;
 
@@ -83,3 +84,4 @@
         }
     }
 }
+#pragma warning restore S2342

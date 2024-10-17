@@ -1,4 +1,6 @@
-﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.Features.SystemParameter
+﻿#pragma warning disable S4136
+
+namespace Fanex.NAP.SPU.CTS.AgencyCC.Features.SystemParameter
 {
     using Fanex.Data;
     using Fanex.Data.Repository;
@@ -75,3 +77,4 @@
         }
     }
 }
+#pragma warning restore S4136

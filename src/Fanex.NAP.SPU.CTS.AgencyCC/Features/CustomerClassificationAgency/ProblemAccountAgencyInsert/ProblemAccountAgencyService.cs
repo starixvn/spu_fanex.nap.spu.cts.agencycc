@@ -35,9 +35,9 @@
         {
             if (problemAccounts != null && problemAccounts.Any())
             {
-                var paClassification = CombinePAWithLosingPerformace(problemAccounts, funcId);
+                var paClassification = CombinePAWithLosingPerformace(problemAccounts);
 
-                var modelInsert = new InsertCustomerClassificationAgencyModel()
+                var modelInsert = new InsertCustomerClassificationAgencyModel
                 {
                     CustInfoJson = JsonConvert.SerializeObject(paClassification),
                     IsToQueue = isToQueue,
@@ -61,7 +61,7 @@
 
         public ResultRemoveCustomerClassificationAgencyModel RemoveProblemAccount(IEnumerable<RemoveProblemAccountEntity> problemAccounts, bool isFromQueue)
         {
-            var modelRemove = new RemoveCustomerClassificationAgencyModel()
+            var modelRemove = new RemoveCustomerClassificationAgencyModel
             {
                 CustClassificationJson = JsonConvert.SerializeObject(problemAccounts),
                 IsFromQueue = isFromQueue,
@@ -84,8 +84,10 @@
             {
                 var custPas = customerInfo.Where(x => x.IsPA).Distinct();
 
+#pragma warning disable S125
                 // not handle for SMA
                 //CheckNewPAAssociationCustomerForRollback(JsonConvert.SerializeObject(custPas));
+#pragma warning disable S125
 
                 UpdateBetLimitOfFlaggedCustomer(custPas.Select(x => x.CustID));
             }
@@ -117,7 +119,7 @@
             }
         }       
 
-        private IEnumerable<InsertProblemAccountEntity> CombinePAWithLosingPerformace(IEnumerable<InsertProblemAccountEntity> problemAccounts, FunctionId funcId)
+        private IEnumerable<InsertProblemAccountEntity> CombinePAWithLosingPerformace(IEnumerable<InsertProblemAccountEntity> problemAccounts)
         {
             return problemAccounts.Select(x => {
                 var y = x;

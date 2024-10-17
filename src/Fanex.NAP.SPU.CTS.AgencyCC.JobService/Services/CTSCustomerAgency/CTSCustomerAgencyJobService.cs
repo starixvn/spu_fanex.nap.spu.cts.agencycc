@@ -59,7 +59,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CTSCustomerAgency
                     {
                         var custIDs = inactivateCusts.CustInfos.Select(x => x.CustID).Distinct();
 
-                        var rescanConfig = new RescanParametersModel()
+                        var rescanConfig = new RescanParametersModel
                         {
                             IsToQueue = false,
                             FunctionId = FunctionId.InactivateNewCustomer,

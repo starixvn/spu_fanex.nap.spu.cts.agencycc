@@ -32,7 +32,9 @@
         private readonly IRescanCustClassificationAgencyService _rescanCustClassificationService;
         private readonly IDataLogTrackingServices _dataLogTrackingServices;
 
-        public AffectedDownlineAgencyJobService(ISentryClient sentryClient,
+#pragma warning disable S107
+        public AffectedDownlineAgencyJobService(
+            ISentryClient sentryClient,
             IAppSettings appSettings,
             IProblemAccountAgencyService problemAccountAgencyService,
             IRescanCustClassificationAgencyService rescanCustClassificationService,
@@ -40,6 +42,7 @@
             IDataLogTrackingServices dataLogTrackingServices,
             ICustClassToMainDBService custClassToMainDBService, 
             IAntiFraudCenterServices antiFraudCenterServices)
+#pragma warning restore S107
         {
             _sentryClient = sentryClient;
             _appSettings = appSettings;
@@ -73,7 +76,7 @@
             var isSuccess = true;
             var actionType = agencyInfos.ActionType;
 
-            var rescanParamaters = new RescanParametersModel()
+            var rescanParamaters = new RescanParametersModel
             {
                 IsToQueue = false,
                 FunctionId = FunctionId.DownlineCustomerClassification,
@@ -91,6 +94,7 @@
                 }
             };
 
+#pragma warning disable S131
             switch (actionType)
             {
                 case (int)DownlineClassification_ActionType.InsertVVIP:
@@ -118,6 +122,7 @@
                         break;
                     }
             }
+#pragma warning restore S131
 
             return isSuccess;
         }

@@ -106,11 +106,11 @@
             return isSuccess;
         }
 
-        public bool PushExternalProblemAccounts(IEnumerable<long> custIDs, PushDataToExternalModel parameters)
+        public bool PushExternalProblemAccounts(IEnumerable<long> custIds, PushDataToExternalModel paras)
         {
-            if (custIDs.Any())
+            if (custIds.Any())
             {
-                return _custClassToMainDBService.PushExternalProblemAcountPackage(custIDs.Distinct(), parameters);
+                return _custClassToMainDBService.PushExternalProblemAcountPackage(custIds.Distinct(), paras);
             }
 
             return true;

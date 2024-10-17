@@ -23,6 +23,8 @@
             this.systemParameterDataAccess = systemParameterDataAccess;
         }
 
+#pragma warning disable S2589 // Boolean expressions should not be gratuitous
+#pragma warning disable S6580
         public Int64 GetLastScannedId(CTS_SystemParameters paraID)
         {
             var lastScannedId = systemParameterDataAccess.GetPreviousTimingExecution(paraID);
@@ -54,4 +56,6 @@
             return true;
         }
     }
+#pragma warning restore S6580
+#pragma warning restore S2589 // Boolean expressions should not be gratuitous
 }

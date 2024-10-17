@@ -58,7 +58,6 @@
         private readonly string environment;
         private readonly string evironmentName;
         private readonly string spName;
-        private readonly string soon88FeedDataAPI;
         private readonly string afcInsertAccountURL;
         private readonly string afcDeleteAccountURL;
         private readonly bool isSyncAFCData;

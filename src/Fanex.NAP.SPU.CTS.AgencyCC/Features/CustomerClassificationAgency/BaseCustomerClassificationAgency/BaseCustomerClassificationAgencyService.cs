@@ -5,8 +5,6 @@
     using Fanex.NAP.SPU.CTS.AgencyCC.Shares.Models;
     using Sentry;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
 
     public interface IBaseCustomerClassificationAgencyService
@@ -55,6 +53,7 @@
             return _dataAccess.RemoveCustomerClassificationAgency(inputFlow, model);
         }
 
+#pragma warning disable S125
         //public IEnumerable<ProblemAccountLosingClassificationEntity> GetProblemAccountLosingClassification(IEnumerable<long> custIds, FunctionId funcId)
         //{
         //    if (custIds != null && custIds.Any())
@@ -66,6 +65,7 @@
 
         //    return Enumerable.Empty<ProblemAccountLosingClassificationEntity>();
         //}
+#pragma warning restore S125
 
         public DBResult UpdateBetLimitOfFlaggedCustomer(string custIDs)
         {
