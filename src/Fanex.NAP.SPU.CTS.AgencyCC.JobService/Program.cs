@@ -6,7 +6,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService
     using Sentry;
     using System;
 
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {
@@ -42,7 +42,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseUrls("http://*:5001");
+                    webBuilder.UseUrls("http://*:5000");
 
                     webBuilder
                     .UseSentry()
