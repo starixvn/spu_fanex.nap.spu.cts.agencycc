@@ -1,5 +1,6 @@
 ﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.Shares
 {
+    using Fanex.NAP.SPU.CTS.AgencyCC.Shares.Models;
     using Newtonsoft.Json;
     using System;
     using System.Net;
@@ -11,6 +12,12 @@
 
     public static class ApiHelper
     {
+        private static APIHelperConfig _config;
+        public static void Setup(APIHelperConfig config)
+        {
+            _config = config;
+        }
+
 #pragma warning disable S1133 // Deprecated code should be removed
         [Obsolete("Too many generic and parameter")]
 #pragma warning restore S1133 // Deprecated code should be removed
@@ -64,7 +71,7 @@
         {
             var proxy = new WebProxy
             {
-                Address = new Uri($"http://10.3.252.100:8801")
+                Address = new Uri(_config?.Proxy)
             };
 
             var httpClientHandler = new HttpClientHandler

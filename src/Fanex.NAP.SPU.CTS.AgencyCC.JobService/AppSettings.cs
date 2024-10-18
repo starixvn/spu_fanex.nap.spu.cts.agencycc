@@ -1,5 +1,6 @@
 ﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService
 {
+    using Fanex.NAP.SPU.CTS.AgencyCC.Shares.Models;
     using Microsoft.Extensions.Configuration;
     using System;
     using System.ComponentModel;
@@ -49,6 +50,8 @@
         bool UpdateIsWriteLogSetting(string serviceName, bool isWriteLog);
 
         bool NormalAccountBySportIsWriteLog { get; }
+
+        APIHelperConfig APIHelperConfig { get; }
     }
 
     public class AppSettings : IAppSettings
@@ -64,6 +67,7 @@
         private readonly string sentryDsn;
         private readonly string insertVIPURL;
         private readonly string insertBAURL;
+        private readonly APIHelperConfig apiHelperConfig;
 
         public AppSettings(IConfiguration configuration)
         {
@@ -78,6 +82,10 @@
             sentryDsn = GetValue<string>("Sentry:Dsn");
             insertVIPURL = GetValue<string>("InsertVIP_BA_API:InsertVIPURL");
             insertBAURL = GetValue<string>("InsertVIP_BA_API:InsertBAURL");
+            apiHelperConfig = new APIHelperConfig
+            {
+                Proxy = GetValue<string>("APIHelperConfig:Proxy")
+            };
         }
 
         #region Variables
@@ -139,6 +147,8 @@
         public int InsertReactivatedCustomersBatchSize => GetValue<int>("InsertReactivatedCustomers:BatchSize");
 
         public bool NormalAccountBySportIsWriteLog => GetValue<bool>("NormalAccountBySportIsWriteLog:IsWriteLog");
+
+        public APIHelperConfig APIHelperConfig => apiHelperConfig;
 
         #endregion Variables
 

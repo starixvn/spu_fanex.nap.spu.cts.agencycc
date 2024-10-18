@@ -1,10 +1,10 @@
-﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Infrastructure.Extensions
+﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Infrastructure.Extensions
 {
     using System;
     using System.Linq;
     using System.Reflection;
 
-    public class TestExtension
+    public static class TestExtension
     {
         public static MethodInfo GetPrivateMethod(Type type, string methodName, int pos = 0)
         {
@@ -12,7 +12,9 @@
                                 .Where(x => x.Name == methodName && x.IsPrivate);
 
             if (methodList is null || !methodList.Any())
+            {
                 throw new EntryPointNotFoundException();
+            }
 
             var method = methodList.ElementAt(pos);
 
@@ -25,7 +27,9 @@
                                 .Where(x => x.Name == methodName && x.IsPrivate);
 
             if (methodList is null || !methodList.Any())
+            {
                 throw new EntryPointNotFoundException();
+            }
 
             var method = methodList.ElementAt(pos);
 
@@ -38,7 +42,9 @@
                                 .Where(x => x.Name == fieldName && x.IsPrivate);
 
             if (fieldInfo is null || !fieldInfo.Any())
+            {
                 throw new EntryPointNotFoundException();
+            }
 
             var field = fieldInfo.ElementAt(pos);
 

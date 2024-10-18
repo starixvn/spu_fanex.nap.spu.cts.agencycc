@@ -138,10 +138,12 @@
             {
                 isSuccess = PushCustClassificationToMainDB(lastestClassifications, paras.RoleGroup, paras.ServiceName);
 
+#pragma warning disable S125 // Sections of code should not be commented out
                 //if (paras.IsUpdateDangerToMainDB && isSuccess)
                 //{
                 //    isSuccess = UpdateDangerLevelToMainDB(lastestClassifications, paras.ServiceName);
                 //}
+#pragma warning restore S125 // Sections of code should not be commented out
             }
 
             return isSuccess;
@@ -151,7 +153,7 @@
         {
             if (lastestClassifications != null && lastestClassifications.Any())
             {
-                var custClassification = lastestClassifications.Select(c => new LatestClassificationModel()
+                var custClassification = lastestClassifications.Select(c => new LatestClassificationModel
                 {
                     CustId = c.CustID,
                     Category = c.CategoryID,

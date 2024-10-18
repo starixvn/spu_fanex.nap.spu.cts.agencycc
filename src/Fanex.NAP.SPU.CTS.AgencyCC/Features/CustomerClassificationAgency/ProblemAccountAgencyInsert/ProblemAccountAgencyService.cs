@@ -9,6 +9,7 @@
     using System.Linq;
     using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
 
+#pragma warning disable S103 // Lines should not be too long
     public interface IProblemAccountAgencyService
     {
         IEnumerable<long> RescanCustomerClassification(IEnumerable<RescanCustomerClassificationAgencyEntity> custRescans, FunctionId funcId, AgencyCCInputFlow ccInputFlow, bool isToQueue, string serviceName);
@@ -133,3 +134,4 @@
         }
     }
 }
+#pragma warning restore S103 // Lines should not be too long

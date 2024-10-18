@@ -9,7 +9,7 @@ using System;
 using Xunit;
 using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
 
-namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.CustomerClassificationAgency
+namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Features.CustomerClassificationAgency
 {
     public class BaseCustomerClassificationAgencyServiceTest
     {

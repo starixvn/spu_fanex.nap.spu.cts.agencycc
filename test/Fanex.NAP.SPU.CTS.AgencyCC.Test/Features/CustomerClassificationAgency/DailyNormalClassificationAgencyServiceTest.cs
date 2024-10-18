@@ -1,16 +1,16 @@
-﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.CustomerClassificationAgency.DailyNormalClassificationAgency
+﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Features.CustomerClassificationAgency.DailyNormalClassificationAgency
 {
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.NormalClassificationAgency;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.NormalClassificationAgency.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.SystemParameter;
-    using Fanex.NAP.SPU.CTS.AgencyCC.Test.Infrastructure.Extensions;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Tests.Infrastructure.Extensions;
     using NSubstitute;
     using NSubstitute.ExceptionExtensions;
     using System;
     using System.Collections.Generic;
     using Xunit;
     using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
-    using static Fanex.NAP.SPU.CTS.AgencyCC.Test.Infrastructure.Consts.CustomerClassificationAgency.DailyNormalClassificationAgencyConsts;
+    using static Fanex.NAP.SPU.CTS.AgencyCC.Tests.Infrastructure.Consts.CustomerClassificationAgency.DailyNormalClassificationAgencyConsts;
 
     public class DailyNormalClassificationAgencyServiceTest
     {

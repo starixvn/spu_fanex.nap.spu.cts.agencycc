@@ -1,5 +1,6 @@
-﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Infrastructure.Consts.PushDataToExternal
+﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Infrastructure.Consts.PushDataToExternal
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S3898:Value types should implement \"IEquatable<T>\"", Justification = "<Pending>")]
     public struct CustClassificationToMainDBConsts
     {
         public struct PrivateMethodName

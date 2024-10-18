@@ -2,7 +2,7 @@
 using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB;
 using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Entities;
 using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Model;
-using Fanex.NAP.SPU.CTS.AgencyCC.Test.Infrastructure.Extensions;
+using Fanex.NAP.SPU.CTS.AgencyCC.Tests.Infrastructure.Extensions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Sentry;
@@ -12,9 +12,9 @@ using System.Linq;
 using System.Reflection;
 using Xunit;
 using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
-using static Fanex.NAP.SPU.CTS.AgencyCC.Test.Infrastructure.Consts.PushDataToExternal.CustClassificationToMainDBConsts;
+using static Fanex.NAP.SPU.CTS.AgencyCC.Tests.Infrastructure.Consts.PushDataToExternal.CustClassificationToMainDBConsts;
 
-namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.PushDataToExternal
+namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Features.PushDataToExternal
 {
     public class CustClassificationToMainDBTests
     {

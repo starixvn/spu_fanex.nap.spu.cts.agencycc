@@ -5,7 +5,7 @@ using Sentry;
 using System;
 using Xunit;
 
-namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.DataLogTracking
+namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Features.DataLogTracking
 {
     public class DataLogTrackingTest
     {

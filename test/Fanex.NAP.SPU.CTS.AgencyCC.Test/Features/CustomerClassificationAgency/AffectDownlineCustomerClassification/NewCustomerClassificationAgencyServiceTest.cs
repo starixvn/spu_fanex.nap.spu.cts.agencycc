@@ -1,6 +1,6 @@
 ﻿using Fanex.NAP.SPU.CTS.AgencyCC.Features.AntiFraudCenter;
 using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.AffectDownlineCustomerClassification.NewCustomerClassificationAgency;
-using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.AffectDownlineCustomerClassification.NewCustomerClassificationAgency.Entitites;
+using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.AffectDownlineCustomerClassification.NewCustomerClassificationAgency.Entities;
 using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.AffectDownlineCustomerClassification.NewCustomerClassificationAgency.Model;
 using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency;
 using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Entities;
@@ -12,7 +12,7 @@ using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RescanCus
 using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB;
 using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Model;
 using Fanex.NAP.SPU.CTS.AgencyCC.Features.SystemParameter;
-using Fanex.NAP.SPU.CTS.AgencyCC.Test.Infrastructure.Extensions;
+using Fanex.NAP.SPU.CTS.AgencyCC.Tests.Infrastructure.Extensions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Sentry;
@@ -20,9 +20,9 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
-using static Fanex.NAP.SPU.CTS.AgencyCC.Test.Infrastructure.Consts.CustomerClassificationAgency.AffectDownlineCustomerClassification.NewCustomerClassificationAgencyConsts;
+using static Fanex.NAP.SPU.CTS.AgencyCC.Tests.Infrastructure.Consts.CustomerClassificationAgency.AffectDownlineCustomerClassification.NewCustomerClassificationAgencyConsts;
 
-namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.CustomerClassificationAgency.AffectDownlineCustomerClassification
+namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Features.CustomerClassificationAgency.AffectDownlineCustomerClassification
 {
     public class NewCustomerClassificationAgencyServiceTest
     {
@@ -57,9 +57,9 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.CustomerClassificationAgency.
             // Arrange
             var newCustomerClassificationAgencyModel = new NewCustomerClassificationAgencyModel
             {
-                VVIPClassification = new List<VVIPCategoryAgencyEntity>()
+                VVIPClassification = new List<VvipCategoryAgencyEntity>
                 {
-                    new VVIPCategoryAgencyEntity()
+                    new VvipCategoryAgencyEntity()
                 }
             };
 
@@ -103,9 +103,9 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.CustomerClassificationAgency.
             // Arrange
             var newCustomerClassificationAgencyModel = new NewCustomerClassificationAgencyModel
             {
-                VVIPClassification = new List<VVIPCategoryAgencyEntity>()
+                VVIPClassification = new List<VvipCategoryAgencyEntity>
                 {
-                    new VVIPCategoryAgencyEntity()
+                    new VvipCategoryAgencyEntity()
                 }
             };
 

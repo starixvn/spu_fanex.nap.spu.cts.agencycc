@@ -1,15 +1,15 @@
-﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.CustomerClassificationAgency.RealtimeClassificationAgency
+﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Features.CustomerClassificationAgency.RealtimeClassificationAgency
 {
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RealtimeClassificationAgency;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RealtimeClassificationAgency.Entities;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RealtimeClassificationAgency.Model;
-    using Fanex.NAP.SPU.CTS.AgencyCC.Test.Infrastructure.Extensions;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Tests.Infrastructure.Extensions;
     using NSubstitute;
     using NSubstitute.ExceptionExtensions;
     using System;
     using System.Collections.Generic;
     using Xunit;
-    using static Fanex.NAP.SPU.CTS.AgencyCC.Test.Infrastructure.Consts.CustomerClassificationAgency.CustomerClassificationAgencyServiceConsts;
+    using static Fanex.NAP.SPU.CTS.AgencyCC.Tests.Infrastructure.Consts.CustomerClassificationAgency.CustomerClassificationAgencyServiceConsts;
 
     public class RealtimeClassificationAgencyServiceTest
     {

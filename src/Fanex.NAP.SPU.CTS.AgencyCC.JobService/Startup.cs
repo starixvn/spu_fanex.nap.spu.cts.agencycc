@@ -6,6 +6,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService
     using Fanex.Logging;
     using Fanex.Logging.Sentry;
     using Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Shares;
     using HealthChecks.UI.Client;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -48,6 +49,8 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService
             RegisterLogging(appSettings);
 
             FanexDataConfig(appSettings);
+
+            ApiHelper.Setup(appSettings.APIHelperConfig);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

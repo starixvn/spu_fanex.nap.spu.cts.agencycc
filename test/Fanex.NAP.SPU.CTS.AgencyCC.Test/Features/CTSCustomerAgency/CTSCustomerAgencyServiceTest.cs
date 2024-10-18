@@ -6,7 +6,7 @@ using NSubstitute;
 using System.Collections.Generic;
 using Xunit;
 
-namespace Fanex.NAP.SPU.CTS.AgencyCC.Test.Features.CTSCustomerAgency
+namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Features.CTSCustomerAgency
 {
     public class CTSCustomerAgencyServiceTest
     {
