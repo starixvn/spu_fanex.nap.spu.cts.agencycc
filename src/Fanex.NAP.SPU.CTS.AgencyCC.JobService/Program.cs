@@ -43,7 +43,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
 #pragma warning disable S1075 // URIs should not be hardcoded
-                    webBuilder.UseUrls("http://*:5000");
+                    webBuilder.UseUrls("http://*:5001");
 #pragma warning restore S1075 // URIs should not be hardcoded
 
                     webBuilder

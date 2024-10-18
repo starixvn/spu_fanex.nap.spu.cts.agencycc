@@ -147,23 +147,19 @@
             return isSuccess;
         }
 
-#pragma warning disable S1172
         private bool PushCustClassificationToMainDB(IEnumerable<LatestCCDangerLevelEntity> lastestClassifications, RoleGroupType roleGroup, string serviceName)
-#pragma warning restore S1172
         {
-#pragma warning disable S125
-            //if (lastestClassifications != null && lastestClassifications.Any())
-            //{
-            //    var custClassification = lastestClassifications.Select(c => new LatestClassificationModel()
-            //    {
-            //        CustId = c.CustID,
-            //        Category = c.CategoryID,
-            //        CustomerClass = c.CustomerClass
-            //    });
+            if (lastestClassifications != null && lastestClassifications.Any())
+            {
+                var custClassification = lastestClassifications.Select(c => new LatestClassificationModel()
+                {
+                    CustId = c.CustID,
+                    Category = c.CategoryID,
+                    CustomerClass = c.CustomerClass
+                });
 
-            //    return PushCustomerClassification(custClassification, roleGroup, Constants.RetryPushCCToExternal, serviceName);
-            //}
-#pragma warning restore S125
+                return PushCustomerClassification(custClassification, roleGroup, Constants.RetryPushCCToExternal, serviceName);
+            }
 
             return true;
         }
