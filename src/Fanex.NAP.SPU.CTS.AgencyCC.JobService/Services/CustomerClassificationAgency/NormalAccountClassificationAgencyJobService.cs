@@ -68,7 +68,10 @@
             {
                 var custChunks = customerList.Chunk(batchInternalSize).ToList();
 
-                custChunks.ForEach(custBatch => ClassifyNormalAccount(custBatch, normalPoolCustomer.ScannedMaxId));
+                custChunks
+                    .AsParallel()
+                    .WithDegreeOfParallelism(4)
+                    .ForAll(custBatch => ClassifyNormalAccount(custBatch, normalPoolCustomer.ScannedMaxId));
             }
         }
 

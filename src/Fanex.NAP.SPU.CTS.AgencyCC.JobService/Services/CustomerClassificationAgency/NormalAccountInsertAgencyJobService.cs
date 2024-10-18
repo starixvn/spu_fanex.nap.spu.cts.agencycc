@@ -81,7 +81,7 @@
 
                 custChunks
                     .AsParallel()
-                    .WithDegreeOfParallelism(5)
+                    .WithDegreeOfParallelism(4)
                     .ForAll(custBatch => InsertNormalAccount(custBatch, batchExternalSize, failedThreads));
 
                 _service.CompleteNormalAccountInsert(normalAccountModel.ScannedMaxId, failedThreads.IsEmpty);
