@@ -1,22 +1,22 @@
-﻿using Fanex.NAP.SPU.CTS.AgencyCC.Features.CTSCustomer;
-using Fanex.NAP.SPU.CTS.AgencyCC.Features.CTSCustomer.Model;
-using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RescanCustomerClassificationAgency.Model;
-using FluentAssertions;
-using NSubstitute;
-using System.Collections.Generic;
-using Xunit;
-
-namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Features.CTSCustomerAgency
+﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Features.CTSCustomerAgency
 {
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CTSCustomer;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CTSCustomer.Model;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RescanCustomerClassificationAgency.Model;
+    using FluentAssertions;
+    using NSubstitute;
+    using System.Collections.Generic;
+    using Xunit;
+
     public class CTSCustomerAgencyServiceTest
     {
-        private readonly ICTSCustomerAgencyDataAccess _dataAccess;
-        private readonly ICTSCustomerAgencyService _service;
+        private readonly ICtsCustomerAgencyDataAccess _dataAccess;
+        private readonly ICtsCustomerAgencyService _service;
 
         public CTSCustomerAgencyServiceTest()
         {
-            _dataAccess = Substitute.For<ICTSCustomerAgencyDataAccess>();
-            _service = new CTSCustomerAgencyService(_dataAccess);
+            _dataAccess = Substitute.For<ICtsCustomerAgencyDataAccess>();
+            _service = new CtsCustomerAgencyService(_dataAccess);
         }
 
         [Fact]

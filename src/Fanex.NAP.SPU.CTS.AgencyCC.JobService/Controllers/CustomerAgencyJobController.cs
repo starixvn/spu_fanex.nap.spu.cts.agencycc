@@ -12,9 +12,9 @@
     public class CustomerAgencyJobController : ControllerBase
     {
         private readonly ISentryClient _sentryClient;
-        private readonly ICTSCustomerAgencyJobService _ctsCustomerAgencyJob;
+        private readonly ICtsCustomerAgencyJobService _ctsCustomerAgencyJob;
 
-        public CustomerAgencyJobController(ISentryClient sentryClient, ICTSCustomerAgencyJobService ctsCustomerAgencyJob)
+        public CustomerAgencyJobController(ISentryClient sentryClient, ICtsCustomerAgencyJobService ctsCustomerAgencyJob)
         {
             _sentryClient = sentryClient;
             _ctsCustomerAgencyJob = ctsCustomerAgencyJob;

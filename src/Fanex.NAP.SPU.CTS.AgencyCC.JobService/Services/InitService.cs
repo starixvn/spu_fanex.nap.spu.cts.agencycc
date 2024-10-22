@@ -71,9 +71,9 @@
 
         private static void RegisterCustomerAgency(IServiceCollection services)
         {
-            services.AddSingleton<ICTSCustomerAgencyDataAccess, CTSCustomerAgencyDataAccess>();
-            services.AddSingleton<ICTSCustomerAgencyService, CTSCustomerAgencyService>();
-            services.AddSingleton<ICTSCustomerAgencyJobService, CTSCustomerAgencyJobService>();
+            services.AddSingleton<ICtsCustomerAgencyDataAccess, CtsCustomerAgencyDataAccess>();
+            services.AddSingleton<ICtsCustomerAgencyService, CtsCustomerAgencyService>();
+            services.AddSingleton<ICtsCustomerAgencyJobService, CtsCustomerAgencyJobService>();
         }
 
         private static void RegisterDataAccesLayer(IServiceCollection services)

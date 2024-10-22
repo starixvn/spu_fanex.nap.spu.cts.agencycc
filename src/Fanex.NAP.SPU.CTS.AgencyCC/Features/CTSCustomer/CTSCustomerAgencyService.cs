@@ -2,20 +2,16 @@
 {
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CTSCustomer.Model;
 
-#pragma warning disable S101 // Types should be named in PascalCase
-    public interface ICTSCustomerAgencyService
-#pragma warning restore S101 // Types should be named in PascalCase
+    public interface ICtsCustomerAgencyService
     {
         InactivateNewCustomerModel GetInactivateNewCustomers();
     }
 
-#pragma warning disable S101 // Types should be named in PascalCase
-    public class CTSCustomerAgencyService : ICTSCustomerAgencyService
-#pragma warning restore S101 // Types should be named in PascalCase
+    public class CtsCustomerAgencyService : ICtsCustomerAgencyService
     {
-        private readonly ICTSCustomerAgencyDataAccess _dataAccess;
+        private readonly ICtsCustomerAgencyDataAccess _dataAccess;
 
-        public CTSCustomerAgencyService(ICTSCustomerAgencyDataAccess dataAccess)
+        public CtsCustomerAgencyService(ICtsCustomerAgencyDataAccess dataAccess)
         {
             _dataAccess = dataAccess;
         }

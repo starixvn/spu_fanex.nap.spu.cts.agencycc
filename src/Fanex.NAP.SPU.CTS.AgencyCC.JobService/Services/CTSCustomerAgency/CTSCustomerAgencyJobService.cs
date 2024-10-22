@@ -1,39 +1,35 @@
-﻿using Fanex.Logging.Extensions;
-using Fanex.Logging.Extensions.Database;
-using Fanex.NAP.SPU.CTS.AgencyCC.Features.CTSCustomer;
-using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RescanCustomerClassificationAgency;
-using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RescanCustomerClassificationAgency.Model;
-using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Model;
-using Fanex.NAP.SPU.CTS.AgencyCC.Features.SystemParameter;
-using Sentry;
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
-
-namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CTSCustomerAgency
+﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CTSCustomerAgency
 {
-#pragma warning disable S101 // Types should be named in PascalCase
-    public interface ICTSCustomerAgencyJobService
-#pragma warning restore S101 // Types should be named in PascalCase
+    using Fanex.Logging.Extensions;
+    using Fanex.Logging.Extensions.Database;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CTSCustomer;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RescanCustomerClassificationAgency;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RescanCustomerClassificationAgency.Model;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Model;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.SystemParameter;
+    using Sentry;
+    using System;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
+
+    public interface ICtsCustomerAgencyJobService
     {
         Task<bool> InactivateNewCustomers(int batchSize);
     }
 
-#pragma warning disable S101 // Types should be named in PascalCase
-    public class CTSCustomerAgencyJobService : ICTSCustomerAgencyJobService
-#pragma warning restore S101 // Types should be named in PascalCase
+    public class CtsCustomerAgencyJobService : ICtsCustomerAgencyJobService
     {
         private readonly ISentryClient _sentryClient;
-        private readonly ICTSCustomerAgencyService _service;
+        private readonly ICtsCustomerAgencyService _service;
         private readonly ISystemParameterServices _systemParameter;
         private readonly IRescanCustClassificationAgencyService _rescanCustClassification;
         private readonly IAppSettings _appSettings;
 
-        public CTSCustomerAgencyJobService(
+        public CtsCustomerAgencyJobService(
             ISentryClient sentryClient,
-            ICTSCustomerAgencyService service,
+            ICtsCustomerAgencyService service,
             ISystemParameterServices systemParameter,
             IRescanCustClassificationAgencyService rescanCustClassification,
             IAppSettings appSettings)
