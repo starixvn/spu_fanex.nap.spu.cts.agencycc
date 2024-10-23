@@ -44,6 +44,14 @@
             RegisterWrapperCustomerClassificaton(services);
 
             RegisterAffectDownline(services);
+
+            RegisterRobotAgency(services);
+        }
+
+        private static void RegisterRobotAgency(IServiceCollection services)
+        {
+            services.AddSingleton<IAffectedDownlineAgencyService, AffectedDownlineAgencyService>();
+            services.AddSingleton<IRobotAgencyJobService, RobotAgencyJobService>();
         }
 
         private static void RegisterAffectDownline(IServiceCollection services)

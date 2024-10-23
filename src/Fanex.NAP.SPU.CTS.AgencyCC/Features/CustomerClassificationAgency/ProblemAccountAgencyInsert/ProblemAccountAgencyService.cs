@@ -9,14 +9,17 @@
     using System.Linq;
     using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
 
-#pragma warning disable S103 // Lines should not be too long
     public interface IProblemAccountAgencyService
     {
-        IEnumerable<long> RescanCustomerClassification(IEnumerable<RescanCustomerClassificationAgencyEntity> custRescans, FunctionId funcId, AgencyCCInputFlow ccInputFlow, bool isToQueue, string serviceName);
+        IEnumerable<long> RescanCustomerClassification(IEnumerable<RescanCustomerClassificationAgencyEntity> custRescans, 
+            FunctionId funcId, AgencyCCInputFlow ccInputFlow, bool isToQueue, string serviceName);
 
-        IEnumerable<long> InsertProblemAccountsAgencyPackage(IEnumerable<InsertProblemAccountEntity> problemAccounts, FunctionId funcId, AgencyCCInputFlow ccInputFlow, bool isToQueue, string serviceName);
+        IEnumerable<long> InsertProblemAccountsAgencyPackage(IEnumerable<InsertProblemAccountEntity> problemAccounts, 
+            FunctionId funcId, AgencyCCInputFlow ccInputFlow, bool isToQueue, string serviceName);
 
         ResultRemoveCustomerClassificationAgencyModel RemoveProblemAccount(IEnumerable<RemoveProblemAccountEntity> problemAccounts, bool isFromQueue);
+
+        int? GetCategoryByCategoryTypeName(string categoryTypeName);
     }
 
     public class ProblemAccountAgencyService : BaseCustomerClassificationAgencyService, IProblemAccountAgencyService
@@ -25,14 +28,16 @@
             IBaseCustomerClassificationAgencyDataAccess baseCCAgencyDataAccess,
             ISentryClient sentryClient) : base(baseCCAgencyDataAccess, sentryClient) { }
 
-        public IEnumerable<long> RescanCustomerClassification(IEnumerable<RescanCustomerClassificationAgencyEntity> custRescans, FunctionId funcId, AgencyCCInputFlow ccInputFlow, bool isToQueue, string serviceName)
+        public IEnumerable<long> RescanCustomerClassification(IEnumerable<RescanCustomerClassificationAgencyEntity> custRescans, 
+            FunctionId funcId, AgencyCCInputFlow ccInputFlow, bool isToQueue, string serviceName)
         {
             var pas = custRescans.Select(x => new InsertProblemAccountEntity(x));
 
             return InsertProblemAccountsAgencyPackage(pas, funcId, ccInputFlow, isToQueue, serviceName);          
         }
 
-        public IEnumerable<long> InsertProblemAccountsAgencyPackage(IEnumerable<InsertProblemAccountEntity> problemAccounts, FunctionId funcId, AgencyCCInputFlow ccInputFlow, bool isToQueue, string serviceName)
+        public IEnumerable<long> InsertProblemAccountsAgencyPackage(IEnumerable<InsertProblemAccountEntity> problemAccounts, 
+            FunctionId funcId, AgencyCCInputFlow ccInputFlow, bool isToQueue, string serviceName)
         {
             if (problemAccounts != null && problemAccounts.Any())
             {
@@ -77,7 +82,7 @@
             }            
 
             return removePaResult;
-        }
+        }      
 
         private void InsertPALogicsAgency(IEnumerable<CustInfoEntity> customerInfo)
         {
@@ -134,4 +139,3 @@
         }
     }
 }
-#pragma warning restore S103 // Lines should not be too long

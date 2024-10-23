@@ -6,6 +6,9 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Shares
     public static class Constants
     {
         public const int RetryPushCCToExternal = 3;
+        public const int StarixITId = 10278938;
+
+        public const string CATEGORYTYPE_AGENCY_CATEID_ROBOT = "CONST_AGENCY_CATEID_ROBOT";
 
         public enum CTS_SystemParameters
         {
@@ -57,8 +60,9 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Shares
 
         public enum FunctionId
         {
-            InactivateNewCustomer = 11,
             InsertNewCustJob = 4,
+            InactivateNewCustomer = 11,            
+            RobotUserJob = 23,
             DownlineCustomerClassification = 52
         }
 

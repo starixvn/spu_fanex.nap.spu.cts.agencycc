@@ -18,6 +18,8 @@
         DBResult UpdateBetLimitOfFlaggedCustomer(string custIDs);
 
         DBResult UpdateBetLimitOfUnflaggedCustomer(string custIDs);
+
+        int? GetCategoryByCategoryTypeName(string categoryTypeName);
     }
 
     public class BaseCustomerClassificationAgencyService : IBaseCustomerClassificationAgencyService
@@ -75,6 +77,11 @@
         public DBResult UpdateBetLimitOfUnflaggedCustomer(string custIDs)
         {
             return _dataAccess.UpdateBetLimitOfUnflaggedCustomer(custIDs);
+        }
+
+        public int? GetCategoryByCategoryTypeName(string categoryTypeName)
+        {
+            return _dataAccess.GetCategoryByCategoryTypeName(categoryTypeName);
         }
     }
 }

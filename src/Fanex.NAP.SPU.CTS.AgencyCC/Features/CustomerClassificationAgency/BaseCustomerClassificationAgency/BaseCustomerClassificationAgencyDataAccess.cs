@@ -5,6 +5,7 @@
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Entities;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Shares.Models;
+    using System.Linq;
     using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
 
     public interface IBaseCustomerClassificationAgencyDataAccess
@@ -18,6 +19,8 @@
         DBResult UpdateBetLimitOfFlaggedCustomer(string custIDs);
 
         DBResult UpdateBetLimitOfUnflaggedCustomer(string custIDs);
+
+        int? GetCategoryByCategoryTypeName(string categoryTypeName);
     }
 
     public class BaseCustomerClassificationAgencyDataAccess : IBaseCustomerClassificationAgencyDataAccess
@@ -109,5 +112,16 @@
             };
         }
 
+        public int? GetCategoryByCategoryTypeName(string categoryTypeName)
+        {
+            var criteria = new GetCategoryByCategoryTypeNameCriteria
+            {
+                CategoryTypeName = categoryTypeName
+            };
+
+            var result = _repository.Fetch<int>(criteria);
+
+            return result != null ? result.FirstOrDefault() : null;
+        }
     }
 }

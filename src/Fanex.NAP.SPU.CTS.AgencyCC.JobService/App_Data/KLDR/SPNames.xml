@@ -12,9 +12,6 @@
 		<Setting Key="CTS_DC_CustInfo_GetCustIDsRole" SpName="CTS_DC_CustInfo_GetCustIDsRole" DbName="MySQL.CTS_DataCenter.ctsService" />
 		<Setting Key="CTS_GeneralNormalClassificationAgency_RescanNormal_Preprocess" SpName="CTS_GeneralNormalClassificationAgency_RescanNormal_Preprocess" DbName="SQL.bodbVR2Model.bodbSPUNet" />
 	</Function>
-	<Function Name="CustomerClassification">
-		<Setting Key="CTS_DC_CustClassification_GetCCAndDangerLevel" SpName="CTS_DC_CustClassification_GetCCAndDangerLevel" DbName="MySQL.CTS_DataCenter.ctsService" />
-	</Function>
 	<Function Name="RealtimeClassification">
 		<Setting Key="CTS_DC_CustClassificationAgency_Realtime_GetCategory" SpName="CTS_DC_CustClassificationAgency_Realtime_GetCategory" DbName="MySQL.CTS_DataCenter.ctsService" />
 		<Setting Key="CTS_GeneralNormalClassificationAgency_RealTime_GetChanges" SpName="CTS_GeneralNormalClassificationAgency_RealTime_GetChanges" DbName="SQL.bodbVR2Model.bodbSPUNet" />
@@ -34,7 +31,9 @@
 		<Setting Key="CTS_DC_CustClassificationAgency_Rescan_Get" SpName="CTS_DC_CustClassificationAgency_Rescan_Get" DbName="MySQL.CTS_DataCenter.ctsService" />
 		<Setting Key="CTS_DC_CustClassificationAgency_Insert" SpName="CTS_DC_CustClassificationAgency_Insert" DbName="MySQL.CTS_DataCenter.ctsServiceAdmin" TimeOut="600" />
 		<Setting Key="CTS_DC_CustInfo_CheckCategoryInfoNewCustAgency" SpName="CTS_DC_CustInfo_CheckCategoryInfoNewCustAgency" DbName="MySQL.CTS_DataCenter.ctsService" />
-    	<Setting Key="CTS_DC_CustClassificationAgency_Remove" SpName="CTS_DC_CustClassificationAgency_Remove" DbName="MySQL.CTS_DataCenter.ctsServiceAdmin" TimeOut="600" />
+    <Setting Key="CTS_DC_CustClassificationAgency_Remove" SpName="CTS_DC_CustClassificationAgency_Remove" DbName="MySQL.CTS_DataCenter.ctsServiceAdmin" TimeOut="600" />
+    <Setting Key="CTS_DC_Category_GetByCategoryTypeName" SpName="CTS_DC_Category_GetByCategoryTypeName" DbName="MySQL.CTS_DataCenter.ctsService" />
+    <Setting Key="CTS_DC_CustClassification_GetCCAndDangerLevel" SpName="CTS_DC_CustClassification_GetCCAndDangerLevel" DbName="MySQL.CTS_DataCenter.ctsService" />
   </Function>
 	<Function Name="DailyNormalClassification">
 		<Setting Key="CTS_GeneralNormalClassificationAgency_Daily_Preprocess" SpName="CTS_GeneralNormalClassificationAgency_Daily_Preprocess" DbName="SQL.bodbVR2Model.bodbSPUNet" TimeOut="1200" />

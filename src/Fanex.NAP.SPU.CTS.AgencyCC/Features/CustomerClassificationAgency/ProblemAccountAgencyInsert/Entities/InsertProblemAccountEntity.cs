@@ -1,11 +1,23 @@
 ﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.ProblemAccountAgencyInsert
 {
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Entities;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.TWRobot;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Shares;
     using System;  
 
     public class InsertProblemAccountEntity : CustomerClassificationAgencyEntity
     {
         public InsertProblemAccountEntity() { }
+
+        public InsertProblemAccountEntity(TWRobotUserEntity robot, int? robotCategoryID)
+        {
+            this.CustID = robot.CustId;
+            this.CategoryID = robotCategoryID;
+            this.RobotCounter = robot.Counter;
+            this.CreatedBy = Constants.StarixITId;
+            this.IsFromTW = true;
+            this.IsMarkedDirectly = true;
+        }
 
         public InsertProblemAccountEntity(RescanCustomerClassificationAgencyEntity data)
         {
@@ -45,5 +57,8 @@
         public bool IsFromAI { get; set; }
 
         public DateTime? CreatedDate { get; set; }
+
+        public int? RobotCounter { get; set; }
+
     }
 }
