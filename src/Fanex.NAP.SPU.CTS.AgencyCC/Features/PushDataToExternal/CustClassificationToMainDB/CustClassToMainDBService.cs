@@ -75,7 +75,14 @@
                 {
                     var result = _dataAccess.UpdateCustomerClassification(customerClassifications, roleGroup);
 
-                    if (result.ErrorCode == 200 || retryTime == 0)
+                    if (result.ErrorCode == 200)
+                    {
+                        Utilities.LogSentryError(
+                            serviceName, $"PushCustomerClassificationToMain throw exception: not existing CustIDs in mainDB",
+                            customerClassifications, new Exception(result.ErrorMsg), _sentryClient);
+                    }
+
+                    if (retryTime == 0)
                     {
                         Utilities.LogSentryError(
                             serviceName, $"PushCustomerClassificationToMain fail with error code: {result.ErrorCode}",
