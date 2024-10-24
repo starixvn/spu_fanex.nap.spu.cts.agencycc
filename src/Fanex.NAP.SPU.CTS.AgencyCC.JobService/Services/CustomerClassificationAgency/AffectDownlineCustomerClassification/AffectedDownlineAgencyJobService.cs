@@ -5,6 +5,7 @@
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.ProblemAccountAgencyInsert;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RescanCustomerClassificationAgency;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RescanCustomerClassificationAgency.Model;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgencyAPI.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.DataLogTracking;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Model;
@@ -17,7 +18,7 @@
 
     public interface IAffectedDownlineAgencyJobService
     {
-        Task<bool> Execute(CustClassificationFromQueueModel agencyInfos);
+        Task<bool> Execute(CustomerClassificationAgencyParameterModel<CustClassificationFromQueueModel> agencyInfos);
     }
 
     public class AffectedDownlineAgencyJobService : IAffectedDownlineAgencyJobService
@@ -40,7 +41,7 @@
             IRescanCustClassificationAgencyService rescanCustClassificationService,
             IAffectedDownlineAgencyService affectedDownlineAgency,
             IDataLogTrackingServices dataLogTrackingServices,
-            ICustClassToMainDBService custClassToMainDBService, 
+            ICustClassToMainDBService custClassToMainDBService,
             IAntiFraudCenterServices antiFraudCenterServices)
 #pragma warning restore S107
         {
@@ -55,7 +56,7 @@
             _antiFraudCenterServices = antiFraudCenterServices;
         }
 
-        public Task<bool> Execute(CustClassificationFromQueueModel agencyInfos)
+        public Task<bool> Execute(CustomerClassificationAgencyParameterModel<CustClassificationFromQueueModel> agencyInfos)
         {
             try
             {
@@ -71,10 +72,10 @@
             }
         }
 
-        private bool JobRun(CustClassificationFromQueueModel agencyInfos)
+        private bool JobRun(CustomerClassificationAgencyParameterModel<CustClassificationFromQueueModel> agencyInfos)
         {
             var isSuccess = true;
-            var actionType = agencyInfos.ActionType;
+            var actionType = agencyInfos.Data.ActionType;
 
             var rescanParamaters = new RescanParametersModel
             {
@@ -100,25 +101,25 @@
             {
                 case (int)DownlineClassification_ActionType.InsertVVIP:
                     {
-                        isSuccess = InsertVVIP(agencyInfos, rescanParamaters);
+                        isSuccess = InsertVVIP(agencyInfos.Data, rescanParamaters);
 
                         break;
                     }
                 case (int)DownlineClassification_ActionType.RemoveVVIP:
                     {
-                        isSuccess = RemoveVVIP(agencyInfos, rescanParamaters);
+                        isSuccess = RemoveVVIP(agencyInfos.Data, rescanParamaters);
 
                         break;
                     }
                 case (int)DownlineClassification_ActionType.InsertPA:
                     {
-                        isSuccess = InsertPA(agencyInfos, rescanParamaters);
+                        isSuccess = InsertPA(agencyInfos.Data, rescanParamaters);
 
                         break;
                     }
                 case (int)DownlineClassification_ActionType.RemovePA:
                     {
-                        isSuccess = RemovePA(agencyInfos, rescanParamaters);
+                        isSuccess = RemovePA(agencyInfos.Data, rescanParamaters);
 
                         break;
                     }
@@ -143,13 +144,13 @@
                     IsLicensee = c.IsLicensee,
                     Remark = c.Remark,
                     IsMarkedDirectly = false,
-                    IsFromCTS = c.IsFromCTS,                   
+                    IsFromCTS = c.IsFromCTS,
                     CreatedBy = c.CreatedBy
                 });
 
-                var result = _problemAccountAgencyService.InsertProblemAccountsAgencyPackage(probAccounts, 
-                    FunctionId.DownlineCustomerClassification, 
-                    AgencyCCInputFlow.InsertPACategory, 
+                var result = _problemAccountAgencyService.InsertProblemAccountsAgencyPackage(probAccounts,
+                    FunctionId.DownlineCustomerClassification,
+                    AgencyCCInputFlow.InsertPACategory,
                     rescanParameters.IsToQueue, _serviceName);
 
                 return _custClassToMainDBService.PushExternalProblemAcountPackage(result, rescanParameters.PushDataExternal);
@@ -183,7 +184,7 @@
                 if (isSuccess && result.CustInfos != null && result.CustInfos.Any())
                 {
                     isSuccess = _rescanCustClassificationService.RescanCustomerClassificationAgency(result.CustInfos.Select(c => c.CustID).Distinct(), rescanParameters);
-                }               
+                }
             }
 
             return isSuccess;
@@ -205,7 +206,7 @@
 
                 _antiFraudCenterServices.DeleteAFCAccounts(custIDs, FromFlow.CTSServices, parameters.PushDataExternal.IsSyncAFCData, parameters.PushDataExternal.AFCDeleteAccountURL);
             }
-            
+
             return isSuccess;
         }
 

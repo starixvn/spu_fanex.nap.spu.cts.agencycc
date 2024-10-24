@@ -33,7 +33,7 @@
         }
 
         [HttpPost("affectDownlineAgency")]
-        public async Task<bool> AffectDownlineAgency([FromBody] CustClassificationFromQueueModel agencyInfos)
+        public async Task<bool> AffectDownlineAgency([FromBody] CustomerClassificationAgencyParameterModel<CustClassificationFromQueueModel> agencyInfos)
         {
             return await _affectedDownlineAgencyJobService.Execute(agencyInfos);
         }
