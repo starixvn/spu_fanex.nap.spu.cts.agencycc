@@ -33,6 +33,8 @@
             IsMarkedDirectly = data.IsMarkedDirectly;           
             IsFromCTS = data.IsFromCTS;                  
             CreatedDate = data.CreatedDate;
+            IsFromTW = data.IsFromTW;
+            RobotCounter = data.RobotCounter;
         }
 
         public Int64 CTSCustID { get; set; }

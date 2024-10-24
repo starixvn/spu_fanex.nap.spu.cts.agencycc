@@ -28,6 +28,10 @@
 
         public bool IsFromCTS { get; set; }
 
+        public bool IsFromTW { get; set; }
+
+        public int? RobotCounter { get; set; }
+
         public DateTime LastModifiedDate { get; set; }
 
         public int InputFlowID { get; set; }
