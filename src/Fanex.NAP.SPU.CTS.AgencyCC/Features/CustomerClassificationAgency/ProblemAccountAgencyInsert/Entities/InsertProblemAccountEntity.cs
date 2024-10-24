@@ -14,6 +14,7 @@
             this.CustID = robot.CustId;
             this.CategoryID = robotCategoryID;
             this.RobotCounter = robot.Counter;
+            this.RoleID = robot.RoleID;
             this.CreatedBy = Constants.StarixITId;
             this.IsFromTW = true;
             this.IsMarkedDirectly = true;
@@ -36,7 +37,7 @@
 
         public Int64 CTSCustID { get; set; }
 
-        public int? RoleID { get; set; }
+        public int RoleID { get; set; }
 
         public int SubscriberID { get; set; }
        

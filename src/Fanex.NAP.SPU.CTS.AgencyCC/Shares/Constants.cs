@@ -6,7 +6,9 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Shares
     public static class Constants
     {
         public const int RetryPushCCToExternal = 3;
+#pragma warning disable S2148 // Underscores should be used to make large numbers readable
         public const int StarixITId = 10278938;
+#pragma warning restore S2148 // Underscores should be used to make large numbers readable
 
         public const string CATEGORYTYPE_AGENCY_CATEID_ROBOT = "CONST_AGENCY_CATEID_ROBOT";
 
