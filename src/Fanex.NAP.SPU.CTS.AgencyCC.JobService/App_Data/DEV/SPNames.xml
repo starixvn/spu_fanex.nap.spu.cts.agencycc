@@ -49,4 +49,7 @@
     <Setting Key="NAP_BLControl_EvidenceFlagged" SpName="NAP_BLControl_EvidenceFlagged" DbName="SQL.CustDB.bodbAdminNet" />
     <Setting Key="NAP_BLControl_EvidenceUnflagged" SpName="NAP_BLControl_EvidenceUnflagged" DbName="SQL.CustDB.bodbAdminNet" />
   </Function>
+  <Function name="LogData">
+    <Setting Key="CTS_Archive_Log_Insert" SpName="CTS_Archive_Log_Insert" DbName="MySQL.CTS_Archive2.ctsServiceAdmin" />
+  </Function>
 </Functions>
