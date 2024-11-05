@@ -10,6 +10,8 @@
 
         public int SubscriberID { get; set; }
 
+        public int? CategoryID { get; set; }
+
         public int CreatedBy { get; set; }
 
         public string Remark { get; set; }

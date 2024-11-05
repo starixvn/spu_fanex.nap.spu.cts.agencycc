@@ -80,6 +80,7 @@
                     CustID = c.CustID,
                     CTSCustID = c.CTSCustID,
                     SubscriberID = c.SubscriberID,
+                    CategoryID = c.CategoryID,
                     RoleID = c.RoleID,
                     Remark = c.Remark,
                     CreatedBy = c.CreatedBy
