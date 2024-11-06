@@ -59,7 +59,7 @@
                         {
                             IsToQueue = false,
                             FunctionId = FunctionId.InactivateNewCustomer,
-                            RescanNormalType = RescanNormalType.Auto_Customer,
+                            RescanNormalType = RescanNormalType.Auto_InactiveCustomer,
                             InternalBatchSize = batchSize,
                             ServiceName = "InactiveNewCustomerAgency",
                             PushDataExternal = new PushDataToExternalModel

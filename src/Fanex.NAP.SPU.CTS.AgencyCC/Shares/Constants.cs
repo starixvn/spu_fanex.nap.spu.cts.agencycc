@@ -70,9 +70,9 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Shares
 
         public enum RescanNormalType
         {
-            Manual = 4,
             Auto_Customer = 5,
-            Auto_AfftectedDownline = 6
+            Auto_AfftectedDownline = 6,
+            Auto_InactiveCustomer = 8
         }
 
         public enum CustomerRole
