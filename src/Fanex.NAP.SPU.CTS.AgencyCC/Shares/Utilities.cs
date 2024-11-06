@@ -34,27 +34,27 @@
                 .ToList();
         }
 
-        //public static IEnumerable<IEnumerable<T>> Chunk<T>(this IEnumerable<T> source, int chunksize)
-        //{
-        //    var q = new Queue<T>();
+        public static IEnumerable<IEnumerable<T>> Chunk3<T>(this IEnumerable<T> source, int chunksize)
+        {
+            var q = new Queue<T>();
 
-        //    foreach (var item in source)
-        //    {
-        //        // check if q is full
-        //        if (q.Count == chunksize)
-        //        {
-        //            var ret = q;
-        //            q = new Queue<T>();
+            foreach (var item in source)
+            {
+                // check if q is full
+                if (q.Count == chunksize)
+                {
+                    var ret = q;
+                    q = new Queue<T>();
 
-        //            yield return ret;
-        //        }
+                    yield return ret;
+                }
 
-        //        // enqueue item
-        //        q.Enqueue(item);
-        //    }
+                // enqueue item
+                q.Enqueue(item);
+            }
 
-        //    yield return q;
-        //}
+            yield return q;
+        }
 
         public static async Task<TResult> Post<TParam, TResult>(string url, TParam param)
         {
