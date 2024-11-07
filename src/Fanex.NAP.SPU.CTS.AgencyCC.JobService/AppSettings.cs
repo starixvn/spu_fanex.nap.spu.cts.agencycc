@@ -17,39 +17,13 @@
 
         string AFCDeleteAccountURL { get; }
 
-        bool IsSyncAFCData { get; }
+        bool IsSyncAFCData { get; }     
 
-        bool ProblemAccountIsWriteLog { get; }
+        bool NormalAccountIsWriteLog { get; }                                        
+     
+        string SentryDsn { get; }      
 
-        bool NormalAccountIsWriteLog { get; }
-
-        bool RobotAccountIsWriteLog { get; }
-
-        bool RemoveAccountEvidenceIsWriteLog { get; }
-
-        bool CustomerEvidenceIsSendMailToSPU { get; }
-
-        int CustomerEvidenceMailingToSPU { get; }
-
-        bool TransformCTSCustomerIsWriteLog { get; }
-
-        int TransformCTSCustomerBatchSize { get; }
-
-        bool IsAutoInsertMissingCustomer { get; }
-
-        bool InsertReactivatedCustomersIsWriteLog { get; }
-
-        int InsertReactivatedCustomersBatchSize { get; }
-
-        string SentryDsn { get; }
-
-        string InsertVIPURL { get; }
-
-        string InsertBAURL { get; }
-
-        bool UpdateIsWriteLogSetting(string serviceName, bool isWriteLog);
-
-        bool NormalAccountBySportIsWriteLog { get; }
+        bool UpdateIsWriteLogSetting(string serviceName, bool isWriteLog);        
 
         APIHelperConfig APIHelperConfig { get; }
     }
@@ -64,9 +38,7 @@
         private readonly string afcInsertAccountURL;
         private readonly string afcDeleteAccountURL;
         private readonly bool isSyncAFCData;
-        private readonly string sentryDsn;
-        private readonly string insertVIPURL;
-        private readonly string insertBAURL;
+        private readonly string sentryDsn;       
         private readonly APIHelperConfig apiHelperConfig;
 
         public AppSettings(IConfiguration configuration)
@@ -79,9 +51,7 @@
             afcInsertAccountURL = GetValue<string>("AntiFraudCenter:AFCInsertAccountURL");
             afcDeleteAccountURL = GetValue<string>("AntiFraudCenter:AFCDeleteAccountURL");
             isSyncAFCData = GetValue<bool>("AntiFraudCenter:IsSyncAFCData");
-            sentryDsn = GetValue<string>("Sentry:Dsn");
-            insertVIPURL = GetValue<string>("InsertVIP_BA_API:InsertVIPURL");
-            insertBAURL = GetValue<string>("InsertVIP_BA_API:InsertBAURL");
+            sentryDsn = GetValue<string>("Sentry:Dsn");           
             apiHelperConfig = new APIHelperConfig
             {
                 Proxy = GetValue<string>("APIHelperConfig:Proxy")
@@ -118,36 +88,10 @@
 
         public bool IsSyncAFCData => isSyncAFCData;
 
-        public string SentryDsn => sentryDsn;
+        public string SentryDsn => sentryDsn;      
 
-        public string InsertVIPURL => insertVIPURL;
-
-        public string InsertBAURL => insertBAURL;
-
-        public bool ProblemAccountIsWriteLog => GetValue<bool>("ProblemAccountInsert:IsWriteLog");
-
-        public bool NormalAccountIsWriteLog => GetValue<bool>("NormalAccountInsert:IsWriteLog");
-
-        public bool RobotAccountIsWriteLog => GetValue<bool>("RobotAccountInsert:IsWriteLog");
-
-        public bool RemoveAccountEvidenceIsWriteLog => GetValue<bool>("RemoveAccountEvidence:IsWriteLog");
-
-        public bool CustomerEvidenceIsSendMailToSPU => GetValue<bool>("CustomerEvidenceInsert:IsSendMailToSPU");
-
-        public int CustomerEvidenceMailingToSPU => GetValue<int>("CustomerEvidenceInsert:MailingIdToSPU");
-
-        public bool TransformCTSCustomerIsWriteLog => GetValue<bool>("TransformCTSCustomer:IsWriteLog");
-
-        public int TransformCTSCustomerBatchSize => GetValue<int>("TransformCTSCustomer:BatchSize");
-
-        public bool IsAutoInsertMissingCustomer => GetValue<bool>("MonitorInsertNewCustomer:IsAutoInsertMissingCust");
-
-        public bool InsertReactivatedCustomersIsWriteLog => GetValue<bool>("InsertReactivatedCustomers:IsWriteLog");
-
-        public int InsertReactivatedCustomersBatchSize => GetValue<int>("InsertReactivatedCustomers:BatchSize");
-
-        public bool NormalAccountBySportIsWriteLog => GetValue<bool>("NormalAccountBySportIsWriteLog:IsWriteLog");
-
+        public bool NormalAccountIsWriteLog => GetValue<bool>("NormalAccountInsert:IsWriteLog");                                              
+       
         public APIHelperConfig APIHelperConfig => apiHelperConfig;
 
         #endregion Variables
