@@ -21,7 +21,7 @@
 	<Function Name="NormalClassification">
 		<Setting Key="CTS_DC_CustClassificationAgency_Normal_GetCurrentCategory" SpName="CTS_DC_CustClassificationAgency_Normal_GetCurrentCategory" DbName="MySQL.CTS_DataCenter.ctsService" />
 		<Setting Key="CTS_GeneralNormalClassificationAgency_NormalPool_Get" SpName="CTS_GeneralNormalClassificationAgency_NormalPool_Get" DbName="SQL.bodbVR2Model.bodbSPUNet" />
-		<Setting Key="CTS_GeneralNormalClassificationAgency_NormalPool_Classify" SpName="CTS_GeneralNormalClassificationAgency_NormalPool_Classify" DbName="SQL.bodbVR2Model.bodbSPUNet" />
+		<Setting Key="CTS_GeneralNormalClassificationAgency_NormalPool_Classify" SpName="CTS_GeneralNormalClassificationAgency_NormalPool_Classify_xpre" DbName="SQL.bodbVR2Model.bodbSPUNet" />
 		<Setting Key="CTS_GeneralNormalClassificationAgency_NormalPool_Clear" SpName="CTS_GeneralNormalClassificationAgency_NormalPool_Clear" DbName="SQL.bodbVR2Model.bodbSPUNet" />
 	</Function>
 	<Function Name="InactivateNewCustomer">
