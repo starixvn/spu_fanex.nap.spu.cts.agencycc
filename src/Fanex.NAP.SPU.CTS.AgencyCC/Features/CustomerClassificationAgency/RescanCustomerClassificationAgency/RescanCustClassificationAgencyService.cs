@@ -27,15 +27,17 @@
     {
         private readonly IRescanCustClassificationAgencyDataAccess _dataAccess;
         private readonly ICustClassToMainDBService _custClassToMainDBService;
+        private readonly ISentryClient _sentryClient;
 
         private List<long> smaCustIds;
         private bool isSuccess;
 
         public RescanCustClassificationAgencyService(
             IBaseCustomerClassificationAgencyDataAccess baseCCAgencyDataAccess,
+            IProblemAccountAgencyDataAccess paAgencyDataAccess,
             ISentryClient sentryClient,
             IRescanCustClassificationAgencyDataAccess dataAccess,
-            ICustClassToMainDBService custClassToMainDBService) : base(baseCCAgencyDataAccess, sentryClient)
+            ICustClassToMainDBService custClassToMainDBService) : base(baseCCAgencyDataAccess, paAgencyDataAccess, sentryClient)
         {
             _dataAccess = dataAccess;
             _custClassToMainDBService = custClassToMainDBService;

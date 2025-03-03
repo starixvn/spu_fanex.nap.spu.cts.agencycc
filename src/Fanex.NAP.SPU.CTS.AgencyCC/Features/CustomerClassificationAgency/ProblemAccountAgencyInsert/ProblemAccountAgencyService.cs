@@ -20,13 +20,23 @@
         ResultRemoveCustomerClassificationAgencyModel RemoveProblemAccount(IEnumerable<RemoveProblemAccountEntity> problemAccounts, bool isFromQueue);
 
         int? GetCategoryByCategoryTypeName(string categoryTypeName);
+
+        IEnumerable<ProblemAccountLosingAgencyEntity> GetProblemAccountLosingAgencies(IEnumerable<long> custIds);
     }
 
     public class ProblemAccountAgencyService : BaseCustomerClassificationAgencyService, IProblemAccountAgencyService
     {
+        private readonly IProblemAccountAgencyDataAccess _paAgencyDataAccess;
+        private readonly ISentryClient _sentryClient;
+
         public ProblemAccountAgencyService(
             IBaseCustomerClassificationAgencyDataAccess baseCCAgencyDataAccess,
-            ISentryClient sentryClient) : base(baseCCAgencyDataAccess, sentryClient) { }
+            IProblemAccountAgencyDataAccess paAgencyDataAccess,
+            ISentryClient sentryClient) : base(baseCCAgencyDataAccess, sentryClient) 
+        {
+            _paAgencyDataAccess = paAgencyDataAccess;
+            _sentryClient = sentryClient;
+        }
 
         public IEnumerable<long> RescanCustomerClassification(IEnumerable<RescanCustomerClassificationAgencyEntity> custRescans, 
             FunctionId funcId, AgencyCCInputFlow ccInputFlow, bool isToQueue, string serviceName)
@@ -123,19 +133,65 @@
             {
                 UpdateBetLimitOfUnflaggedCustomer(string.Join(",", custId));
             }
-        }       
+        }  
+        
+        public IEnumerable<ProblemAccountLosingAgencyEntity> GetProblemAccountLosingAgencies(IEnumerable<long> custIds)
+        {
+            if (custIds != null && custIds.Any())
+            {
+                var custIDList = string.Join(",", custIds);
+
+                return _paAgencyDataAccess.GetProblemAccountLosingAgencies(custIDList);
+            }
+
+            return Enumerable.Empty<ProblemAccountLosingAgencyEntity>();
+        }
 
         private IEnumerable<InsertProblemAccountEntity> CombinePAWithLosingPerformace(IEnumerable<InsertProblemAccountEntity> problemAccounts)
         {
-            return problemAccounts.Select(x => {
-                var y = x;
-                y.WinlossStatus = 2;
-                y.TurnoverRM = 0;
-                y.WinlossRM = 0;
-                y.BetCount = 0;
-                y.PerformanceTime = null;
-                return y;
-            });
+            var custIDs = problemAccounts.Select(x => x.CustID)?.Distinct();
+
+            var paLosing = GetProblemAccountLosingAgencies(custIDs);
+            
+            return MergePALosingClassification(problemAccounts, paLosing);
+        }
+
+        private IEnumerable<InsertProblemAccountEntity> MergePALosingClassification(IEnumerable<InsertProblemAccountEntity> problemAccounts, IEnumerable<ProblemAccountLosingAgencyEntity> paLosing)
+        {
+            if (problemAccounts != null && problemAccounts.Any())
+            {
+                return problemAccounts.GroupJoin(paLosing ?? Enumerable.Empty<ProblemAccountLosingAgencyEntity>(),
+                                                 pa => pa.CustID,
+                                                 pl => pl.CustId,
+                                                (pa, pl) => new { pa, pl })
+                                                .SelectMany(
+                                                        group => group.pl.DefaultIfEmpty(),
+                                                        (group, temp) => new InsertProblemAccountEntity
+                                                        {
+                                                            CTSCustID = group.pa.CTSCustID,
+                                                            CustID = group.pa.CustID,
+                                                            RoleID = group.pa.RoleID,
+                                                            SubscriberID = group.pa.SubscriberID,
+                                                            CategoryID = group.pa.CategoryID,
+                                                            IsLicensee = group.pa.IsLicensee,
+                                                            CreatedBy = group.pa.CreatedBy, 
+                                                            CreatedDate = group.pa.CreatedDate,
+                                                            Remark = group.pa.Remark,
+                                                            IsMarkedDirectly = group.pa.IsMarkedDirectly,
+                                                            IsFromAI = group.pa.IsFromAI,
+                                                            IsFromCTS = group.pa.IsFromCTS,
+                                                            IsFromTW = group.pa.IsFromTW, 
+                                                          
+                                                            RobotCounter = group.pa.RobotCounter, 
+                                                            BetCount = temp?.BetCount,
+                                                            TurnoverRM = temp?.TurnoverRM,
+                                                            WinlossRM = temp?.WinlossRM,
+                                                            WinlossStatus = temp?.WinlossStatus,
+                                                            PerformanceTime = temp?.PerformanceTime
+                                                        });
+            }
+
+            return Enumerable.Empty<InsertProblemAccountEntity>();
         }
     }
 }

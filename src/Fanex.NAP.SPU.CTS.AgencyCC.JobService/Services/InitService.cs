@@ -62,6 +62,7 @@
 
         private static void RegisterProblemAccount(IServiceCollection services)
         {
+            services.AddSingleton<IProblemAccountAgencyDataAccess, ProblemAccountAgencyDataAccess>();
             services.AddSingleton<IProblemAccountAgencyService, ProblemAccountAgencyService>();
         }
 

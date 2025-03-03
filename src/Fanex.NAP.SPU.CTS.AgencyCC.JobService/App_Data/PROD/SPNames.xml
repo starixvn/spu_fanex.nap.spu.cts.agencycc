@@ -7,6 +7,7 @@
 		<Setting Key="CTS_SystemParameter_Get" SpName="CTS_SystemParameter_Get" DbName="SQL.WASAVerse.bodbSPUNet" />
 		<Setting Key="CTS_SystemParameter_Update" SpName="CTS_SystemParameter_Update" DbName="SQL.WASAVerse.bodbSPUNet" />
 		<Setting Key="Acc_CustomerUpdateCustomerClass" SpName="Acc_CustomerUpdateCustomerClass" DbName="SQL.CustDB.bodbAdminNet" TimeOut="600" />
+    <Setting Key="CTS_ProblemAccountsClassificationAgency_Daily" SpName="CTS_ProblemAccountsClassificationAgency_Daily" DbName="SQL.bodbVR2Model.bodbSPUNet" />
 	</Function>
 	<Function Name="Rescan">
 		<Setting Key="CTS_DC_CustInfo_GetCustIDsRole" SpName="CTS_DC_CustInfo_GetCustIDsRole" DbName="MySQL.CTS_DataCenter.ctsService" />

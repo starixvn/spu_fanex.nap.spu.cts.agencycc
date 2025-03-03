@@ -1,6 +1,7 @@
 ﻿using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency;
 using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Entities;
 using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Model;
+using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.ProblemAccountAgencyInsert;
 using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RescanCustomerClassificationAgency;
 using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RescanCustomerClassificationAgency.Entities;
 using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RescanCustomerClassificationAgency.Model;
@@ -22,9 +23,10 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Features.CustomerClassificationAgency
 {
     public class RescanCustClassificationAgencyServiceTest
     {
-        private readonly IRescanCustClassificationAgencyDataAccess _dataAccess;
+        private readonly IRescanCustClassificationAgencyDataAccess _dataAccess;       
         private readonly ICustClassToMainDBService _custClassToMainDBService;
         private readonly IBaseCustomerClassificationAgencyDataAccess _baseCCAgencyDataAccess;
+        private readonly IProblemAccountAgencyDataAccess _paAgencyDataAccess;
         private readonly ISentryClient _sentryClient;
 
         private readonly IRescanCustClassificationAgencyService _service;
@@ -34,9 +36,10 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Features.CustomerClassificationAgency
             _dataAccess = Substitute.For<IRescanCustClassificationAgencyDataAccess>();
             _custClassToMainDBService = Substitute.For<ICustClassToMainDBService>();
             _baseCCAgencyDataAccess = Substitute.For<IBaseCustomerClassificationAgencyDataAccess>();
+            _paAgencyDataAccess = Substitute.For<IProblemAccountAgencyDataAccess>();
             _sentryClient = Substitute.For<ISentryClient>();
 
-            _service = new RescanCustClassificationAgencyService(_baseCCAgencyDataAccess, _sentryClient, _dataAccess, _custClassToMainDBService);
+            _service = new RescanCustClassificationAgencyService(_baseCCAgencyDataAccess, _paAgencyDataAccess, _sentryClient, _dataAccess, _custClassToMainDBService);
         }
 
         [Fact]

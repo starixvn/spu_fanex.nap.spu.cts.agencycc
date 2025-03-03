@@ -17,6 +17,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Infrastructure.Consts.CustomerClassif
     public class ProblemAccountAgencyServiceTest
     {
         private readonly IBaseCustomerClassificationAgencyDataAccess _baseCCAgencyDataAccess;
+        private readonly IProblemAccountAgencyDataAccess _paAgencyDataAccess;
         private readonly ISentryClient _sentryClient;
 
         private readonly IProblemAccountAgencyService _service;
@@ -24,9 +25,11 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Infrastructure.Consts.CustomerClassif
         public ProblemAccountAgencyServiceTest()
         {
             _baseCCAgencyDataAccess = Substitute.For<IBaseCustomerClassificationAgencyDataAccess>();
+            _paAgencyDataAccess = Substitute.For<IProblemAccountAgencyDataAccess>();
+
             _sentryClient = Substitute.For<ISentryClient>();
 
-            _service = new ProblemAccountAgencyService(_baseCCAgencyDataAccess, _sentryClient);
+            _service = new ProblemAccountAgencyService(_baseCCAgencyDataAccess, _paAgencyDataAccess, _sentryClient);
         }
 
         [Fact]
