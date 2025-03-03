@@ -2,7 +2,7 @@
 {
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Entities;
-    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Model;   
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Model;
     using Newtonsoft.Json;
     using Sentry;
     using System.Collections.Generic;
@@ -11,15 +11,20 @@
 
     public interface IProblemAccountAgencyService
     {
-        IEnumerable<long> RescanCustomerClassification(IEnumerable<RescanCustomerClassificationAgencyEntity> custRescans, 
+        IEnumerable<long> RescanCustomerClassification(IEnumerable<RescanCustomerClassificationAgencyEntity> custRescans,
             FunctionId funcId, AgencyCCInputFlow ccInputFlow, bool isToQueue, string serviceName);
 
-        IEnumerable<long> InsertProblemAccountsAgencyPackage(IEnumerable<InsertProblemAccountEntity> problemAccounts, 
+        IEnumerable<long> InsertProblemAccountsAgencyPackage(IEnumerable<InsertProblemAccountEntity> problemAccounts,
             FunctionId funcId, AgencyCCInputFlow ccInputFlow, bool isToQueue, string serviceName);
 
         ResultRemoveCustomerClassificationAgencyModel RemoveProblemAccount(IEnumerable<RemoveProblemAccountEntity> problemAccounts, bool isFromQueue);
 
         int? GetCategoryByCategoryTypeName(string categoryTypeName);
+
+#pragma warning disable S125
+        // not handle SMA
+        //void InsertPALogicsAgency(IEnumerable<CustInfoEntity> customerInfo);
+#pragma warning disable S125
 
         IEnumerable<ProblemAccountLosingAgencyEntity> GetProblemAccountLosingAgencies(IEnumerable<long> custIds);
     }
@@ -38,15 +43,15 @@
             _sentryClient = sentryClient;
         }
 
-        public IEnumerable<long> RescanCustomerClassification(IEnumerable<RescanCustomerClassificationAgencyEntity> custRescans, 
+        public IEnumerable<long> RescanCustomerClassification(IEnumerable<RescanCustomerClassificationAgencyEntity> custRescans,
             FunctionId funcId, AgencyCCInputFlow ccInputFlow, bool isToQueue, string serviceName)
         {
             var pas = custRescans.Select(x => new InsertProblemAccountEntity(x));
 
-            return InsertProblemAccountsAgencyPackage(pas, funcId, ccInputFlow, isToQueue, serviceName);          
+            return InsertProblemAccountsAgencyPackage(pas, funcId, ccInputFlow, isToQueue, serviceName);
         }
 
-        public IEnumerable<long> InsertProblemAccountsAgencyPackage(IEnumerable<InsertProblemAccountEntity> problemAccounts, 
+        public IEnumerable<long> InsertProblemAccountsAgencyPackage(IEnumerable<InsertProblemAccountEntity> problemAccounts,
             FunctionId funcId, AgencyCCInputFlow ccInputFlow, bool isToQueue, string serviceName)
         {
             if (problemAccounts != null && problemAccounts.Any())
@@ -66,7 +71,10 @@
                 {
                     var custUpdatePALogics = insertPaResult.CustInfos.Select(x => new CustInfoEntity { CustID = x.CustID, CTSCustID = x.CTSCustID, IsPA = x.IsPA });
 
-                    InsertPALogicsAgency(custUpdatePALogics);
+#pragma warning disable S125
+                    // not handle for SMA
+                    //InsertPALogicsAgency(custUpdatePALogics);
+#pragma warning disable S125
 
                     return insertPaResult.CustInfos.Select(x => x.CustID).Distinct();
                 }
@@ -86,55 +94,58 @@
 
             var removePaResult = RemoveCustomerClassificationAgency(AgencyCCInputFlow.RemovePACategory, modelRemove);
 
-            if (string.IsNullOrEmpty(removePaResult.ErrorMessage))
-            {
-                RemovePALogics(removePaResult.CustInfos);
-            }            
+#pragma warning disable S125
+            // not handle for SMA
+            //if (string.IsNullOrEmpty(removePaResult.ErrorMessage))
+            //{
+            //    RemovePALogics(removePaResult.CustInfos);
+            //}
+#pragma warning disable S125
 
             return removePaResult;
-        }      
-
-        private void InsertPALogicsAgency(IEnumerable<CustInfoEntity> customerInfo)
-        {
-            if (customerInfo != null && customerInfo.Any())
-            {
-                var custPas = customerInfo.Where(x => x.IsPA).Distinct();
+        }
 
 #pragma warning disable S125
-                // not handle for SMA
-                //CheckNewPAAssociationCustomerForRollback(JsonConvert.SerializeObject(custPas));
+        // not handle for SMA
+        //public void InsertPALogicsAgency(IEnumerable<CustInfoEntity> customerInfo)
+        //{
+        //    if (customerInfo != null && customerInfo.Any())
+        //    {
+        //        var custPas = customerInfo.Where(x => x.IsPA).Distinct();
+
+        //        CheckNewPAAssociationCustomerForRollback(JsonConvert.SerializeObject(custPas));
+
+        //        UpdateBetLimitOfFlaggedCustomer(custPas.Select(x => x.CustID));
+        //    }
+        //}
+
+        //private void RemovePALogics(IEnumerable<ResultRemoveCustomerClassificationEntity> customerInfo)
+        //{
+        //    if (customerInfo != null && customerInfo.Any())
+        //    {
+        //        var custIds = customerInfo.Where(c => c.IsCleanPA).Select(x => x.CustID).Distinct();
+
+        //        UpdateBetLimitOfUnflaggedCustomer(custIds);
+        //    }
+        //}
+
+        //private void UpdateBetLimitOfFlaggedCustomer(IEnumerable<long> custId)
+        //{
+        //    if (custId != null && custId.Any())
+        //    {
+        //        UpdateBetLimitOfFlaggedCustomer(string.Join(",", custId));
+        //    }
+        //}
+
+        //private void UpdateBetLimitOfUnflaggedCustomer(IEnumerable<long> custId)
+        //{
+        //    if (custId != null && custId.Any())
+        //    {
+        //        UpdateBetLimitOfUnflaggedCustomer(string.Join(",", custId));
+        //    }
+        //}
 #pragma warning disable S125
 
-                UpdateBetLimitOfFlaggedCustomer(custPas.Select(x => x.CustID));
-            }
-        }
-
-        private void RemovePALogics(IEnumerable<ResultRemoveCustomerClassificationEntity> customerInfo)
-        {
-            if (customerInfo != null && customerInfo.Any())
-            {
-                var custIds = customerInfo.Where(c => c.IsCleanPA).Select(x => x.CustID).Distinct();
-
-                UpdateBetLimitOfUnflaggedCustomer(custIds);
-            }
-        }
-
-        private void UpdateBetLimitOfFlaggedCustomer(IEnumerable<long> custId)
-        {
-            if (custId != null && custId.Any())
-            {
-                UpdateBetLimitOfFlaggedCustomer(string.Join(",", custId));
-            }
-        }
-
-        private void UpdateBetLimitOfUnflaggedCustomer(IEnumerable<long> custId)
-        {
-            if (custId != null && custId.Any())
-            {
-                UpdateBetLimitOfUnflaggedCustomer(string.Join(",", custId));
-            }
-        }  
-        
         public IEnumerable<ProblemAccountLosingAgencyEntity> GetProblemAccountLosingAgencies(IEnumerable<long> custIds)
         {
             if (custIds != null && custIds.Any())

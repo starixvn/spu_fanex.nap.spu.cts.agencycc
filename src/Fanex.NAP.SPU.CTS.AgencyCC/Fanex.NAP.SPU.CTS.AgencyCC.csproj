@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
@@ -19,6 +19,8 @@
 
 	<ItemGroup>
 		<Folder Include="Features\CTSCustomer\Entities\" />
+		<Folder Include="Features\CustomerClassificationAgency\DailyProblemClassificationAgency\Model\" />
+		<Folder Include="Features\CustomerClassificationAgency\ProblemAccountAgencyInsert\Criteria\" />
 	</ItemGroup>
 
 	<ItemGroup>

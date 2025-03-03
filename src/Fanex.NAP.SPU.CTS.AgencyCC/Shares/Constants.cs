@@ -65,7 +65,8 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Shares
             InsertNewCustJob = 4,
             InactivateNewCustomer = 11,            
             RobotUserJob = 23,
-            DownlineCustomerClassification = 52
+            DownlineCustomerClassification = 52,
+            ProblemDailyJob = 9999
         }
 
         public enum RescanNormalType
