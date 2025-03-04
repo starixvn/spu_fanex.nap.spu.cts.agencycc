@@ -16,14 +16,14 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Features.CustomerClassificationAgency
 {
     public class ProblemWLClassificationAgencyServiceTest
     {
-        private readonly IProblemClassificationAgencyDataAccess _dataAccess;
+        private readonly IProblemWLClassificationAgencyDataAccess _dataAccess;
         private readonly ICustClassToMainDBService _custClassToMainDB;
 
         private readonly IProblemWLClassificationAgencyService _service;
 
         public ProblemWLClassificationAgencyServiceTest()
         {
-            _dataAccess = Substitute.For<IProblemClassificationAgencyDataAccess>();
+            _dataAccess = Substitute.For<IProblemWLClassificationAgencyDataAccess>();
             _custClassToMainDB = Substitute.For<ICustClassToMainDBService>();
 
             _service = new ProblemWLClassificationAgencyService(_dataAccess, _custClassToMainDB);

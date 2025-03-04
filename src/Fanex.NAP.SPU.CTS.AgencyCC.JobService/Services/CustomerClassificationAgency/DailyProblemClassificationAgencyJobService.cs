@@ -8,8 +8,6 @@
     using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
     using System.Linq;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Model;
-    using Fanex.NAP.SPU.Notification.Services;
-    using System.ServiceProcess;
 
     public interface IDailyProblemClassificationAgencyJobService
     {
@@ -77,10 +75,6 @@
                     _service
                         .GetInstanceProblemWLClassificationAgencyService()
                         .InsertPAWLClassificationAgency(batchSize, paBatch)
-#pragma warning disable S125
-                        // not handle SMA
-                        //.InsertPALogicAgency()
-#pragma warning disable S125
                         .PushCCToExternal(new PushDataToExternalModel
                         {
                             RoleGroup = RoleGroupType.Agency,

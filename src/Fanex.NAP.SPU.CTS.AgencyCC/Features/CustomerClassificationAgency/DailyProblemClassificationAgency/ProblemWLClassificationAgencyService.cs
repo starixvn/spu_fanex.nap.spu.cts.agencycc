@@ -13,23 +13,18 @@
     {
         IProblemWLClassificationAgencyService InsertPAWLClassificationAgency(int batchSize, IEnumerable<ProblemAccountLosingAgencyEntity> paWLClassification);
 
-#pragma warning disable S125
-        // not handle SMA
-        //IProblemWLClassificationAgencyService InsertPALogicAgency();
-#pragma warning disable S125
-
         bool PushCCToExternal(PushDataToExternalModel paras);
     }
 
     public class ProblemWLClassificationAgencyService : IProblemWLClassificationAgencyService
     {
-        private readonly IProblemClassificationAgencyDataAccess _dataAccess;
+        private readonly IProblemWLClassificationAgencyDataAccess _dataAccess;
         private readonly ICustClassToMainDBService _custClassToMainDB;
 
         private IEnumerable<PAWLInsertAgencyEntity> _paWLs;
 
         public ProblemWLClassificationAgencyService(
-            IProblemClassificationAgencyDataAccess dataAccess,
+            IProblemWLClassificationAgencyDataAccess dataAccess,
             ICustClassToMainDBService custClassToMainDB)
         {
             _dataAccess = dataAccess;

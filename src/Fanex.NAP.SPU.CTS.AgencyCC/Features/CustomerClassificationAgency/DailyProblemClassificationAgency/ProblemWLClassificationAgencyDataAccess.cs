@@ -5,7 +5,7 @@
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.DailyProblemClassificationAgency.Entities;
     using System.Collections.Generic;
 
-    public interface IProblemClassificationAgencyDataAccess
+    public interface IProblemWLClassificationAgencyDataAccess
     {
         IEnumerable<long> GetPADailyScanFromQueue();
 
@@ -14,11 +14,11 @@
         IEnumerable<PAWLInsertAgencyEntity> InsertProblemAccountWLPerformance(string paJson);
     }
 
-    public class ProblemClassificationAgencyDataAccess : IProblemClassificationAgencyDataAccess
+    public class ProblemWLClassificationAgencyDataAccess : IProblemWLClassificationAgencyDataAccess
     {
         private readonly IDynamicRepository _repository;
 
-        public ProblemClassificationAgencyDataAccess()
+        public ProblemWLClassificationAgencyDataAccess()
         {
             _repository = new DynamicRepository();
         }

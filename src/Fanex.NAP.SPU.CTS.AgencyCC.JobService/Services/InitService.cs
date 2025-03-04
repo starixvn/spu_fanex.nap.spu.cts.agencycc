@@ -54,7 +54,7 @@
 
         private static void RegisterProblemClassificationAgency(IServiceCollection services)
         {
-            services.AddSingleton<IProblemClassificationAgencyDataAccess, ProblemClassificationAgencyDataAccess>();
+            services.AddSingleton<IProblemWLClassificationAgencyDataAccess, ProblemWLClassificationAgencyDataAccess>();
             services.AddTransient<IProblemWLClassificationAgencyService, ProblemWLClassificationAgencyService>();
             services.AddSingleton<IDailyProblemClassificationAgencyService, DailyProblemClassificationAgencyService>();
             services.AddSingleton<IDailyProblemClassificationAgencyJobService, DailyProblemClassificationAgencyJobService>();

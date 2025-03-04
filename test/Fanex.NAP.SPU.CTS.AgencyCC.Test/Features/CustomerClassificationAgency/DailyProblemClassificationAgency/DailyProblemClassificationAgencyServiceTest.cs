@@ -12,7 +12,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Features.CustomerClassificationAgency
 {
     public class DailyProblemClassificationAgencyServiceTest
     {
-        private readonly IProblemClassificationAgencyDataAccess _dataAccess;
+        private readonly IProblemWLClassificationAgencyDataAccess _dataAccess;
         private readonly IProblemAccountAgencyService _problemAccountService;
         private readonly IServiceProvider _serviceProvider;
 
@@ -20,7 +20,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Features.CustomerClassificationAgency
 
         public DailyProblemClassificationAgencyServiceTest()
         {
-            _dataAccess = Substitute.For<IProblemClassificationAgencyDataAccess>();
+            _dataAccess = Substitute.For<IProblemWLClassificationAgencyDataAccess>();
             _problemAccountService = Substitute.For<IProblemAccountAgencyService>();
             _serviceProvider = Substitute.For<IServiceProvider>();
 

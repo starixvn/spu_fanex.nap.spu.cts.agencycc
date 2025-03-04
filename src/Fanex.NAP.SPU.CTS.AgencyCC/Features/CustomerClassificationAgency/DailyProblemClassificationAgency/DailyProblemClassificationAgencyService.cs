@@ -22,7 +22,7 @@
 
     public class DailyProblemClassificationAgencyService : IDailyProblemClassificationAgencyService
     {
-        private readonly IProblemClassificationAgencyDataAccess _dataAccess;
+        private readonly IProblemWLClassificationAgencyDataAccess _dataAccess;
         private readonly IProblemAccountAgencyService _problemAccountAgencyService;
         private readonly IServiceProvider _serviceProvider;
 
@@ -30,7 +30,7 @@
 
 
         public DailyProblemClassificationAgencyService(
-            IProblemClassificationAgencyDataAccess dataAccess,
+            IProblemWLClassificationAgencyDataAccess dataAccess,
             IProblemAccountAgencyService problemAccountAgencyService,
             IServiceProvider serviceProvider)
         {
