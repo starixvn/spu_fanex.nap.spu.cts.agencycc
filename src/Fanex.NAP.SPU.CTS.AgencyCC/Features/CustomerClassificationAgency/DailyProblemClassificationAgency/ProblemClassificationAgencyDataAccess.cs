@@ -18,9 +18,9 @@
     {
         private readonly IDynamicRepository _repository;
 
-        public ProblemClassificationAgencyDataAccess(IDynamicRepository repository)
+        public ProblemClassificationAgencyDataAccess()
         {
-            _repository = repository;
+            _repository = new DynamicRepository();
         }
 
         public IEnumerable<long> GetPADailyScanFromQueue()

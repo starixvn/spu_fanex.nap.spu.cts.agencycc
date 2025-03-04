@@ -13,7 +13,7 @@
 
         IDailyProblemClassificationAgencyService GetPADailyAgencyScanFromQueue();
 
-        IEnumerable<ProblemAccountLosingAgencyEntity> GetProblemAccountLosingClassification(FunctionId funcId);
+        IEnumerable<ProblemAccountLosingAgencyEntity> GetProblemAccountLosingClassification();
 
         IProblemWLClassificationAgencyService GetInstanceProblemWLClassificationAgencyService();
 
@@ -53,7 +53,7 @@
             return this;
         }
 
-        public IEnumerable<ProblemAccountLosingAgencyEntity> GetProblemAccountLosingClassification(FunctionId funcId)
+        public IEnumerable<ProblemAccountLosingAgencyEntity> GetProblemAccountLosingClassification()
         {
             if (_paDailyScanFromQueue.IsNotNullOrEmpty())
             {

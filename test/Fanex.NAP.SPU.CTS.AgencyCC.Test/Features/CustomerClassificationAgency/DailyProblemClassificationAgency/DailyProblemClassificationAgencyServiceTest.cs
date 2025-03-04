@@ -6,7 +6,6 @@ using NSubstitute.ExceptionExtensions;
 using System;
 using System.Collections.Generic;
 using Xunit;
-using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
 using static Fanex.NAP.SPU.CTS.AgencyCC.Tests.Infrastructure.Consts.CustomerClassificationAgency.DailyProblemClassificationAgency.DailyProblemClassificationAgencyServiceConsts;
 
 namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Features.CustomerClassificationAgency.DailyProblemClassificationAgency
@@ -135,7 +134,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Features.CustomerClassificationAgency
             paDailyScanFromQueueField.SetValue(_service, paDailyScanFromQueue);
             _problemAccountService.GetProblemAccountLosingAgencies(Arg.Any<IEnumerable<long>>()).Returns(paLosings);
 
-            var result = _service.GetProblemAccountLosingClassification(FunctionId.ProblemDailyJob);
+            var result = _service.GetProblemAccountLosingClassification();
             // Assert
             _problemAccountService.Received(1).GetProblemAccountLosingAgencies(Arg.Any<IEnumerable<long>>());
             Assert.StrictEqual(paLosings, result);
@@ -147,7 +146,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Features.CustomerClassificationAgency
             // Arrange
 
             // Act
-            var result = _service.GetProblemAccountLosingClassification(FunctionId.ProblemDailyJob);
+            var result = _service.GetProblemAccountLosingClassification();
 
             // Assert
             _problemAccountService.Received(0).GetProblemAccountLosingAgencies(Arg.Any<IEnumerable<long>>());
@@ -166,7 +165,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Features.CustomerClassificationAgency
             paDailyScanFromQueueField.SetValue(_service, paDailyScanFromQueue);
             _problemAccountService.GetProblemAccountLosingAgencies(Arg.Any<IEnumerable<long>>()).Throws<Exception>();
 
-            Action action = () => _service.GetProblemAccountLosingClassification(FunctionId.ProblemDailyJob);
+            Action action = () => _service.GetProblemAccountLosingClassification();
 
             // Assert
             _problemAccountService.Received(0).GetProblemAccountLosingAgencies(Arg.Any<IEnumerable<long>>());

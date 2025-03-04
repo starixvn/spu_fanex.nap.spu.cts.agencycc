@@ -64,7 +64,7 @@
                 _service
                     .Start()
                     .GetPADailyAgencyScanFromQueue()
-                    .GetProblemAccountLosingClassification(FunctionId.ProblemDailyJob);
+                    .GetProblemAccountLosingClassification();
 
             if (paClassificationAgency.IsNullOrEmpty())
             {

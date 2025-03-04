@@ -22,13 +22,15 @@
             IRealtimeClassificationAgencyJobService realtimeClassification,
             IDailyNormalClassificationAgencyJobService dailyNormalClassification,
             INormalAccountClassificationAgencyJobService normalAccountClassification,
-            INormalAccountInsertAgencyJobService normalAccountInsert)
+            INormalAccountInsertAgencyJobService normalAccountInsert,
+            IDailyProblemClassificationAgencyJobService problemClassificationAgencyJobService)
         {
             _sentryClient = sentryClient;
             _realtimeClassification = realtimeClassification;
             _dailyNormalClassification = dailyNormalClassification;
             _normalAccountClassification = normalAccountClassification;
             _normalAccountInsert = normalAccountInsert;
+            _problemClassificationAgencyJobService = problemClassificationAgencyJobService;
         }
 
         [HttpPost("scanningRealtimeClassificationAgency")]
