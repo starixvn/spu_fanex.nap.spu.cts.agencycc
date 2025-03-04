@@ -15,6 +15,7 @@
         private readonly IDailyNormalClassificationAgencyJobService _dailyNormalClassification;
         private readonly INormalAccountClassificationAgencyJobService _normalAccountClassification;
         private readonly INormalAccountInsertAgencyJobService _normalAccountInsert;
+        private readonly IDailyProblemClassificationAgencyJobService _problemClassificationAgencyJobService;
 
         public ClassificationAgencyJobController(
             ISentryClient sentryClient,
@@ -53,6 +54,13 @@
         public async Task<bool> NormalAccountInsert([FromForm] int batchExternalSize, [FromForm] int batchInternalSize)
         {
             return await _normalAccountInsert.Execute(batchExternalSize, batchInternalSize);
+        }
+
+        [HttpPost("scanningDailyProblemClassificationAgency")]
+        public async Task<bool> DailyScanningNormalClassificationAgency([FromForm] int batchSize)
+        {
+            _sentryClient.CaptureMessage($"Daily Problem Agency Service is running at {DateTime.Now}");
+            return await _problemClassificationAgencyJobService.Execute(batchSize);
         }
     }
 }
