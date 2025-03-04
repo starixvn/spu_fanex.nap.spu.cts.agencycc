@@ -18,6 +18,7 @@
 		<Setting Key="CTS_GeneralNormalClassificationAgency_RealTime_GetChanges" SpName="CTS_GeneralNormalClassificationAgency_RealTime_GetChanges" DbName="SQL.bodbVR2Model.bodbSPUNet" />
 		<Setting Key="CTS_GeneralNormalClassificationAgency_Realtime_Preprocess" SpName="CTS_GeneralNormalClassificationAgency_Realtime_Preprocess" DbName="SQL.bodbVR2Model.bodbSPUNet" />
 		<Setting Key="CTS_GeneralNormalClassificationAgency_RealTime_Complete" SpName="CTS_GeneralNormalClassificationAgency_RealTime_Complete" DbName="SQL.bodbVR2Model.bodbSPUNet" />
+    <Setting Key="CTS_DC_CustClassificationAgency_DailyScanPA_InsertToQueue" SpName="CTS_DC_CustClassificationAgency_DailyScanPA_InsertToQueue" DbName="MySQL.CTS_DataCenter.ctsServiceAdmin" />
 	</Function>
 	<Function Name="NormalClassification">
 		<Setting Key="CTS_DC_CustClassificationAgency_Normal_GetCurrentCategory" SpName="CTS_DC_CustClassificationAgency_Normal_GetCurrentCategory" DbName="MySQL.CTS_DataCenter.ctsService" />

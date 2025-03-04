@@ -14,6 +14,8 @@
 
         void PreprocessCustomerClassRealtime(string custIdList);
 
+        void InsertToQueuePaAgencyRealtime(string custIdList);
+
         void CompleteCustomerRealtime(long scannedMaxId);
     }
 
@@ -46,12 +48,12 @@
                 CustIdList = custIdList
             };
 
-            var normalCusts = _repository.Fetch<long>(criteria);
+            var (normalCusts, paCusts) = _repository.FetchMultiple<long, long>(criteria);
 
             return new GetCustomerCategoryAgencyRealtimeModel
             {
                 CustomerCategory = normalCusts.ToList(),
-                //CustomerPADailyScan = paCusts.ToList()
+                CustomerPADailyScan = paCusts.ToList()
             };
         }
 
@@ -60,6 +62,16 @@
             var criteria = new PreprocessCustomerAgencyRealtimeCriteria
             {
                 ListCustId = custIdList
+            };
+
+            _repository.Execute(criteria);
+        }
+
+        public void InsertToQueuePaAgencyRealtime(string custIdList)
+        {
+            var criteria = new PaAgencyInsertToQueueRealtimeCriteria
+            {
+                CustIDList = custIdList
             };
 
             _repository.Execute(criteria);

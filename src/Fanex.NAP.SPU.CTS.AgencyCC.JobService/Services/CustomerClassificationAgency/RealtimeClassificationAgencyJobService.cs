@@ -33,6 +33,7 @@
                         .GetNewPlaceBetCustomers()
                         .GetCustomerCategory(batchInternalSize)
                         .PreprocessCustomerClassRealtime(batchExternalSize)
+                        .InsertToQueuePaAgencyRealtime(batchExternalSize)
                         .CompleteCustomerRealtime();
                 }
                 else
