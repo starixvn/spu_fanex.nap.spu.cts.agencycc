@@ -27,7 +27,6 @@
     {
         private readonly IRescanCustClassificationAgencyDataAccess _dataAccess;
         private readonly ICustClassToMainDBService _custClassToMainDBService;
-        private readonly ISentryClient _sentryClient;
 
         private List<long> smaCustIds;
         private bool isSuccess;

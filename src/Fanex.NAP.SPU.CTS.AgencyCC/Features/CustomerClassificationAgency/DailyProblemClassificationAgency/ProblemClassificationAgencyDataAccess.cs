@@ -32,7 +32,7 @@
 
         public void CompletePADailyScan(string custIDs)
         {
-            var criteria = new PADailyScanCompleteAgencyCriteria()
+            var criteria = new PADailyScanCompleteAgencyCriteria
             {
                 CustIDs = custIDs
             };
@@ -42,7 +42,7 @@
 
         public IEnumerable<PAWLInsertAgencyEntity> InsertProblemAccountWLPerformance(string paJson)
         {
-            var criteria = new PAWLInsertAgencyCriteria()
+            var criteria = new PAWLInsertAgencyCriteria
             {
                 ProblemAccountJson = paJson
             };

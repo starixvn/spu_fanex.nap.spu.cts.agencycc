@@ -19,7 +19,7 @@
 
         public IEnumerable<ProblemAccountLosingAgencyEntity> GetProblemAccountLosingAgencies(string custIDList) 
         {
-            var criteria = new ProblemAccountLosingAgencyGetCriteria()
+            var criteria = new ProblemAccountLosingAgencyGetCriteria
             {
                 CustIDList = custIDList
             };

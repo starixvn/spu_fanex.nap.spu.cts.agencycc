@@ -31,16 +31,14 @@
 
     public class ProblemAccountAgencyService : BaseCustomerClassificationAgencyService, IProblemAccountAgencyService
     {
-        private readonly IProblemAccountAgencyDataAccess _paAgencyDataAccess;
-        private readonly ISentryClient _sentryClient;
+        private readonly IProblemAccountAgencyDataAccess _paAgencyDataAccess; 
 
         public ProblemAccountAgencyService(
             IBaseCustomerClassificationAgencyDataAccess baseCCAgencyDataAccess,
             IProblemAccountAgencyDataAccess paAgencyDataAccess,
             ISentryClient sentryClient) : base(baseCCAgencyDataAccess, sentryClient) 
         {
-            _paAgencyDataAccess = paAgencyDataAccess;
-            _sentryClient = sentryClient;
+            _paAgencyDataAccess = paAgencyDataAccess; 
         }
 
         public IEnumerable<long> RescanCustomerClassification(IEnumerable<RescanCustomerClassificationAgencyEntity> custRescans,
@@ -69,9 +67,8 @@
 
                 if (insertPaResult.CustInfos != null && insertPaResult.CustInfos.Any())
                 {
-                    var custUpdatePALogics = insertPaResult.CustInfos.Select(x => new CustInfoEntity { CustID = x.CustID, CTSCustID = x.CTSCustID, IsPA = x.IsPA });
-
 #pragma warning disable S125
+                    //var custUpdatePALogics = insertPaResult.CustInfos.Select(x => new CustInfoEntity { CustID = x.CustID, CTSCustID = x.CTSCustID, IsPA = x.IsPA });
                     // not handle for SMA
                     //InsertPALogicsAgency(custUpdatePALogics);
 #pragma warning disable S125
