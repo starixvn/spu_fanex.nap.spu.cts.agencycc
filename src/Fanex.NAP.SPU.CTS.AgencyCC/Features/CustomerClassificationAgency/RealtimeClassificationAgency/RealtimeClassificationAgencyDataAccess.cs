@@ -52,8 +52,8 @@
 
             return new GetCustomerCategoryAgencyRealtimeModel
             {
-                CustomerCategory = normalCusts.ToList(),
-                CustomerPADailyScan = paCusts.ToList()
+                CustomerCategory = normalCusts?.ToList(),
+                CustomerPADailyScan = paCusts?.ToList()
             };
         }
 

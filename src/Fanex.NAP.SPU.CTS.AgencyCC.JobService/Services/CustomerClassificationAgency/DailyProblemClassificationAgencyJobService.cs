@@ -64,29 +64,27 @@
                     .GetPADailyAgencyScanFromQueue()
                     .GetProblemAccountLosingClassification();
 
-            if (paClassificationAgency.IsNullOrEmpty())
+            if (paClassificationAgency.IsNotNullOrEmpty())
             {
-                return;
-            }
-
-            foreach (var paBatch in paClassificationAgency.Chunk(batchSize))
-            {
-                var isSuccess =
-                    _service
-                        .GetInstanceProblemWLClassificationAgencyService()
-                        .InsertPAWLClassificationAgency(batchSize, paBatch)
-                        .PushCCToExternal(new PushDataToExternalModel
-                        {
-                            RoleGroup = RoleGroupType.Agency,
-                            ExternalBatchSize = batchSize,
-                            IsUpdateDangerToMainDB = false, // not handle
-                            IsWriteLog = _appSettings.ProblemAccountIsWriteLog,
-                            ServiceName = _serviceName
-                        });
-
-                if (!isSuccess)
+                foreach (var paBatch in paClassificationAgency.Chunk(batchSize))
                 {
-                    return;
+                    var isSuccess =
+                        _service
+                            .GetInstanceProblemWLClassificationAgencyService()
+                            .InsertPAWLClassificationAgency(batchSize, paBatch)
+                            .PushCCToExternal(new PushDataToExternalModel
+                            {
+                                RoleGroup = RoleGroupType.Agency,
+                                ExternalBatchSize = batchSize,
+                                IsUpdateDangerToMainDB = false, // not handle
+                                IsWriteLog = _appSettings.ProblemAccountIsWriteLog,
+                                ServiceName = _serviceName
+                            });
+
+                    if (!isSuccess)
+                    {
+                        return;
+                    }
                 }
             }
 
