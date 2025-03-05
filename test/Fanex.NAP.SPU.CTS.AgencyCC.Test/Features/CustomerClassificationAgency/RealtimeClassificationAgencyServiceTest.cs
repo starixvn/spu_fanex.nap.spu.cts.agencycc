@@ -107,7 +107,7 @@
 
             _dataAccess.GetCustomerCategory(Arg.Any<string>()).Returns(new GetCustomerCategoryAgencyRealtimeModel
             {
-                CustomerCategory = new List<long> { 1, 2 }
+                CustomerCategory = new List<ulong> { 1, 2 }
             });
 
             _service.GetCustomerCategory(2);
@@ -146,7 +146,7 @@
             // Arrange
             var customerCategories = new GetCustomerCategoryAgencyRealtimeModel
             {
-                CustomerCategory = new List<long> { 1, 2, 3, 4 }
+                CustomerCategory = new List<ulong> { 1, 2, 3, 4 }
             };
 
 
@@ -167,7 +167,7 @@
             // Arrange
             var customerCategories = new GetCustomerCategoryAgencyRealtimeModel
             {
-                CustomerCategory = new List<long> { 1, 2, 3, 4 }
+                CustomerCategory = new List<ulong> { 1, 2, 3, 4 }
             };
 
 

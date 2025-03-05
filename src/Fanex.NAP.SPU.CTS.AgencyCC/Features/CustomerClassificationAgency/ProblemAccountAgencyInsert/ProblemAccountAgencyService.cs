@@ -21,11 +21,6 @@
 
         int? GetCategoryByCategoryTypeName(string categoryTypeName);
 
-#pragma warning disable S125
-        // not handle SMA
-        //void InsertPALogicsAgency(IEnumerable<CustInfoEntity> customerInfo);
-#pragma warning disable S125
-
         IEnumerable<ProblemAccountLosingAgencyEntity> GetProblemAccountLosingAgencies(IEnumerable<long> custIds);
     }
 
@@ -67,12 +62,6 @@
 
                 if (insertPaResult.CustInfos != null && insertPaResult.CustInfos.Any())
                 {
-#pragma warning disable S125
-                    //var custUpdatePALogics = insertPaResult.CustInfos.Select(x => new CustInfoEntity { CustID = x.CustID, CTSCustID = x.CTSCustID, IsPA = x.IsPA });
-                    // not handle for SMA
-                    //InsertPALogicsAgency(custUpdatePALogics);
-#pragma warning disable S125
-
                     return insertPaResult.CustInfos.Select(x => x.CustID).Distinct();
                 }
             }
@@ -89,17 +78,7 @@
                 FromAction = (int)FromFlow.CTSWEB
             };
 
-            var removePaResult = RemoveCustomerClassificationAgency(AgencyCCInputFlow.RemovePACategory, modelRemove);
-
-#pragma warning disable S125
-            // not handle for SMA
-            //if (string.IsNullOrEmpty(removePaResult.ErrorMessage))
-            //{
-            //    RemovePALogics(removePaResult.CustInfos);
-            //}
-#pragma warning disable S125
-
-            return removePaResult;
+            return RemoveCustomerClassificationAgency(AgencyCCInputFlow.RemovePACategory, modelRemove);
         }
 
 #pragma warning disable S125

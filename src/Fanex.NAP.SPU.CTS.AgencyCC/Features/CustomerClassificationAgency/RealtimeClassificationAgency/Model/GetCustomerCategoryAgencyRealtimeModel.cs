@@ -6,12 +6,12 @@
     {
         public GetCustomerCategoryAgencyRealtimeModel()
         {
-            CustomerCategory = new List<long>();
-            CustomerPADailyScan = new List<long>();
+            CustomerCategory = new List<ulong>();
+            CustomerPADailyScan = new List<ulong>();
         }
 
-        public List<long> CustomerCategory { get; set; }
+        public List<ulong> CustomerCategory { get; set; }
 
-        public List<long> CustomerPADailyScan { get; set; }
+        public List<ulong> CustomerPADailyScan { get; set; }
     }
 }

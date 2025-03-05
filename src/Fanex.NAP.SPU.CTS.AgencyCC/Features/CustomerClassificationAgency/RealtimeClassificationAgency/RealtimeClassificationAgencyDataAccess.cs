@@ -4,6 +4,7 @@
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RealtimeClassificationAgency.Criteria;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RealtimeClassificationAgency.Entities;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RealtimeClassificationAgency.Model;
+    using System;
     using System.Linq;
 
     public interface IRealtimeClassificationAgencyDataAccess
@@ -47,8 +48,8 @@
             {
                 CustIdList = custIdList
             };
-
-            var (normalCusts, paCusts) = _repository.FetchMultiple<long, long>(criteria);
+            
+            var (normalCusts, paCusts) = _repository.FetchMultiple<ulong, ulong>(criteria);
 
             return new GetCustomerCategoryAgencyRealtimeModel
             {
