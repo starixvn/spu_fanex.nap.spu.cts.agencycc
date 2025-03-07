@@ -34,7 +34,7 @@
         }
 
         [HttpPost("scanningRealtimeClassificationAgency")]
-        public async Task<bool> RealtingScanningClassificationAgency([FromForm] int batchExternalSize, [FromForm] int batchInternalSize)
+        public async Task<bool> RealtimeScanningClassificationAgency([FromForm] int batchExternalSize, [FromForm] int batchInternalSize)
         {
             return await _realtimeClassification.Execute(batchExternalSize, batchInternalSize);
         }
@@ -59,7 +59,7 @@
         }
 
         [HttpPost("scanningDailyProblemClassificationAgency")]
-        public async Task<bool> DailyScanningNormalClassificationAgency([FromForm] int batchSize)
+        public async Task<bool> DailyScanningProblemClassificationAgency([FromForm] int batchSize)
         {
             _sentryClient.CaptureMessage($"Daily Problem Agency Service is running at {DateTime.Now}");
             return await _problemClassificationAgencyJobService.Execute(batchSize);
