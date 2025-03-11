@@ -18,6 +18,8 @@
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.DataLogTracking;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.ProblemAccountAgencyInsert;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.AffectDownlineCustomerClassification;
+    using System;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.DailyProblemClassificationAgency;
 
     public static class InitService
     {
@@ -46,6 +48,16 @@
             RegisterAffectDownline(services);
 
             RegisterRobotAgency(services);
+
+            RegisterProblemClassificationAgency(services);
+        }
+
+        private static void RegisterProblemClassificationAgency(IServiceCollection services)
+        {
+            services.AddSingleton<IProblemWLClassificationAgencyDataAccess, ProblemWLClassificationAgencyDataAccess>();
+            services.AddTransient<IProblemWLClassificationAgencyService, ProblemWLClassificationAgencyService>();
+            services.AddSingleton<IDailyProblemClassificationAgencyService, DailyProblemClassificationAgencyService>();
+            services.AddSingleton<IDailyProblemClassificationAgencyJobService, DailyProblemClassificationAgencyJobService>();
         }
 
         private static void RegisterRobotAgency(IServiceCollection services)
@@ -62,6 +74,7 @@
 
         private static void RegisterProblemAccount(IServiceCollection services)
         {
+            services.AddSingleton<IProblemAccountAgencyDataAccess, ProblemAccountAgencyDataAccess>();
             services.AddSingleton<IProblemAccountAgencyService, ProblemAccountAgencyService>();
         }
 

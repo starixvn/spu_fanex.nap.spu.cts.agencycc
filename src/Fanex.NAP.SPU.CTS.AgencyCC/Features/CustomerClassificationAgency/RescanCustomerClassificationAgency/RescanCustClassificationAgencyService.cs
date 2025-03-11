@@ -33,9 +33,10 @@
 
         public RescanCustClassificationAgencyService(
             IBaseCustomerClassificationAgencyDataAccess baseCCAgencyDataAccess,
+            IProblemAccountAgencyDataAccess paAgencyDataAccess,
             ISentryClient sentryClient,
             IRescanCustClassificationAgencyDataAccess dataAccess,
-            ICustClassToMainDBService custClassToMainDBService) : base(baseCCAgencyDataAccess, sentryClient)
+            ICustClassToMainDBService custClassToMainDBService) : base(baseCCAgencyDataAccess, paAgencyDataAccess, sentryClient)
         {
             _dataAccess = dataAccess;
             _custClassToMainDBService = custClassToMainDBService;

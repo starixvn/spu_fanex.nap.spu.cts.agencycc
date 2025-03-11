@@ -15,23 +15,26 @@
         private readonly IDailyNormalClassificationAgencyJobService _dailyNormalClassification;
         private readonly INormalAccountClassificationAgencyJobService _normalAccountClassification;
         private readonly INormalAccountInsertAgencyJobService _normalAccountInsert;
+        private readonly IDailyProblemClassificationAgencyJobService _problemClassificationAgencyJobService;
 
         public ClassificationAgencyJobController(
             ISentryClient sentryClient,
             IRealtimeClassificationAgencyJobService realtimeClassification,
             IDailyNormalClassificationAgencyJobService dailyNormalClassification,
             INormalAccountClassificationAgencyJobService normalAccountClassification,
-            INormalAccountInsertAgencyJobService normalAccountInsert)
+            INormalAccountInsertAgencyJobService normalAccountInsert,
+            IDailyProblemClassificationAgencyJobService problemClassificationAgencyJobService)
         {
             _sentryClient = sentryClient;
             _realtimeClassification = realtimeClassification;
             _dailyNormalClassification = dailyNormalClassification;
             _normalAccountClassification = normalAccountClassification;
             _normalAccountInsert = normalAccountInsert;
+            _problemClassificationAgencyJobService = problemClassificationAgencyJobService;
         }
 
         [HttpPost("scanningRealtimeClassificationAgency")]
-        public async Task<bool> RealtingScanningClassificationAgency([FromForm] int batchExternalSize, [FromForm] int batchInternalSize)
+        public async Task<bool> RealtimeScanningClassificationAgency([FromForm] int batchExternalSize, [FromForm] int batchInternalSize)
         {
             return await _realtimeClassification.Execute(batchExternalSize, batchInternalSize);
         }
@@ -53,6 +56,13 @@
         public async Task<bool> NormalAccountInsert([FromForm] int batchExternalSize, [FromForm] int batchInternalSize)
         {
             return await _normalAccountInsert.Execute(batchExternalSize, batchInternalSize);
+        }
+
+        [HttpPost("scanningDailyProblemClassificationAgency")]
+        public async Task<bool> DailyScanningProblemClassificationAgency([FromForm] int batchSize)
+        {
+            _sentryClient.CaptureMessage($"Daily Problem Agency Service is running at {DateTime.Now}");
+            return await _problemClassificationAgencyJobService.Execute(batchSize);
         }
     }
 }

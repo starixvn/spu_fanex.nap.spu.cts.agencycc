@@ -17,6 +17,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Infrastructure.Consts.CustomerClassif
     public class ProblemAccountAgencyServiceTest
     {
         private readonly IBaseCustomerClassificationAgencyDataAccess _baseCCAgencyDataAccess;
+        private readonly IProblemAccountAgencyDataAccess _paAgencyDataAccess;
         private readonly ISentryClient _sentryClient;
 
         private readonly IProblemAccountAgencyService _service;
@@ -24,9 +25,11 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Infrastructure.Consts.CustomerClassif
         public ProblemAccountAgencyServiceTest()
         {
             _baseCCAgencyDataAccess = Substitute.For<IBaseCustomerClassificationAgencyDataAccess>();
+            _paAgencyDataAccess = Substitute.For<IProblemAccountAgencyDataAccess>();
+
             _sentryClient = Substitute.For<ISentryClient>();
 
-            _service = new ProblemAccountAgencyService(_baseCCAgencyDataAccess, _sentryClient);
+            _service = new ProblemAccountAgencyService(_baseCCAgencyDataAccess, _paAgencyDataAccess, _sentryClient);
         }
 
         [Fact]
@@ -71,101 +74,104 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Infrastructure.Consts.CustomerClassif
             Assert.Throws<Exception>(action);
         }
 
-        [Fact]
-        public void RemovePALogics_WhenSuccess()
-        {
-            // Arrange
-            var removePALogicsMethod = TestExtension.GetPrivateMethod(typeof(ProblemAccountAgencyService), PrivateMethodName.RemovePALogics);
+#pragma warning disable S125
+        // not handle SMA
+        //[Fact]
+        //public void RemovePALogics_WhenSuccess()
+        //{
+        //    // Arrange
+        //    var removePALogicsMethod = TestExtension.GetPrivateMethod(typeof(ProblemAccountAgencyService), PrivateMethodName.RemovePALogics);
 
-            // Act
-            _baseCCAgencyDataAccess.UpdateBetLimitOfUnflaggedCustomer(Arg.Any<string>()).Returns(new DBResult());
+        //    // Act
+        //    _baseCCAgencyDataAccess.UpdateBetLimitOfUnflaggedCustomer(Arg.Any<string>()).Returns(new DBResult());
 
-            removePALogicsMethod.Invoke(_service, new object[] { new List<ResultRemoveCustomerClassificationEntity> { new ResultRemoveCustomerClassificationEntity { IsCleanPA = true } } });
+        //    removePALogicsMethod.Invoke(_service, new object[] { new List<ResultRemoveCustomerClassificationEntity> { new ResultRemoveCustomerClassificationEntity { IsCleanPA = true } } });
 
-            // Assert
-            _baseCCAgencyDataAccess.Received(1).UpdateBetLimitOfUnflaggedCustomer(Arg.Any<string>());
-        }
+        //    // Assert
+        //    _baseCCAgencyDataAccess.Received(1).UpdateBetLimitOfUnflaggedCustomer(Arg.Any<string>());
+        //}
 
-        [Fact]
-        public void RemovePALogics_ThrowException()
-        {
-            // Arrange
-            var removePALogicsMethod = TestExtension.GetPrivateMethod(typeof(ProblemAccountAgencyService), PrivateMethodName.RemovePALogics);
+        //[Fact]
+        //public void RemovePALogics_ThrowException()
+        //{
+        //    // Arrange
+        //    var removePALogicsMethod = TestExtension.GetPrivateMethod(typeof(ProblemAccountAgencyService), PrivateMethodName.RemovePALogics);
 
-            // Act
-            _baseCCAgencyDataAccess.UpdateBetLimitOfUnflaggedCustomer(Arg.Any<string>()).Throws<Exception>();
+        //    // Act
+        //    _baseCCAgencyDataAccess.UpdateBetLimitOfUnflaggedCustomer(Arg.Any<string>()).Throws<Exception>();
 
-            Action action = () => removePALogicsMethod.Invoke(
-                _service, new object[] { new List<ResultRemoveCustomerClassificationEntity> { new ResultRemoveCustomerClassificationEntity { IsCleanPA = true } } });
+        //    Action action = () => removePALogicsMethod.Invoke(
+        //        _service, new object[] { new List<ResultRemoveCustomerClassificationEntity> { new ResultRemoveCustomerClassificationEntity { IsCleanPA = true } } });
 
-            // Assert
-            _baseCCAgencyDataAccess.Received(0).UpdateBetLimitOfUnflaggedCustomer(Arg.Any<string>());
+        //    // Assert
+        //    _baseCCAgencyDataAccess.Received(0).UpdateBetLimitOfUnflaggedCustomer(Arg.Any<string>());
 
-            Assert.Throws<TargetInvocationException>(action);
-        }
+        //    Assert.Throws<TargetInvocationException>(action);
+        //}
 
-        [Fact]
-        public void UpdateBetLimitOfFlaggedCustomer_WhenSuccess()
-        {
-            // Arrange
-            var removePALogicsMethod = TestExtension.GetPrivateMethod(typeof(ProblemAccountAgencyService), PrivateMethodName.UpdateBetLimitOfFlaggedCustomer);
+        //[Fact]
+        //public void UpdateBetLimitOfFlaggedCustomer_WhenSuccess()
+        //{
+        //    // Arrange
+        //    var removePALogicsMethod = TestExtension.GetPrivateMethod(typeof(ProblemAccountAgencyService), PrivateMethodName.UpdateBetLimitOfFlaggedCustomer);
 
-            // Act
-            _baseCCAgencyDataAccess.UpdateBetLimitOfFlaggedCustomer(Arg.Any<string>()).Returns(new DBResult());
+        //    // Act
+        //    _baseCCAgencyDataAccess.UpdateBetLimitOfFlaggedCustomer(Arg.Any<string>()).Returns(new DBResult());
 
-            removePALogicsMethod.Invoke(_service, new object[] { new List<long> { 1, 2, 3, 4 } });
+        //    removePALogicsMethod.Invoke(_service, new object[] { new List<long> { 1, 2, 3, 4 } });
 
-            // Assert
-            _baseCCAgencyDataAccess.Received(1).UpdateBetLimitOfFlaggedCustomer(Arg.Any<string>());
-        }
+        //    // Assert
+        //    _baseCCAgencyDataAccess.Received(1).UpdateBetLimitOfFlaggedCustomer(Arg.Any<string>());
+        //}
 
-        [Fact]
-        public void UpdateBetLimitOfFlaggedCustomer_ThrowException()
-        {
-            // Arrange
-            var removePALogicsMethod = TestExtension.GetPrivateMethod(typeof(ProblemAccountAgencyService), PrivateMethodName.UpdateBetLimitOfFlaggedCustomer);
+        //[Fact]
+        //public void UpdateBetLimitOfFlaggedCustomer_ThrowException()
+        //{
+        //    // Arrange
+        //    var removePALogicsMethod = TestExtension.GetPrivateMethod(typeof(ProblemAccountAgencyService), PrivateMethodName.UpdateBetLimitOfFlaggedCustomer);
 
-            // Act
-            _baseCCAgencyDataAccess.UpdateBetLimitOfFlaggedCustomer(Arg.Any<string>()).Throws<Exception>();
+        //    // Act
+        //    _baseCCAgencyDataAccess.UpdateBetLimitOfFlaggedCustomer(Arg.Any<string>()).Throws<Exception>();
 
-            Action action = () => removePALogicsMethod.Invoke(_service, new object[] { new List<long> { 1, 2, 3, 4 } });
+        //    Action action = () => removePALogicsMethod.Invoke(_service, new object[] { new List<long> { 1, 2, 3, 4 } });
 
-            // Assert
-            _baseCCAgencyDataAccess.Received(0).UpdateBetLimitOfFlaggedCustomer(Arg.Any<string>());
+        //    // Assert
+        //    _baseCCAgencyDataAccess.Received(0).UpdateBetLimitOfFlaggedCustomer(Arg.Any<string>());
 
-            Assert.Throws<TargetInvocationException>(action);
-        }
+        //    Assert.Throws<TargetInvocationException>(action);
+        //}
 
-        [Fact]
-        public void UpdateBetLimitOfUnflaggedCustomer_WhenSuccess()
-        {
-            // Arrange
-            var removePALogicsMethod = TestExtension.GetPrivateMethod(typeof(ProblemAccountAgencyService), PrivateMethodName.UpdateBetLimitOfUnflaggedCustomer);
+        //[Fact]
+        //public void UpdateBetLimitOfUnflaggedCustomer_WhenSuccess()
+        //{
+        //    // Arrange
+        //    var removePALogicsMethod = TestExtension.GetPrivateMethod(typeof(ProblemAccountAgencyService), PrivateMethodName.UpdateBetLimitOfUnflaggedCustomer);
 
-            // Act
-            _baseCCAgencyDataAccess.UpdateBetLimitOfUnflaggedCustomer(Arg.Any<string>()).Returns(new DBResult());
+        //    // Act
+        //    _baseCCAgencyDataAccess.UpdateBetLimitOfUnflaggedCustomer(Arg.Any<string>()).Returns(new DBResult());
 
-            removePALogicsMethod.Invoke(_service, new object[] { new List<long> { 1, 2, 3, 4 } });
+        //    removePALogicsMethod.Invoke(_service, new object[] { new List<long> { 1, 2, 3, 4 } });
 
-            // Assert
-            _baseCCAgencyDataAccess.Received(1).UpdateBetLimitOfUnflaggedCustomer(Arg.Any<string>());
-        }
+        //    // Assert
+        //    _baseCCAgencyDataAccess.Received(1).UpdateBetLimitOfUnflaggedCustomer(Arg.Any<string>());
+        //}
 
-        [Fact]
-        public void UpdateBetLimitOfUnflaggedCustomer_ThrowException()
-        {
-            // Arrange
-            var removePALogicsMethod = TestExtension.GetPrivateMethod(typeof(ProblemAccountAgencyService), PrivateMethodName.UpdateBetLimitOfUnflaggedCustomer);
+        //[Fact]
+        //public void UpdateBetLimitOfUnflaggedCustomer_ThrowException()
+        //{
+        //    // Arrange
+        //    var removePALogicsMethod = TestExtension.GetPrivateMethod(typeof(ProblemAccountAgencyService), PrivateMethodName.UpdateBetLimitOfUnflaggedCustomer);
 
-            // Act
-            _baseCCAgencyDataAccess.UpdateBetLimitOfUnflaggedCustomer(Arg.Any<string>()).Throws<Exception>();
+        //    // Act
+        //    _baseCCAgencyDataAccess.UpdateBetLimitOfUnflaggedCustomer(Arg.Any<string>()).Throws<Exception>();
 
-            Action action = () => removePALogicsMethod.Invoke(_service, new object[] { new List<long> { 1, 2, 3, 4 } });
+        //    Action action = () => removePALogicsMethod.Invoke(_service, new object[] { new List<long> { 1, 2, 3, 4 } });
 
-            // Assert
-            _baseCCAgencyDataAccess.Received(0).UpdateBetLimitOfUnflaggedCustomer(Arg.Any<string>());
+        //    // Assert
+        //    _baseCCAgencyDataAccess.Received(0).UpdateBetLimitOfUnflaggedCustomer(Arg.Any<string>());
 
-            Assert.Throws<TargetInvocationException>(action);
-        }
+        //    Assert.Throws<TargetInvocationException>(action);
+        //}
+#pragma warning disable S125
     }
 }

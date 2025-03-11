@@ -19,8 +19,10 @@
 
         bool IsSyncAFCData { get; }     
 
-        bool NormalAccountIsWriteLog { get; }                                        
-     
+        bool NormalAccountIsWriteLog { get; }
+
+        bool ProblemAccountIsWriteLog { get; }
+
         string SentryDsn { get; }      
 
         bool UpdateIsWriteLogSetting(string serviceName, bool isWriteLog);        
@@ -90,8 +92,10 @@
 
         public string SentryDsn => sentryDsn;      
 
-        public bool NormalAccountIsWriteLog => GetValue<bool>("NormalAccountInsert:IsWriteLog");                                              
-       
+        public bool NormalAccountIsWriteLog => GetValue<bool>("NormalAccountInsert:IsWriteLog");
+
+        public bool ProblemAccountIsWriteLog => GetValue<bool>("ProblemAccountInsert:IsWriteLog");
+
         public APIHelperConfig APIHelperConfig => apiHelperConfig;
 
         #endregion Variables

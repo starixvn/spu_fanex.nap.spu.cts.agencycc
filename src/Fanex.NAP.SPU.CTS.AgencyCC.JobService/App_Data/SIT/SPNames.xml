@@ -7,6 +7,7 @@
 		<Setting Key="CTS_SystemParameter_Get" SpName="CTS_SystemParameter_Get" DbName="SQL.WASAVerse.bodbSPUNet" />
 		<Setting Key="CTS_SystemParameter_Update" SpName="CTS_SystemParameter_Update" DbName="SQL.WASAVerse.bodbSPUNet" />
 		<Setting Key="Acc_CustomerUpdateCustomerClass" SpName="Acc_CustomerUpdateCustomerClass" DbName="SQL.CustDB.bodbAdminNet" TimeOut="600" />
+    <Setting Key="CTS_ProblemAccountsClassificationAgency_Daily" SpName="CTS_ProblemAccountsClassificationAgency_Daily" DbName="SQL.bodbVR2Model.bodbSPUNet" />
 	</Function>
 	<Function Name="Rescan">
 		<Setting Key="CTS_DC_CustInfo_GetCustIDsRole" SpName="CTS_DC_CustInfo_GetCustIDsRole" DbName="MySQL.CTS_DataCenter.ctsService" />
@@ -17,6 +18,7 @@
 		<Setting Key="CTS_GeneralNormalClassificationAgency_RealTime_GetChanges" SpName="CTS_GeneralNormalClassificationAgency_RealTime_GetChanges" DbName="SQL.bodbVR2Model.bodbSPUNet" />
 		<Setting Key="CTS_GeneralNormalClassificationAgency_Realtime_Preprocess" SpName="CTS_GeneralNormalClassificationAgency_Realtime_Preprocess" DbName="SQL.bodbVR2Model.bodbSPUNet" />
 		<Setting Key="CTS_GeneralNormalClassificationAgency_RealTime_Complete" SpName="CTS_GeneralNormalClassificationAgency_RealTime_Complete" DbName="SQL.bodbVR2Model.bodbSPUNet" />
+    <Setting Key="CTS_DC_CustClassificationAgency_DailyScanPA_InsertToQueue" SpName="CTS_DC_CustClassificationAgency_DailyScanPA_InsertToQueue" DbName="MySQL.CTS_DataCenter.ctsServiceAdmin" />
 	</Function>
 	<Function Name="NormalClassification">
 		<Setting Key="CTS_DC_CustClassificationAgency_Normal_GetCurrentCategory" SpName="CTS_DC_CustClassificationAgency_Normal_GetCurrentCategory" DbName="MySQL.CTS_DataCenter.ctsService" />
@@ -29,12 +31,12 @@
 	</Function>
 	<Function Name="CustomerClassification">
 		<Setting Key="CTS_DC_CustClassificationAgency_Rescan_Get" SpName="CTS_DC_CustClassificationAgency_Rescan_Get" DbName="MySQL.CTS_DataCenter.ctsService" />
-		<Setting Key="CTS_DC_CustClassificationAgency_Insert" SpName="CTS_DC_CustClassificationAgency_Insert" DbName="MySQL.CTS_DataCenter.ctsServiceAdmin" TimeOut="600" />		
-	  <Setting Key="CTS_DC_CustInfo_CheckCategoryInfoNewCustAgency" SpName="CTS_DC_CustInfo_CheckCategoryInfoNewCustAgency" DbName="MySQL.CTS_DataCenter.ctsService" />
-    <Setting Key="CTS_DC_CustClassificationAgency_Remove" SpName="CTS_DC_CustClassificationAgency_Remove" DbName="MySQL.CTS_DataCenter.ctsServiceAdmin" TimeOut="600" />
-    <Setting Key="CTS_DC_Category_GetByCategoryTypeName" SpName="CTS_DC_Category_GetByCategoryTypeName" DbName="MySQL.CTS_DataCenter.ctsService" />
-    <Setting Key="CTS_DC_CustClassification_GetCCAndDangerLevel" SpName="CTS_DC_CustClassification_GetCCAndDangerLevel" DbName="MySQL.CTS_DataCenter.ctsService" />
-  </Function>
+		<Setting Key="CTS_DC_CustClassificationAgency_Insert" SpName="CTS_DC_CustClassificationAgency_Insert" DbName="MySQL.CTS_DataCenter.ctsServiceAdmin" TimeOut="600" />
+		<Setting Key="CTS_DC_CustInfo_CheckCategoryInfoNewCustAgency" SpName="CTS_DC_CustInfo_CheckCategoryInfoNewCustAgency" DbName="MySQL.CTS_DataCenter.ctsService" />
+		<Setting Key="CTS_DC_CustClassificationAgency_Remove" SpName="CTS_DC_CustClassificationAgency_Remove" DbName="MySQL.CTS_DataCenter.ctsServiceAdmin" TimeOut="600" />
+		<Setting Key="CTS_DC_Category_GetByCategoryTypeName" SpName="CTS_DC_Category_GetByCategoryTypeName" DbName="MySQL.CTS_DataCenter.ctsService" />
+		<Setting Key="CTS_DC_CustClassification_GetCCAndDangerLevel" SpName="CTS_DC_CustClassification_GetCCAndDangerLevel" DbName="MySQL.CTS_DataCenter.ctsService" />
+	</Function>
 	<Function Name="DailyNormalClassification">
 		<Setting Key="CTS_GeneralNormalClassificationAgency_Daily_Preprocess" SpName="CTS_GeneralNormalClassificationAgency_Daily_Preprocess" DbName="SQL.bodbVR2Model.bodbSPUNet" TimeOut="1200" />
 	</Function>
@@ -45,11 +47,16 @@
 		<Setting Key="CTS_GeneralNormalClassificationAgency_NormalAccount_Get" SpName="CTS_GeneralNormalClassificationAgency_NormalAccount_Get" DbName="SQL.bodbVR2Model.bodbSPUNet" TimeOut="300" />
 		<Setting Key="CTS_GeneralNormalClassificationAgency_NormalAccount_Complete" SpName="CTS_GeneralNormalClassificationAgency_NormalAccount_Complete" DbName="SQL.bodbVR2Model.bodbSPUNet" TimeOut="300" />
 	</Function>
-  <Function Name="CustomerEvidenceInsert">  
-    <Setting Key="NAP_BLControl_EvidenceFlagged" SpName="NAP_BLControl_EvidenceFlagged" DbName="SQL.CustDB.bodbAdminNet" TimeOut="600" />
-    <Setting Key="NAP_BLControl_EvidenceUnflagged" SpName="NAP_BLControl_EvidenceUnflagged" DbName="SQL.CustDB.bodbAdminNet" TimeOut="600" />
-  </Function>
-  <Function name="LogData">
-    <Setting Key="CTS_Archive_Log_Insert" SpName="CTS_Archive_Log_Insert" DbName="MySQL.CTS_Archive2.ctsServiceAdmin" />
-  </Function>
+	<Function Name="CustomerEvidenceInsert">
+		<Setting Key="NAP_BLControl_EvidenceFlagged" SpName="NAP_BLControl_EvidenceFlagged" DbName="SQL.CustDB.bodbAdminNet" TimeOut="600" />
+		<Setting Key="NAP_BLControl_EvidenceUnflagged" SpName="NAP_BLControl_EvidenceUnflagged" DbName="SQL.CustDB.bodbAdminNet" TimeOut="600" />
+	</Function>
+	<Function name="LogData">
+		<Setting Key="CTS_Archive_Log_Insert" SpName="CTS_Archive_Log_Insert" DbName="MySQL.CTS_Archive2.ctsServiceAdmin" />
+	</Function>
+	<Function name="ProblemAccountClassification">
+		<Setting Key="CTS_DC_CustClassificationAgency_DailyScanPA_GetFromQueue" SpName="CTS_DC_CustClassificationAgency_DailyScanPA_GetFromQueue" DbName="MySQL.CTS_DataCenter.ctsService" />
+		<Setting Key="CTS_DC_CustClassificationAgency_DailyScanPA_Complete" SpName="CTS_DC_CustClassificationAgency_DailyScanPA_Complete" DbName="MySQL.CTS_DataCenter.ctsServiceAdmin" />
+		<Setting Key="CTS_DC_CustClassificationAgency_DailyScanPA_Insert" SpName="CTS_DC_CustClassificationAgency_DailyScanPA_Insert" DbName="MySQL.CTS_DataCenter.ctsServiceAdmin" />
+	</Function>
 </Functions>

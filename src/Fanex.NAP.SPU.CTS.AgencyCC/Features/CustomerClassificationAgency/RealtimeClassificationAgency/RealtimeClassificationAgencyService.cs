@@ -14,6 +14,8 @@
 
         IRealtimeClassificationAgencyService PreprocessCustomerClassRealtime(int batchSize);
 
+        IRealtimeClassificationAgencyService InsertToQueuePaAgencyRealtime(int batchSize);
+
         IRealtimeClassificationAgencyService CompleteCustomerRealtime();
     }
 
@@ -56,6 +58,7 @@
                     var custCategory = _dataAccess.GetCustomerCategory(custIDs);
 
                     _customerCategories.CustomerCategory.AddRange(custCategory.CustomerCategory);
+                    _customerCategories.CustomerPADailyScan.AddRange(custCategory.CustomerPADailyScan);
                 }
             }
 
@@ -73,6 +76,23 @@
                     var custIdList = string.Join(",", custBatch);
 
                     _dataAccess.PreprocessCustomerClassRealtime(custIdList);
+                }
+            }
+
+            return this;
+        }
+
+        public IRealtimeClassificationAgencyService InsertToQueuePaAgencyRealtime(int batchSize)
+        {
+            if (_customerCategories != null && _customerCategories.CustomerPADailyScan.IsNotNullOrEmpty()) 
+            {
+                var paCustChunks = _customerCategories.CustomerPADailyScan.Chunk(batchSize);
+
+                foreach (var custBatch in paCustChunks)
+                {
+                    var custIdList = string.Join(",", custBatch);
+
+                    _dataAccess.InsertToQueuePaAgencyRealtime(custIdList);
                 }
             }
 

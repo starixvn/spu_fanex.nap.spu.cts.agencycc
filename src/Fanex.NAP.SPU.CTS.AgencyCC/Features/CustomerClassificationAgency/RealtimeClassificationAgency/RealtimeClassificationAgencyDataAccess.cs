@@ -4,6 +4,7 @@
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RealtimeClassificationAgency.Criteria;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RealtimeClassificationAgency.Entities;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RealtimeClassificationAgency.Model;
+    using System;
     using System.Linq;
 
     public interface IRealtimeClassificationAgencyDataAccess
@@ -13,6 +14,8 @@
         GetCustomerCategoryAgencyRealtimeModel GetCustomerCategory(string custIdList);
 
         void PreprocessCustomerClassRealtime(string custIdList);
+
+        void InsertToQueuePaAgencyRealtime(string custIdList);
 
         void CompleteCustomerRealtime(long scannedMaxId);
     }
@@ -45,13 +48,13 @@
             {
                 CustIdList = custIdList
             };
-
-            var normalCusts = _repository.Fetch<long>(criteria);
+            
+            var (normalCusts, paCusts) = _repository.FetchMultiple<ulong, ulong>(criteria);
 
             return new GetCustomerCategoryAgencyRealtimeModel
             {
-                CustomerCategory = normalCusts.ToList(),
-                //CustomerPADailyScan = paCusts.ToList()
+                CustomerCategory = normalCusts?.ToList(),
+                CustomerPADailyScan = paCusts?.ToList()
             };
         }
 
@@ -60,6 +63,16 @@
             var criteria = new PreprocessCustomerAgencyRealtimeCriteria
             {
                 ListCustId = custIdList
+            };
+
+            _repository.Execute(criteria);
+        }
+
+        public void InsertToQueuePaAgencyRealtime(string custIdList)
+        {
+            var criteria = new PaAgencyInsertToQueueRealtimeCriteria
+            {
+                CustIDList = custIdList
             };
 
             _repository.Execute(criteria);
