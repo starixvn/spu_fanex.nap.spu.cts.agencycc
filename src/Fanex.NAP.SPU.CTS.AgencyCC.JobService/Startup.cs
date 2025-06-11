@@ -82,20 +82,10 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService
 
         private void FanexDataConfig(IAppSettings appSettings)
         {
-            var connections = Configuration
-                                  .GetSection("Connections")
-                                  .GetChildren()
-                                  .AsEnumerable()
-                                  .ToDictionary(
-                                           x => x.GetValue<string>("Name"),
-                                           y => new ConnectionConfiguration(y.GetValue<string>("Name"), y.GetValue<string>("ConnectionString"), y.GetValue<string>("ProviderName"))
-                                   );
-
             DbSettingProviderManager
-              .StartNewSession()
-              .Use(connections)              
-              .WithSqlServer()              
-              .WithMySql()
+              .StartNewSession()           
+              .WithSqlServer(Configuration)              
+              .WithMySql(Configuration)
               .UseDefaultDbSettingProvider(resourcePath: appSettings.SPName)
               .Run();
         }
