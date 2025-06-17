@@ -6,7 +6,7 @@
 		<Setting Key="CTS_DC_SystemParameter_Update" SpName="CTS_DC_SystemParameter_Update" DbName="CTSMain.CTS_DataCenter.ctsServiceAdmin" />
 		<Setting Key="CTS_SystemParameter_Get" SpName="CTS_SystemParameter_Get" DbName="DBCTS.WASAVerse.wsv_cts" />
 		<Setting Key="CTS_SystemParameter_Update" SpName="CTS_SystemParameter_Update" DbName="DBCTS.WASAVerse.wsv_cts" />
-		<Setting Key="Acc_CustomerUpdateCustomerClass" SpName="Acc_CustomerUpdateCustomerClass" DbName="DBCust.CustDB.wsv_nap" TimeOut="600" />
+		<Setting Key="Acc_CustomerUpdateCustomerClass" SpName="Acc_CustomerUpdateCustomerClass" DbName="DBCUST.CustDB.wsv_nap" TimeOut="600" />
     <Setting Key="CTS_ProblemAccountsClassificationAgency_Daily" SpName="CTS_ProblemAccountsClassificationAgency_Daily" DbName="DBVR2.bodb_VR2Model.wsv_cts" />
 	</Function>
 	<Function Name="Rescan">
@@ -48,8 +48,8 @@
 		<Setting Key="CTS_GeneralNormalClassificationAgency_NormalAccount_Complete" SpName="CTS_GeneralNormalClassificationAgency_NormalAccount_Complete" DbName="DBVR2.bodb_VR2Model.wsv_cts" TimeOut="300" />
 	</Function>
 	<Function Name="CustomerEvidenceInsert">
-		<Setting Key="NAP_BLControl_EvidenceFlagged" SpName="NAP_BLControl_EvidenceFlagged" DbName="DBCust.CustDB.wsv_nap" TimeOut="600" />
-		<Setting Key="NAP_BLControl_EvidenceUnflagged" SpName="NAP_BLControl_EvidenceUnflagged" DbName="DBCust.CustDB.wsv_nap" TimeOut="600" />
+		<Setting Key="NAP_BLControl_EvidenceFlagged" SpName="NAP_BLControl_EvidenceFlagged" DbName="DBCUST.CustDB.wsv_nap" TimeOut="600" />
+		<Setting Key="NAP_BLControl_EvidenceUnflagged" SpName="NAP_BLControl_EvidenceUnflagged" DbName="DBCUST.CustDB.wsv_nap" TimeOut="600" />
 	</Function>
 	<Function name="LogData">
 		<Setting Key="CTS_Archive_Log_Insert" SpName="CTS_Archive_Log_Insert" DbName="CTSArchive.CTS_Archive.ctsServiceAdmin" />
