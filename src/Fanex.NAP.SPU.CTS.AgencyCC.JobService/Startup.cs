@@ -93,7 +93,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService
         private void RegisterLogging(IAppSettings appSettings)
         {
             LogManager
-                .SetDefaultLogCategory("")
+                .SetDefaultLogCategory(appSettings.SentryCategory)
                 .Use(new List<ILogEngine>
                 {
                      new SentryLogging(new SentryEngineOptions {
