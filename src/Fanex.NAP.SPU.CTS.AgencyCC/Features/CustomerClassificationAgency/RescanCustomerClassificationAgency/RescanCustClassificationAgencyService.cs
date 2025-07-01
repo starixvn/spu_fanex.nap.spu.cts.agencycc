@@ -7,7 +7,6 @@
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Shares;
-    using Sentry;
     using System.Collections.Generic;
     using System.Linq;
     using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
@@ -34,9 +33,8 @@
         public RescanCustClassificationAgencyService(
             IBaseCustomerClassificationAgencyDataAccess baseCCAgencyDataAccess,
             IProblemAccountAgencyDataAccess paAgencyDataAccess,
-            ISentryClient sentryClient,
             IRescanCustClassificationAgencyDataAccess dataAccess,
-            ICustClassToMainDBService custClassToMainDBService) : base(baseCCAgencyDataAccess, paAgencyDataAccess, sentryClient)
+            ICustClassToMainDBService custClassToMainDBService) : base(baseCCAgencyDataAccess, paAgencyDataAccess)
         {
             _dataAccess = dataAccess;
             _custClassToMainDBService = custClassToMainDBService;

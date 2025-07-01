@@ -4,7 +4,6 @@
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.NormalAccountClassificationAgency.Entities;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.NormalAccountClassificationAgency.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Shares;
-    using Sentry;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -18,13 +17,11 @@
     public class NormalAccountClassificationAgencyJobService : INormalAccountClassificationAgencyJobService
     {
         private readonly string _serviceName = "NormalAccountClassificationAgencyService";
-        private readonly ISentryClient _sentryClient;
         private readonly INormalAccountClassificationAgencyService _service;
 
-        public NormalAccountClassificationAgencyJobService(INormalAccountClassificationAgencyService service, ISentryClient sentryClient)
+        public NormalAccountClassificationAgencyJobService(INormalAccountClassificationAgencyService service)
         {
             _service = service;
-            _sentryClient = sentryClient;
         }
 
         public Task<bool> Execute(int batchInternalSize)
@@ -40,7 +37,7 @@
             }
             catch (Exception ex)
             {
-                Utilities.LogSentryError(_serviceName, ex.Message, string.Empty, ex, _sentryClient);
+                Utilities.LogSentryError(_serviceName, ex.Message, string.Empty, ex);
 
                 return Task.FromResult(false);
             }

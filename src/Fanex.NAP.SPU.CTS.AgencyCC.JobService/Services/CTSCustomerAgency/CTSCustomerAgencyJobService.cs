@@ -7,7 +7,7 @@
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RescanCustomerClassificationAgency.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.SystemParameter;
-    using Sentry;
+    using Fanex.NAP.SPU.CTS.Shares;
     using System;
     using System.Linq;
     using System.Threading;
@@ -21,20 +21,17 @@
 
     public class CtsCustomerAgencyJobService : ICtsCustomerAgencyJobService
     {
-        private readonly ISentryClient _sentryClient;
         private readonly ICtsCustomerAgencyService _service;
         private readonly ISystemParameterServices _systemParameter;
         private readonly IRescanCustClassificationAgencyService _rescanCustClassification;
         private readonly IAppSettings _appSettings;
 
         public CtsCustomerAgencyJobService(
-            ISentryClient sentryClient,
             ICtsCustomerAgencyService service,
             ISystemParameterServices systemParameter,
             IRescanCustClassificationAgencyService rescanCustClassification,
             IAppSettings appSettings)
         {
-            _sentryClient = sentryClient;
             _service = service;
             _systemParameter = systemParameter;
             _rescanCustClassification = rescanCustClassification;
@@ -98,7 +95,7 @@
                       .AddSection("Exception Info", CommonInfoGetters.GetExceptionInfo(ex))
                       .ToString();
 
-                _sentryClient.CaptureMessage(logMessage, Sentry.Protocol.SentryLevel.Error);
+                logMessage.LogError();
                 return Task.FromResult(false);
             }
         }

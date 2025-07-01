@@ -6,7 +6,6 @@
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Shares;
-    using Sentry;
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
@@ -22,7 +21,6 @@
     public class NormalAccountInsertAgencyJobService : INormalAccountInsertAgencyJobService
     {
         private readonly INormalAccountInsertAgencyService _service;
-        private readonly ISentryClient _sentryClient;
         private readonly string _serviceName = "NormalAccountInsertAgency";
         private readonly IAntiFraudCenterServices _antiFraudCenterService;
         private readonly IAppSettings _appSettings;
@@ -30,13 +28,11 @@
 
         public NormalAccountInsertAgencyJobService(
             INormalAccountInsertAgencyService service,
-            ISentryClient sentryClient,
             IAntiFraudCenterServices antiFraudCenter,
             IAppSettings appSettings,
             ICustClassToMainDBService custClassToMainDBService)
         {
             _service = service;
-            _sentryClient = sentryClient;
             _antiFraudCenterService = antiFraudCenter;
             _appSettings = appSettings;
             _custClassToMainDBService = custClassToMainDBService;
@@ -61,7 +57,7 @@
             }
             catch (Exception ex)
             {
-                Utilities.LogSentryError(_serviceName, ex.Message, string.Empty, ex, _sentryClient);
+                Utilities.LogSentryError(_serviceName, ex.Message, string.Empty, ex);
 
                 return Task.FromResult(false);
             }

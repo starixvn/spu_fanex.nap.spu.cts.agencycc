@@ -7,9 +7,7 @@
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Shares;
-    using Sentry;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
@@ -22,19 +20,17 @@
     public class RobotAgencyJobService : IRobotAgencyJobService
     {
         private readonly string _serviceName = "RobotInsertAgency";
-        private readonly ISentryClient _sentryClient;
         private readonly IProblemAccountAgencyService _problemAccountAgencyService;
         private readonly ICustClassToMainDBService _custClassToMainDBService;
         private readonly IDataLogTrackingServices _dataLogTrackingServices;
         private readonly IAppSettings _appSettings;
 
-        public RobotAgencyJobService(ISentryClient sentryClient,
+        public RobotAgencyJobService(
             IProblemAccountAgencyService problemAccountAgencyService,
             ICustClassToMainDBService custClassToMainDBService,
             IDataLogTrackingServices dataLogTrackingServices,
             IAppSettings appSettings)
         {
-            _sentryClient = sentryClient;
             _problemAccountAgencyService = problemAccountAgencyService;
             _custClassToMainDBService = custClassToMainDBService;
             _dataLogTrackingServices = dataLogTrackingServices;            
@@ -49,7 +45,7 @@
             }
             catch (Exception ex)
             {
-                Utilities.LogSentryError(_serviceName, ex.Message, string.Empty, ex, _sentryClient);
+                Utilities.LogSentryError(_serviceName, ex.Message, string.Empty, ex);
 
                 _dataLogTrackingServices.LogErrorData(ex, _serviceName);
 

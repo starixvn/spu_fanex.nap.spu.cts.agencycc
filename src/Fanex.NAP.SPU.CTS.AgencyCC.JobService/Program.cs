@@ -1,9 +1,9 @@
 namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService
 {
+    using Fanex.NAP.SPU.CTS.Shares;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Hosting;
-    using Sentry;
     using System;
 
     public static class Program
@@ -14,14 +14,15 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService
             {
                 var host = CreateHostBuilder(args).Build();
 
-                SentrySdk.CaptureMessage(string.Format("{0} has been started at {1}", typeof(Program).FullName, DateTime.Now));
+                LogExtension.LogInfo(string.Format("{0} has been started at {1}", typeof(Program).FullName, DateTime.Now));
+                LogExtension.LogError(string.Format("{0} has been started at {1}", typeof(Program).FullName, DateTime.Now));
 
                 host.Run();
 
             }
             catch (Exception ex)
             {
-                SentrySdk.CaptureException(ex);
+                ex.LogError();
                 Console.WriteLine(ex.Message + "\n" + ex.StackTrace);
             }
 
@@ -47,7 +48,6 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService
 #pragma warning restore S1075 // URIs should not be hardcoded
 
                     webBuilder
-                    .UseSentry()
                     .UseStartup<Startup>();
                 });
         }

@@ -21,7 +21,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Features.CustomerClassificationAgency
         {
             _dataAccss = Substitute.For<INormalAccountInsertAgencyDataAccess>();
             _baseDataAccess = Substitute.For<IBaseCustomerClassificationAgencyDataAccess>();
-            _service = new NormalAccountInsertAgencyService(_baseDataAccess, null, _dataAccss);
+            _service = new NormalAccountInsertAgencyService(_baseDataAccess, _dataAccss);
         }
 
         [Fact]
@@ -58,7 +58,7 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Features.CustomerClassificationAgency
             // Act
             _baseDataAccess.InsertCustomerClassification(Arg.Any<AgencyCCInputFlow>(), Arg.Any<InsertCustomerClassificationAgencyModel>()).Returns(new ResultInsertCustomerClassificationAgencyModel());
 
-            var result = _service.InsertNormalAccount(data,string.Empty, false);
+            var result = _service.InsertNormalAccount(data, string.Empty, false);
 
             // Assert
             _baseDataAccess.Received(1).InsertCustomerClassification(Arg.Any<AgencyCCInputFlow>(), Arg.Any<InsertCustomerClassificationAgencyModel>());

@@ -7,7 +7,6 @@
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Entities;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Shares;
-    using Sentry;
     using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
 
     public interface ICustClassToMainDBService
@@ -24,13 +23,11 @@
     public class CustClassToMainDBService : ICustClassToMainDBService
     {
         private readonly ICustClassToMainDBDataAccess _dataAccess;
-        private readonly ISentryClient _sentryClient;
         private readonly IAntiFraudCenterServices _antiFraudCenterServices;
 
-        public CustClassToMainDBService(ICustClassToMainDBDataAccess dataAccess, ISentryClient sentryClient, IAntiFraudCenterServices antiFraudCenterServices)
+        public CustClassToMainDBService(ICustClassToMainDBDataAccess dataAccess, IAntiFraudCenterServices antiFraudCenterServices)
         {
             _dataAccess = dataAccess;
-            _sentryClient = sentryClient;
             _antiFraudCenterServices = antiFraudCenterServices;
         }
 
@@ -79,7 +76,7 @@
                     {
                         Utilities.LogSentryError(
                             serviceName, $"PushCustomerClassificationToMain throw exception: not existing CustIDs in mainDB with ErrorMsg: {result.ErrorMsg}",
-                            customerClassifications, new Exception("Not existing CustIDs in mainDB"), _sentryClient);
+                            customerClassifications, new Exception("Not existing CustIDs in mainDB"));
                     }
 
 
@@ -92,7 +89,7 @@
                     {
                         Utilities.LogSentryError(
                            serviceName, $"PushCustomerClassificationToMain fail with error code: {result.ErrorCode}",
-                           customerClassifications, new Exception(result.ErrorMsg), _sentryClient);
+                           customerClassifications, new Exception(result.ErrorMsg));
 
                         return false;
                     }
@@ -103,7 +100,7 @@
                 {
                     if (retryTime == 0)
                     {
-                        Utilities.LogSentryError(serviceName, "PushCustomerClassificationToMain throw exception", customerClassifications, ex, _sentryClient);
+                        Utilities.LogSentryError(serviceName, "PushCustomerClassificationToMain throw exception", customerClassifications, ex);
                         return false;
                     }
 
