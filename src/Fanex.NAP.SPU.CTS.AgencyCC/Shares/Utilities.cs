@@ -76,6 +76,7 @@
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Sonar Code Smell", "S6566:Use DateTimeOffset instead of DateTime", Justification = "Legacy code or specific reason")]
         public static void LogSentryInfo<T>(string serviceName, string message, T data, bool isWriteLog)
         {
             if (isWriteLog)
@@ -88,6 +89,7 @@
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Sonar Code Smell", "S6566:Use DateTimeOffset instead of DateTime", Justification = "Legacy code or specific reason")]
         public static void LogSentryError<T>(string serviceName, string message, T data, Exception ex, string dataType = "Data")
         {
             var logMessage = new LogMessage(ex.Message)
@@ -99,6 +101,7 @@
             LogExtension.LogError(logMessage);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Sonar Code Smell", "S6566:Use DateTimeOffset instead of DateTime", Justification = "Legacy code or specific reason")]
         public static void LogSentryError(string serviceName, string message, Exception ex)
         {
             var logMessage = new LogMessage(ex.Message)
@@ -118,6 +121,7 @@
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Sonar Code Smell", "S6566:Use DateTimeOffset instead of DateTime", Justification = "Legacy code or specific reason")]
         public static void NotifyTeamsMessage(string message, string systemName, string environment, string groupId)
         {
             var notificationService = new NotificationService();
