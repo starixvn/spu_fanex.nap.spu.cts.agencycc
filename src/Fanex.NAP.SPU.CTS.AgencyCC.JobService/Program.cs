@@ -15,7 +15,6 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService
                 var host = CreateHostBuilder(args).Build();
 
                 LogExtension.LogInfo(string.Format("{0} has been started at {1}", typeof(Program).FullName, DateTime.Now));
-                LogExtension.LogError(string.Format("{0} has been started at {1}", typeof(Program).FullName, DateTime.Now));
 
                 host.Run();
 
