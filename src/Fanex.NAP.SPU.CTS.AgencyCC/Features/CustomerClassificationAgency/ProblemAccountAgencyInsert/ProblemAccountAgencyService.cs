@@ -4,7 +4,6 @@
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Entities;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Model;
     using Newtonsoft.Json;
-    using Sentry;
     using System.Collections.Generic;
     using System.Linq;
     using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
@@ -30,8 +29,7 @@
 
         public ProblemAccountAgencyService(
             IBaseCustomerClassificationAgencyDataAccess baseCCAgencyDataAccess,
-            IProblemAccountAgencyDataAccess paAgencyDataAccess,
-            ISentryClient sentryClient) : base(baseCCAgencyDataAccess, sentryClient) 
+            IProblemAccountAgencyDataAccess paAgencyDataAccess) : base(baseCCAgencyDataAccess) 
         {
             _paAgencyDataAccess = paAgencyDataAccess; 
         }

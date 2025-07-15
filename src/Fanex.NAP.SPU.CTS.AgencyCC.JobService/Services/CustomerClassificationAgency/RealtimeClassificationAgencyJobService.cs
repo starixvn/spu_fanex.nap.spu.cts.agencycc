@@ -2,7 +2,6 @@
 {
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RealtimeClassificationAgency;
     using Fanex.NAP.SPU.CTS.AgencyCC.Shares;
-    using Sentry;
     using System;
     using System.Threading.Tasks;
 
@@ -14,13 +13,11 @@
     public class RealtimeClassificationAgencyJobService : IRealtimeClassificationAgencyJobService
     {
         private readonly IRealtimeClassificationAgencyService _service;
-        private readonly ISentryClient _sentry;
         private readonly string serviceName = "RealtimeClassificationAgency";
 
-        public RealtimeClassificationAgencyJobService(IRealtimeClassificationAgencyService service, ISentryClient sentry)
+        public RealtimeClassificationAgencyJobService(IRealtimeClassificationAgencyService service)
         {
             _service = service;
-            _sentry = sentry;
         }
 
         public Task<bool> Execute(int batchExternalSize, int batchInternalSize)
@@ -38,12 +35,12 @@
                 }
                 else
                 {
-                    Utilities.LogSentryError(serviceName, "InValid Batch size", (batchExternalSize, batchInternalSize), new NullReferenceException(), _sentry);
+                    Utilities.LogSentryError(serviceName, "InValid Batch size", (batchExternalSize, batchInternalSize), new NullReferenceException());
                 }
             }
             catch (Exception ex)
             {
-                Utilities.LogSentryError(serviceName, ex.Message, string.Empty, ex, _sentry);
+                Utilities.LogSentryError(serviceName, ex.Message, string.Empty, ex);
 
                 return Task.FromResult(false);
             }

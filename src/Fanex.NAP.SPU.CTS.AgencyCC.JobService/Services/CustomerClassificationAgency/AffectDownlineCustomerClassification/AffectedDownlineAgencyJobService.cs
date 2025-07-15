@@ -10,7 +10,6 @@
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Shares;
-    using Sentry;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
@@ -24,7 +23,6 @@
     public class AffectedDownlineAgencyJobService : IAffectedDownlineAgencyJobService
     {
         private readonly string _serviceName;
-        private readonly ISentryClient _sentryClient;
         private readonly IAppSettings _appSettings;
         private readonly IProblemAccountAgencyService _problemAccountAgencyService;
         private readonly IAffectedDownlineAgencyService _affectedDownlineAgency;
@@ -35,7 +33,6 @@
 
 #pragma warning disable S107
         public AffectedDownlineAgencyJobService(
-            ISentryClient sentryClient,
             IAppSettings appSettings,
             IProblemAccountAgencyService problemAccountAgencyService,
             IRescanCustClassificationAgencyService rescanCustClassificationService,
@@ -45,7 +42,6 @@
             IAntiFraudCenterServices antiFraudCenterServices)
 #pragma warning restore S107
         {
-            _sentryClient = sentryClient;
             _appSettings = appSettings;
             _dataLogTrackingServices = dataLogTrackingServices;
             _problemAccountAgencyService = problemAccountAgencyService;
@@ -64,7 +60,7 @@
             }
             catch (Exception ex)
             {
-                Utilities.LogSentryError(_serviceName, ex.Message, string.Empty, ex, _sentryClient);
+                Utilities.LogSentryError(_serviceName, ex.Message, string.Empty, ex);
 
                 _dataLogTrackingServices.LogErrorData(ex, _serviceName);
 

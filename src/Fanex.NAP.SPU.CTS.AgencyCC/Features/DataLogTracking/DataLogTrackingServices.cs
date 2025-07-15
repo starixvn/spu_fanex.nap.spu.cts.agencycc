@@ -4,7 +4,6 @@
     using Fanex.Logging.Extensions.Database;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.DataLogTracking.Entities;
     using Fanex.NAP.SPU.CTS.AgencyCC.Shares;
-    using Sentry;
     using System;
     using System.Linq;
 
@@ -16,12 +15,10 @@
     public class DataLogTrackingServices : IDataLogTrackingServices
     {
         private readonly IDataLogTrackingDataAccess dataLogTrackingDataAccess;
-        private readonly ISentryClient sentryClient;
 
-        public DataLogTrackingServices(IDataLogTrackingDataAccess dataLogTrackingDataAccess, ISentryClient sentryClient)
+        public DataLogTrackingServices(IDataLogTrackingDataAccess dataLogTrackingDataAccess)
         {
             this.dataLogTrackingDataAccess = dataLogTrackingDataAccess;
-            this.sentryClient = sentryClient;
         }
 
         public void LogErrorData(Exception exception, string serviceName)
@@ -44,7 +41,7 @@
             }
             catch (Exception ex)
             {
-                Utilities.LogSentryError(serviceName, "InsertErrorData fail", exception, ex, sentryClient);
+                Utilities.LogSentryError(serviceName, "InsertErrorData fail", exception, ex);
             }
         }
     }

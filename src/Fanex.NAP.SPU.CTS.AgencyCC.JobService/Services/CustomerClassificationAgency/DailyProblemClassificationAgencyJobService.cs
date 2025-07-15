@@ -1,7 +1,6 @@
 ﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CustomerClassificationAgency
 {
     using Fanex.NAP.SPU.CTS.AgencyCC.Shares;
-    using Sentry;
     using System;
     using System.Threading.Tasks;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.DailyProblemClassificationAgency;
@@ -17,16 +16,13 @@
     public class DailyProblemClassificationAgencyJobService : IDailyProblemClassificationAgencyJobService
     {
         private readonly string _serviceName;
-        private readonly ISentryClient _sentryClient;
         private readonly IDailyProblemClassificationAgencyService _service;
         private readonly IAppSettings _appSettings;
 
         public DailyProblemClassificationAgencyJobService(
-            ISentryClient sentryClient,
             IDailyProblemClassificationAgencyService service,
             IAppSettings appSettings)
         {
-            _sentryClient = sentryClient;
             _service = service;
             _appSettings = appSettings;
 
@@ -43,12 +39,12 @@
                 }
                 else
                 {
-                    Utilities.LogSentryError(_serviceName, "InValid Batch size", (batchSize), new Exception(), _sentryClient);
+                    Utilities.LogSentryError(_serviceName, "InValid Batch size", (batchSize), new Exception());
                 }
             }
             catch (Exception ex)
             {
-                Utilities.LogSentryError(_serviceName, ex.Message, string.Empty, ex, _sentryClient);
+                Utilities.LogSentryError(_serviceName, ex.Message, string.Empty, ex);
 
                 return Task.FromResult(false);
             }

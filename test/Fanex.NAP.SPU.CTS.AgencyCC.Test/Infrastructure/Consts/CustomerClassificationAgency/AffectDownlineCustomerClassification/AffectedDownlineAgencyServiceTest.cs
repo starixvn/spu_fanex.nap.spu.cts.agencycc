@@ -4,7 +4,6 @@ using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCusto
 using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Model;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
-using Sentry;
 using System;
 using System.Collections.Generic;
 using Xunit;
@@ -15,16 +14,14 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Infrastructure.Consts.CustomerClassif
     public class AffectedDownlineAgencyServiceTest
     {
         private readonly IBaseCustomerClassificationAgencyDataAccess _baseCCAgencyDataAccess;
-        private readonly ISentryClient _sentryClient;
 
         private readonly IAffectedDownlineAgencyService _service;
 
         public AffectedDownlineAgencyServiceTest()
         {
             _baseCCAgencyDataAccess = Substitute.For<IBaseCustomerClassificationAgencyDataAccess>();
-            _sentryClient = Substitute.For<ISentryClient>();
 
-            _service = new AffectedDownlineAgencyService(_baseCCAgencyDataAccess, _sentryClient);
+            _service = new AffectedDownlineAgencyService(_baseCCAgencyDataAccess);
         }
 
         [Fact]

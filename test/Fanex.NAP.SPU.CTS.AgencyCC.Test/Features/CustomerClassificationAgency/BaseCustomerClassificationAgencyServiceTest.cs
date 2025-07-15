@@ -1,10 +1,10 @@
 ﻿using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency;
 using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Model;
 using Fanex.NAP.SPU.CTS.AgencyCC.Shares.Models;
+using Fanex.NAP.SPU.CTS.Shares;
 using FluentAssertions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
-using Sentry;
 using System;
 using Xunit;
 using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
@@ -15,13 +15,12 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Features.CustomerClassificationAgency
     {
         private readonly IBaseCustomerClassificationAgencyDataAccess baseDataAccess;
         private readonly IBaseCustomerClassificationAgencyService baseService;
-        private readonly ISentryClient sentryClient;
 
         public BaseCustomerClassificationAgencyServiceTest()
         {
-            sentryClient = Substitute.For<ISentryClient>();
             baseDataAccess = Substitute.For<IBaseCustomerClassificationAgencyDataAccess>();
-            baseService = new BaseCustomerClassificationAgencyService(baseDataAccess, sentryClient);
+            baseService = new BaseCustomerClassificationAgencyService(baseDataAccess);
+            LogExtension.ConfigByPassForUnitTest();
         }
 
 

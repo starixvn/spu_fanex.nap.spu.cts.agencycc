@@ -6,7 +6,6 @@
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.NormalAccountInsertAgency.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Shares;
     using Newtonsoft.Json;
-    using Sentry;
     using System.Collections.Generic;
     using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
 
@@ -24,8 +23,7 @@
         private readonly INormalAccountInsertAgencyDataAccess _dataAccess;
         public NormalAccountInsertAgencyService(
             IBaseCustomerClassificationAgencyDataAccess baseCCAgencyDataAccess,
-            ISentryClient sentryClient,
-            INormalAccountInsertAgencyDataAccess dataAccess) : base(baseCCAgencyDataAccess, sentryClient)
+            INormalAccountInsertAgencyDataAccess dataAccess) : base(baseCCAgencyDataAccess)
         {
             _dataAccess = dataAccess;
         }

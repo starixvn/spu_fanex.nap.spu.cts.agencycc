@@ -1,8 +1,8 @@
 ﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService.Controllers
 {
     using Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CustomerClassificationAgency;
+    using Fanex.NAP.SPU.CTS.Shares;
     using Microsoft.AspNetCore.Mvc;
-    using Sentry;
     using System;
     using System.Threading.Tasks;
 
@@ -10,7 +10,6 @@
     [ApiController]
     public class ClassificationAgencyJobController : ControllerBase
     {
-        private readonly ISentryClient _sentryClient;
         private readonly IRealtimeClassificationAgencyJobService _realtimeClassification;
         private readonly IDailyNormalClassificationAgencyJobService _dailyNormalClassification;
         private readonly INormalAccountClassificationAgencyJobService _normalAccountClassification;
@@ -18,14 +17,12 @@
         private readonly IDailyProblemClassificationAgencyJobService _problemClassificationAgencyJobService;
 
         public ClassificationAgencyJobController(
-            ISentryClient sentryClient,
             IRealtimeClassificationAgencyJobService realtimeClassification,
             IDailyNormalClassificationAgencyJobService dailyNormalClassification,
             INormalAccountClassificationAgencyJobService normalAccountClassification,
             INormalAccountInsertAgencyJobService normalAccountInsert,
             IDailyProblemClassificationAgencyJobService problemClassificationAgencyJobService)
         {
-            _sentryClient = sentryClient;
             _realtimeClassification = realtimeClassification;
             _dailyNormalClassification = dailyNormalClassification;
             _normalAccountClassification = normalAccountClassification;
@@ -42,7 +39,7 @@
         [HttpPost("scanningDailyNormalClassificationAgency")]
         public async Task<bool> DailyScanningNormalClassificationAgency()
         {
-            _sentryClient.CaptureMessage($"Daily Normal Agency Service is running at {DateTime.Now}");
+            LogExtension.LogInfo($"Daily Normal Agency Service is running at {DateTime.Now}");
             return await _dailyNormalClassification.Execute();
         }
 
@@ -61,7 +58,7 @@
         [HttpPost("scanningDailyProblemClassificationAgency")]
         public async Task<bool> DailyScanningProblemClassificationAgency([FromForm] int batchSize)
         {
-            _sentryClient.CaptureMessage($"Daily Problem Agency Service is running at {DateTime.Now}");
+            LogExtension.LogInfo($"Daily Problem Agency Service is running at {DateTime.Now}");
             return await _problemClassificationAgencyJobService.Execute(batchSize);
         }
     }

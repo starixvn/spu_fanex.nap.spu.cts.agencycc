@@ -11,7 +11,6 @@ using Fanex.NAP.SPU.CTS.AgencyCC.Shares.Models;
 using Fanex.NAP.SPU.CTS.AgencyCC.Tests.Infrastructure.Extensions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
-using Sentry;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -27,7 +26,6 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Features.CustomerClassificationAgency
         private readonly ICustClassToMainDBService _custClassToMainDBService;
         private readonly IBaseCustomerClassificationAgencyDataAccess _baseCCAgencyDataAccess;
         private readonly IProblemAccountAgencyDataAccess _paAgencyDataAccess;
-        private readonly ISentryClient _sentryClient;
 
         private readonly IRescanCustClassificationAgencyService _service;
 
@@ -37,9 +35,8 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Features.CustomerClassificationAgency
             _custClassToMainDBService = Substitute.For<ICustClassToMainDBService>();
             _baseCCAgencyDataAccess = Substitute.For<IBaseCustomerClassificationAgencyDataAccess>();
             _paAgencyDataAccess = Substitute.For<IProblemAccountAgencyDataAccess>();
-            _sentryClient = Substitute.For<ISentryClient>();
 
-            _service = new RescanCustClassificationAgencyService(_baseCCAgencyDataAccess, _paAgencyDataAccess, _sentryClient, _dataAccess, _custClassToMainDBService);
+            _service = new RescanCustClassificationAgencyService(_baseCCAgencyDataAccess, _paAgencyDataAccess, _dataAccess, _custClassToMainDBService);
         }
 
         [Fact]

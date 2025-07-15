@@ -3,9 +3,9 @@ using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationT
 using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Entities;
 using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Model;
 using Fanex.NAP.SPU.CTS.AgencyCC.Tests.Infrastructure.Extensions;
+using Fanex.NAP.SPU.CTS.Shares;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
-using Sentry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,16 +19,15 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Features.PushDataToExternal
     public class CustClassificationToMainDBTests
     {
         private readonly ICustClassToMainDBDataAccess _dataAccess;
-        private readonly ISentryClient _sentryClient;
         private readonly IAntiFraudCenterServices _antiFraudCenterServices;
         private readonly ICustClassToMainDBService _service;
 
         public CustClassificationToMainDBTests()
         {
-            _sentryClient = Substitute.For<ISentryClient>();
             _dataAccess = Substitute.For<ICustClassToMainDBDataAccess>();
             _antiFraudCenterServices = Substitute.For<IAntiFraudCenterServices>();
-            _service = new CustClassToMainDBService(_dataAccess, _sentryClient, _antiFraudCenterServices);
+            _service = new CustClassToMainDBService(_dataAccess, _antiFraudCenterServices);
+            LogExtension.ConfigByPassForUnitTest();
         }
 
         [Fact]

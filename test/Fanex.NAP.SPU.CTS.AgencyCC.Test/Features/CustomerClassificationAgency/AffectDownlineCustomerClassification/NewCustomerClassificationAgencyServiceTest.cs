@@ -15,7 +15,6 @@ using Fanex.NAP.SPU.CTS.AgencyCC.Features.SystemParameter;
 using Fanex.NAP.SPU.CTS.AgencyCC.Tests.Infrastructure.Extensions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
-using Sentry;
 using System;
 using System.Collections.Generic;
 using Xunit;

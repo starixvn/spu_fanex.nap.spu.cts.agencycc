@@ -7,7 +7,6 @@
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.DataLogTracking;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Shares;
-    using Sentry;
     using System;
     using System.Threading.Tasks;
     using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
@@ -20,18 +19,15 @@
     public class NewCustomerClassificationAgencyJobService : INewCustomerClassificationAgencyJobService
     {
         private readonly string _serviceName = "NewCTSCustomerClassificationAgency";
-        private readonly ISentryClient _sentryClient;
         private readonly INewCustomerClassificationAgencyService _newCustomerClassificationAgencyService;
         private readonly IDataLogTrackingServices _dataLogTrackingServices;
         private readonly IAppSettings _appSettings;
 
         public NewCustomerClassificationAgencyJobService(
-            ISentryClient sentryClient,
             INewCustomerClassificationAgencyService newCustomerClassificationAgencyService,
             IAppSettings appSettings,
             IDataLogTrackingServices dataLogTrackingServices)
         {
-            _sentryClient = sentryClient;
             _newCustomerClassificationAgencyService = newCustomerClassificationAgencyService;
             _appSettings = appSettings;
             _dataLogTrackingServices = dataLogTrackingServices;
@@ -45,7 +41,7 @@
             }
             catch (Exception ex)
             {
-                Utilities.LogSentryError(_serviceName, ex.Message, string.Empty, ex, _sentryClient);
+                Utilities.LogSentryError(_serviceName, ex.Message, string.Empty, ex);
 
                 _dataLogTrackingServices.LogErrorData(ex, _serviceName);
 

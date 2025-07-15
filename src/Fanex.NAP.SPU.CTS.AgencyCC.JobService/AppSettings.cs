@@ -25,6 +25,8 @@
 
         string SentryDsn { get; }      
 
+        string SentryCategory { get; }
+
         bool UpdateIsWriteLogSetting(string serviceName, bool isWriteLog);        
 
         APIHelperConfig APIHelperConfig { get; }
@@ -41,6 +43,7 @@
         private readonly string afcDeleteAccountURL;
         private readonly bool isSyncAFCData;
         private readonly string sentryDsn;       
+        private readonly string sentryCategory;
         private readonly APIHelperConfig apiHelperConfig;
 
         public AppSettings(IConfiguration configuration)
@@ -53,7 +56,8 @@
             afcInsertAccountURL = GetValue<string>("AntiFraudCenter:AFCInsertAccountURL");
             afcDeleteAccountURL = GetValue<string>("AntiFraudCenter:AFCDeleteAccountURL");
             isSyncAFCData = GetValue<bool>("AntiFraudCenter:IsSyncAFCData");
-            sentryDsn = GetValue<string>("Sentry:Dsn");           
+            sentryDsn = GetValue<string>("Sentry:Dsn");          
+            sentryCategory = GetValue<string>("Sentry:Category");
             apiHelperConfig = new APIHelperConfig
             {
                 Proxy = GetValue<string>("APIHelperConfig:Proxy")
@@ -90,7 +94,9 @@
 
         public bool IsSyncAFCData => isSyncAFCData;
 
-        public string SentryDsn => sentryDsn;      
+        public string SentryDsn => sentryDsn;
+
+        public string SentryCategory => sentryCategory;
 
         public bool NormalAccountIsWriteLog => GetValue<bool>("NormalAccountInsert:IsWriteLog");
 

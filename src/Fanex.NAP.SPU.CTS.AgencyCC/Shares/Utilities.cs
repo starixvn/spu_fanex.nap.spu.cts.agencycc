@@ -2,9 +2,9 @@
 {
     using Fanex.Logging.Extensions;
     using Fanex.Logging.Extensions.Database;
+    using Fanex.NAP.SPU.CTS.Shares;
     using Fanex.NAP.SPU.Notification.Services;
     using Newtonsoft.Json;
-    using Sentry;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -76,7 +76,8 @@
             }
         }
 
-        public static void LogSentryInfo<T>(string serviceName, string message, T data, bool isWriteLog, ISentryClient sentryClient)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Sonar Code Smell", "S6566:Use DateTimeOffset instead of DateTime", Justification = "Legacy code or specific reason")]
+        public static void LogSentryInfo<T>(string serviceName, string message, T data, bool isWriteLog)
         {
             if (isWriteLog)
             {
@@ -84,11 +85,12 @@
                 var logMessage = $"{serviceName} - {message} {(data != null ? " - Data:" + JsonConvert.SerializeObject(data) : "")} - {DateTime.Now}";
 #pragma warning restore S2955 // Generic parameters not constrained to reference types should not be compared to "null"
 
-                sentryClient.CaptureMessage(logMessage);
+                LogExtension.LogInfo(logMessage);
             }
         }
 
-        public static void LogSentryError<T>(string serviceName, string message, T data, Exception ex, ISentryClient sentryClient, string dataType = "Data")
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Sonar Code Smell", "S6566:Use DateTimeOffset instead of DateTime", Justification = "Legacy code or specific reason")]
+        public static void LogSentryError<T>(string serviceName, string message, T data, Exception ex, string dataType = "Data")
         {
             var logMessage = new LogMessage(ex.Message)
                 .AddMessage($"{serviceName}")
@@ -96,10 +98,11 @@
                 .AddSection("Exception Info", CommonInfoGetters.GetExceptionInfo(ex))
                 .AddMessage($"{message} - {dataType}: {JsonConvert.SerializeObject(data)} - { DateTime.Now}").ToString();
 
-            sentryClient.CaptureMessage(logMessage, Sentry.Protocol.SentryLevel.Error);
+            LogExtension.LogError(logMessage);
         }
 
-        public static void LogSentryError(string serviceName, string message, Exception ex, ISentryClient sentryClient)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Sonar Code Smell", "S6566:Use DateTimeOffset instead of DateTime", Justification = "Legacy code or specific reason")]
+        public static void LogSentryError(string serviceName, string message, Exception ex)
         {
             var logMessage = new LogMessage(ex.Message)
                 .AddMessage($"{serviceName}")
@@ -107,7 +110,7 @@
                 .AddSection("Exception Info", CommonInfoGetters.GetExceptionInfo(ex))
                 .AddMessage($"{message} - { DateTime.Now}").ToString();
 
-            sentryClient.CaptureMessage(logMessage, Sentry.Protocol.SentryLevel.Error);
+            LogExtension.LogError(logMessage);
         }
 
         public static string ReadTextFile(string filePath)
@@ -118,6 +121,7 @@
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Sonar Code Smell", "S6566:Use DateTimeOffset instead of DateTime", Justification = "Legacy code or specific reason")]
         public static void NotifyTeamsMessage(string message, string systemName, string environment, string groupId)
         {
             var notificationService = new NotificationService();
