@@ -11,11 +11,13 @@
     {
         GetNewPlaceBetCustomerAgencyModel GetNewPlaceBetCustomers();
 
-        GetCustomerCategoryAgencyRealtimeModel GetCustomerCategory(string custIdList);
+        GetCustomerCategoryAgencyRealtimeModel GetCustomerCategory(string custIDList);
 
-        void PreprocessCustomerClassRealtime(string custIdList);
+        void PreprocessCustomerClassRealtime(string custIDList);
 
-        void InsertToQueuePaAgencyRealtime(string custIdList);
+        void InsertToQueuePaAgencyRealtime(string custIDList);
+
+        void InsertToQueueConsiderableDanger(string custIDList);
 
         void CompleteCustomerRealtime(long scannedMaxId);
     }
@@ -42,37 +44,48 @@
             };
         }
 
-        public GetCustomerCategoryAgencyRealtimeModel GetCustomerCategory(string custIdList)
+        public GetCustomerCategoryAgencyRealtimeModel GetCustomerCategory(string custIDList)
         {
             var criteria = new GetCustomerCategoryAgencyRealtimeCriteria
             {
-                CustIdList = custIdList
+                CustIdList = custIDList
             };
             
-            var (normalCusts, paCusts) = _repository.FetchMultiple<ulong, ulong>(criteria);
+            var (normalCusts, paCusts, considerableDangerCusts) = _repository.FetchMultiple<ulong, ulong, ulong>(criteria);
 
             return new GetCustomerCategoryAgencyRealtimeModel
             {
                 CustomerCategory = normalCusts?.ToList(),
-                CustomerPADailyScan = paCusts?.ToList()
+                CustomerPADailyScan = paCusts?.ToList(),
+                CustomerConsiderableDanger = considerableDangerCusts?.ToList()
             };
         }
 
-        public void PreprocessCustomerClassRealtime(string custIdList)
+        public void PreprocessCustomerClassRealtime(string custIDList)
         {
             var criteria = new PreprocessCustomerAgencyRealtimeCriteria
             {
-                ListCustId = custIdList
+                ListCustId = custIDList
             };
 
             _repository.Execute(criteria);
         }
 
-        public void InsertToQueuePaAgencyRealtime(string custIdList)
+        public void InsertToQueuePaAgencyRealtime(string custIDList)
         {
             var criteria = new PaAgencyInsertToQueueRealtimeCriteria
             {
-                CustIDList = custIdList
+                CustIDList = custIDList
+            };
+
+            _repository.Execute(criteria);
+        }
+
+        public void InsertToQueueConsiderableDanger(string custIDList)
+        {
+            var criteria = new CdAgencyInsertToQueueCriteria
+            {
+                CustIDList = custIDList
             };
 
             _repository.Execute(criteria);

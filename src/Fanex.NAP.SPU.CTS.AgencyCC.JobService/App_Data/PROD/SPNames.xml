@@ -19,7 +19,8 @@
 		<Setting Key="CTS_GeneralNormalClassificationAgency_Realtime_Preprocess" SpName="CTS_GeneralNormalClassificationAgency_Realtime_Preprocess" DbName="DBVR2.bodb_VR2Model.wsv_cts" />
 		<Setting Key="CTS_GeneralNormalClassificationAgency_RealTime_Complete" SpName="CTS_GeneralNormalClassificationAgency_RealTime_Complete" DbName="DBVR2.bodb_VR2Model.wsv_cts" />
     <Setting Key="CTS_DC_CustClassificationAgency_DailyScanPA_InsertToQueue" SpName="CTS_DC_CustClassificationAgency_DailyScanPA_InsertToQueue" DbName="CTSMain.CTS_DataCenter.ctsServiceAdmin" />
-	</Function>
+    <Setting Key="CTS_DC_CustClassificationAgency_ConsiderableDanger_Queue_Insert" SpName="CTS_DC_CustClassificationAgency_ConsiderableDanger_Queue_Insert" DbName="CTSMain.CTS_DataCenter.ctsServiceAdmin" />
+  </Function>
 	<Function Name="NormalClassification">
 		<Setting Key="CTS_DC_CustClassificationAgency_Normal_GetCurrentCategory" SpName="CTS_DC_CustClassificationAgency_Normal_GetCurrentCategory" DbName="CTSMain.CTS_DataCenter.ctsService" />
 		<Setting Key="CTS_GeneralNormalClassificationAgency_NormalPool_Get" SpName="CTS_GeneralNormalClassificationAgency_NormalPool_Get" DbName="DBVR2.bodb_VR2Model.wsv_cts" />

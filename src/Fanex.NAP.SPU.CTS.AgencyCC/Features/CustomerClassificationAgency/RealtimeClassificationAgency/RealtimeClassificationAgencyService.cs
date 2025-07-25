@@ -16,6 +16,8 @@
 
         IRealtimeClassificationAgencyService InsertToQueuePaAgencyRealtime(int batchSize);
 
+        IRealtimeClassificationAgencyService InsertToQueueConsiderableDanger(int batchSize);
+
         IRealtimeClassificationAgencyService CompleteCustomerRealtime();
     }
 
@@ -57,8 +59,7 @@
 
                     var custCategory = _dataAccess.GetCustomerCategory(custIDs);
 
-                    _customerCategories.CustomerCategory.AddRange(custCategory.CustomerCategory);
-                    _customerCategories.CustomerPADailyScan.AddRange(custCategory.CustomerPADailyScan);
+                    _customerCategories.AddItems(custCategory);
                 }
             }
 
@@ -72,10 +73,8 @@
                 var customerChunks = _customerCategories.CustomerCategory.Chunk(batchSize);
 
                 foreach (var custBatch in customerChunks)
-                {
-                    var custIdList = string.Join(",", custBatch);
-
-                    _dataAccess.PreprocessCustomerClassRealtime(custIdList);
+                {                    
+                    _dataAccess.PreprocessCustomerClassRealtime(string.Join(",", custBatch));
                 }
             }
 
@@ -89,10 +88,23 @@
                 var paCustChunks = _customerCategories.CustomerPADailyScan.Chunk(batchSize);
 
                 foreach (var custBatch in paCustChunks)
-                {
-                    var custIdList = string.Join(",", custBatch);
+                {                    
+                    _dataAccess.InsertToQueuePaAgencyRealtime(string.Join(",", custBatch));
+                }
+            }
 
-                    _dataAccess.InsertToQueuePaAgencyRealtime(custIdList);
+            return this;
+        }
+
+        public IRealtimeClassificationAgencyService InsertToQueueConsiderableDanger(int batchSize)
+        {
+            if (_customerCategories != null && _customerCategories.CustomerConsiderableDanger.IsNotNullOrEmpty())
+            {
+                var cdCustChunks = _customerCategories.CustomerPADailyScan.Chunk(batchSize);
+
+                foreach (var custBatch in cdCustChunks)
+                {                   
+                    _dataAccess.InsertToQueuePaAgencyRealtime(string.Join(",", custBatch));
                 }
             }
 

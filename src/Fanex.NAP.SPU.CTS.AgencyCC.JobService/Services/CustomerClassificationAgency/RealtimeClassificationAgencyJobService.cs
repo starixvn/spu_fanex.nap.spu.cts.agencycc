@@ -31,6 +31,7 @@
                         .GetCustomerCategory(batchInternalSize)
                         .PreprocessCustomerClassRealtime(batchExternalSize)
                         .InsertToQueuePaAgencyRealtime(batchExternalSize)
+                        .InsertToQueueConsiderableDanger(batchExternalSize)
                         .CompleteCustomerRealtime();
                 }
                 else

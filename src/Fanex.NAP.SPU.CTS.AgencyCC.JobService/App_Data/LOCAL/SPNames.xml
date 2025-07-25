@@ -14,7 +14,7 @@
 		<Setting Key="CTS_GeneralNormalClassificationAgency_RescanNormal_Preprocess" SpName="CTS_GeneralNormalClassificationAgency_RescanNormal_Preprocess" DbName="DBVR2.bodb_VR2Model.wsv_cts" />
 	</Function>
 	<Function Name="RealtimeClassification">
-		<Setting Key="CTS_DC_CustClassificationAgency_Realtime_GetCategory" SpName="CTS_DC_CustClassificationAgency_Realtime_GetCategory" DbName="CTSMain.CTS_DataCenter.ctsService" />
+		<Setting Key="CTS_DC_CustClassificationAgency_Realtime_GetCategory" SpName="CTS_DC_CustClassificationAgency_Realtime_GetCategory_xtest" DbName="CTSMain.CTS_DataCenter.ctsService" />
 		<Setting Key="CTS_GeneralNormalClassificationAgency_RealTime_GetChanges" SpName="CTS_GeneralNormalClassificationAgency_RealTime_GetChanges" DbName="DBVR2.bodb_VR2Model.wsv_cts" />
 		<Setting Key="CTS_GeneralNormalClassificationAgency_Realtime_Preprocess" SpName="CTS_GeneralNormalClassificationAgency_Realtime_Preprocess" DbName="DBVR2.bodb_VR2Model.wsv_cts" />
 		<Setting Key="CTS_GeneralNormalClassificationAgency_RealTime_Complete" SpName="CTS_GeneralNormalClassificationAgency_RealTime_Complete" DbName="DBVR2.bodb_VR2Model.wsv_cts" />
