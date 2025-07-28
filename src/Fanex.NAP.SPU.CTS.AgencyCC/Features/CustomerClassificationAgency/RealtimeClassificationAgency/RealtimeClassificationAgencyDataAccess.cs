@@ -6,6 +6,7 @@
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RealtimeClassificationAgency.Model;
     using System;
     using System.Linq;
+    using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
 
     public interface IRealtimeClassificationAgencyDataAccess
     {
@@ -17,7 +18,7 @@
 
         void InsertToQueuePaAgencyRealtime(string custIDList);
 
-        void InsertToQueueConsiderableDanger(string custIDList);
+        void InsertToQueueConsiderableDanger(string custIDList, AgencyScanType agencyScanType);
 
         void CompleteCustomerRealtime(long scannedMaxId);
     }
@@ -81,10 +82,11 @@
             _repository.Execute(criteria);
         }
 
-        public void InsertToQueueConsiderableDanger(string custIDList)
+        public void InsertToQueueConsiderableDanger(string custIDList, AgencyScanType agencyScanType)
         {
             var criteria = new CdAgencyInsertToQueueCriteria
             {
+                ScanType = (int)agencyScanType,
                 CustIDList = custIDList
             };
 

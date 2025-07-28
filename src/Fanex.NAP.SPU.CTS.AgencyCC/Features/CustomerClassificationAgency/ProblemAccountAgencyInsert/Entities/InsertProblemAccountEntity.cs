@@ -1,6 +1,7 @@
 ﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.ProblemAccountAgencyInsert
 {
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Entities;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.DailyConsiderableDangerAgency;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.TWRobot;
     using Fanex.NAP.SPU.CTS.AgencyCC.Shares;
     using System;  
@@ -8,6 +9,21 @@
     public class InsertProblemAccountEntity : CustomerClassificationAgencyEntity
     {
         public InsertProblemAccountEntity() { }
+
+        public InsertProblemAccountEntity(ConsiderableDangerRecheckEntity data)
+        {
+            this.CustID = data.CustID;
+            this.CTSCustID = data.CTSCustID;
+            this.CategoryID = data.CategoryID;
+            this.RoleID = data.RoleID;
+            this.SubscriberID = data.SubscriberID;
+            this.IsLicensee = data.IsLicensee;
+            this.CreatedBy = Constants.StarixITId;
+            this.IsFromCTS = true;
+            this.IsFromTW = false;
+            this.IsFromAI = false;
+            this.IsMarkedDirectly = true;
+        }
 
         public InsertProblemAccountEntity(TWRobotUserEntity robot, int? robotCategoryID)
         {

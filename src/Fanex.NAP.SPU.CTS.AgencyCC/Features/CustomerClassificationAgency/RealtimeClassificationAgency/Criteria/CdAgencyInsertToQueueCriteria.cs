@@ -5,12 +5,15 @@
 
     public class CdAgencyInsertToQueueCriteria : NonQueryCommand
     {
-        [SpParam(SqlParamName = "ip_CustIDs")]
+        [SpParam(SqlParamName = "ip_ScanType")]
+        public int ScanType { get; set; }
+
+        [SpParam(SqlParamName = "ip_Cust")]
         public string CustIDList { get; set; }
 
         public override string GetSettingKey()
         {
-            return "CTS_DC_CustClassificationAgency_ConsiderableDanger_Queue_Insert";
+            return "CTS_DC_CustClassificationAgency_Considerable_Queue_Insert";
         }
 
         public override bool IsValid()

@@ -49,19 +49,24 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Shares
             [Description("InsertPAReason")]
             InsertPAReason = 1006,
             [Description("Normal")]
-            Normal = 1009,
-            //[Description("RescanPACategory")]
-            //RescanPACategory = 1115,
+            Normal = 1009,           
             [Description("RemovePACategory")]
             RemovePACategory = 1225,
             [Description("RescanNormal")]
             RescanNormal = 1009,
             [Description("RemoveVVIP")]
             RemoveVVIP = 1221,
+            [Description("InsertConderable")]
+            InsertConderable = 1020,           
+            [Description("RecanConsiderable")]
+            RecanConsiderable = 1120,
+            [Description("RemoveConderable")]
+            RemoveConderable = 1220
         }
 
         public enum FunctionId
         {
+            Default = 0,
             InsertNewCustJob = 4,
             InactivateNewCustomer = 11,            
             RobotUserJob = 23,
@@ -87,6 +92,12 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Shares
         {
             Member = 1,
             Agency = 2
+        }
+
+        public enum AgencyScanType
+        {
+            AdjustPA = 1,
+            Realtime = 2
         }
     }
 }

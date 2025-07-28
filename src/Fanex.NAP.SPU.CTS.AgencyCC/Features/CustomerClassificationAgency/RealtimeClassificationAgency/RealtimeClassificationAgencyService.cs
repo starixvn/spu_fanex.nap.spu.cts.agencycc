@@ -3,6 +3,7 @@
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RealtimeClassificationAgency.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Shares;
     using System.Linq;
+    using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
 
     public interface IRealtimeClassificationAgencyService
     {
@@ -16,7 +17,7 @@
 
         IRealtimeClassificationAgencyService InsertToQueuePaAgencyRealtime(int batchSize);
 
-        IRealtimeClassificationAgencyService InsertToQueueConsiderableDanger(int batchSize);
+        IRealtimeClassificationAgencyService InsertToQueueConsiderableDanger(int batchSize, AgencyScanType agencyScanType);
 
         IRealtimeClassificationAgencyService CompleteCustomerRealtime();
     }
@@ -96,7 +97,7 @@
             return this;
         }
 
-        public IRealtimeClassificationAgencyService InsertToQueueConsiderableDanger(int batchSize)
+        public IRealtimeClassificationAgencyService InsertToQueueConsiderableDanger(int batchSize, AgencyScanType agencyScanType)
         {
             if (_customerCategories != null && _customerCategories.CustomerConsiderableDanger.IsNotNullOrEmpty())
             {
@@ -104,7 +105,7 @@
 
                 foreach (var custBatch in cdCustChunks)
                 {                   
-                    _dataAccess.InsertToQueuePaAgencyRealtime(string.Join(",", custBatch));
+                    _dataAccess.InsertToQueueConsiderableDanger(string.Join(",", custBatch), agencyScanType);
                 }
             }
 
