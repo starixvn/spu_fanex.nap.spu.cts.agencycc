@@ -1,6 +1,5 @@
 ﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.Features.ArchiveData.ClassificationHistory
 {
-    using Fanex.Data;
     using Fanex.Data.Repository;    
 
     public class HistoryClassificationArchiveGetCriteria : CriteriaBase

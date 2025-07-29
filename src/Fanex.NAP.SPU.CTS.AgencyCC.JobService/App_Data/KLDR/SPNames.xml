@@ -19,7 +19,7 @@
 		<Setting Key="CTS_GeneralNormalClassificationAgency_Realtime_Preprocess" SpName="CTS_GeneralNormalClassificationAgency_Realtime_Preprocess" DbName="DBVR2.bodb_VR2Model.wsv_cts" />
 		<Setting Key="CTS_GeneralNormalClassificationAgency_RealTime_Complete" SpName="CTS_GeneralNormalClassificationAgency_RealTime_Complete" DbName="DBVR2.bodb_VR2Model.wsv_cts" />
 		<Setting Key="CTS_DC_CustClassificationAgency_DailyScanPA_InsertToQueue" SpName="CTS_DC_CustClassificationAgency_DailyScanPA_InsertToQueue" DbName="CTSMain.CTS_DataCenter.ctsServiceAdmin" />
-    <Setting Key="CTS_DC_CustClassificationAgency_Considerable_Queue_Insert" SpName="CTS_DC_CustClassificationAgency_Considerable_Queue_Insert" DbName="CTSMain.CTS_DataCenter.ctsServiceAdmin" />
+    <Setting Key="CTS_DC_CustClassificationAgency_CDQueue_Insert" SpName="CTS_DC_CustClassificationAgency_CDQueue_Insert" DbName="CTSMain.CTS_DataCenter.ctsServiceAdmin" />
   </Function>
 	<Function Name="NormalClassification">
 		<Setting Key="CTS_DC_CustClassificationAgency_Normal_GetCurrentCategory" SpName="CTS_DC_CustClassificationAgency_Normal_GetCurrentCategory" DbName="CTSMain.CTS_DataCenter.ctsService" />
@@ -61,12 +61,12 @@
 		<Setting Key="CTS_DC_CustClassificationAgency_DailyScanPA_Insert" SpName="CTS_DC_CustClassificationAgency_DailyScanPA_Insert" DbName="CTSMain.CTS_DataCenter.ctsServiceAdmin" />
 	</Function>
   <Function name="DailyConsiderableDanger">
-    <Setting Key="CTS_DC_CustClassificationAgency_Considerable_Queue_Get" SpName="CTS_DC_CustClassificationAgency_Considerable_Queue_Get" DbName="CTSMain.CTS_DataCenter.ctsService" />
-    <Setting Key="CTS_DC_CustClassificationAgency_DetectConsiderable" SpName="CTS_DC_CustClassificationAgency_DetectConsiderable" DbName="CTSMain.CTS_DataCenter.ctsService" />
-    <Setting Key="CTS_DC_CustClassificationAgency_Considerable_Queue_Complete" SpName="CTS_DC_CustClassificationAgency_Considerable_Queue_Complete" DbName="CTSMain.CTS_DataCenter.ctsServiceAdmin" />
+    <Setting Key="CTS_DC_CustClassificationAgency_CDQueue_MaxID" SpName="CTS_DC_CustClassificationAgency_CDQueue_MaxID" DbName="CTSMain.CTS_DataCenter.ctsServiceAdmin" />
+    <Setting Key="CTS_DC_CustClassificationAgency_CDQueue_Get" SpName="CTS_DC_CustClassificationAgency_CDQueue_Get" DbName="CTSMain.CTS_DataCenter.ctsService" />
+    <Setting Key="CTS_DC_CustClassificationAgency_DetectCD" SpName="CTS_DC_CustClassificationAgency_DetectCD" DbName="CTSMain.CTS_DataCenter.ctsService" />
+    <Setting Key="CTS_DC_CustClassificationAgency_CDQueue_Complete" SpName="CTS_DC_CustClassificationAgency_CDQueue_Complete" DbName="CTSMain.CTS_DataCenter.ctsServiceAdmin" />
   </Function>
-  <Function name="CustomerClassAgencyHistoryArchive">
-    <Setting Key="CTS_DC_CustClassificationAgency_Considerable_Queue_MaxID" SpName="CTS_DC_CustClassificationAgency_Considerable_Queue_MaxID" DbName="CTSMain.CTS_DataCenter.ctsServiceAdmin" />
+  <Function name="CustomerClassAgencyHistoryArchive">    
     <Setting Key="CTS_DC_CustClassificationAgency_History_Archive_Get" SpName="CTS_DC_CustClassificationAgency_History_Archive_Get" DbName="CTSMain.CTS_DataCenter.ctsService" />
     <Setting Key="CTS_DC_CustClassificationAgency_History_Archive_Complete" SpName="CTS_DC_CustClassificationAgency_History_Archive_Complete" DbName="CTSMain.CTS_DataCenter.ctsServiceAdmin" />
     <Setting Key="CTS_Archive_CustClassificationAgency_History_Insert" SpName="CTS_Archive_CustClassificationAgency_History_Insert" DbName="CTSMain.CTS_Archive.ctsServiceAdmin" />

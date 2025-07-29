@@ -10,7 +10,7 @@
 
         public override string GetSettingKey()
         {
-            return "CTS_DC_CustClassificationAgency_ConsiderableDanger_Queue_Complete";
+            return "CTS_DC_CustClassificationAgency_CDQueue_Complete";
         }
 
         public override bool IsValid()

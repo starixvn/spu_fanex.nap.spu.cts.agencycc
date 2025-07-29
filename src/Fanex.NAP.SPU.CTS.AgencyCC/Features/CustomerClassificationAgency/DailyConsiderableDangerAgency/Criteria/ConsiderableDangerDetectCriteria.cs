@@ -6,11 +6,14 @@
     public class ConsiderableDangerDetectCriteria : CriteriaBase
     {
         [SpParam(SqlParamName = "ip_CustIDs")]
-        public string CustIDs { get; set; } 
+        public string CustIDs { get; set; }
+
+        [SpParam(SqlParamName = "ip_IsRescan")]
+        public bool IsRescan { get; set; }
 
         public override string GetSettingKey()
         {
-            return "CTS_DC_CustClassificationAgency_DetectConsiderableDanger";
+            return "CTS_DC_CustClassificationAgency_DetectCD";
         }
 
         public override bool IsValid()

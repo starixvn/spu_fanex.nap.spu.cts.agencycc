@@ -50,7 +50,8 @@
         {
             var criteria = new ConsiderableDangerDetectCriteria
             {
-                CustIDs = string.Join(",", custIDs)
+                CustIDs = string.Join(",", custIDs),
+                IsRescan = false
             };
 
             return _repository.Fetch<DetectConsiderableEntity>(criteria);

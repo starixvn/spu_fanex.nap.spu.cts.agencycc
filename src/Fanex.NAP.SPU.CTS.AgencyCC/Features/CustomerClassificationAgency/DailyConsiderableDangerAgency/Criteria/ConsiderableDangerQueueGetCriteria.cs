@@ -13,7 +13,7 @@
 
         public override string GetSettingKey()
         {
-            return "CTS_DC_CustClassificationAgency_Considerable_Queue_Get";
+            return "CTS_DC_CustClassificationAgency_CDQueue_Get";
         }
 
         public override bool IsValid()

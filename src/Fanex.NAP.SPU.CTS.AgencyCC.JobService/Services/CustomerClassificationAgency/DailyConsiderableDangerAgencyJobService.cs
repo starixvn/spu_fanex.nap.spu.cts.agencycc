@@ -47,21 +47,33 @@
 
         private void JobRun(int batchSize) 
         {
+            var isContinue = true;
+
             // Prepare data
             UpdateConsiderableDangerQueue();
-            var considerableQueue = GetConsiderableDangerQueue(batchSize);
-            var detectConsiderable = DetectConsiderableCustomers(considerableQueue);
 
-            // Process customers for insertion
-            var customersToInsert = BuildCustomersForInsertion(considerableQueue, detectConsiderable);
-            InsertConsiderableCategories(customersToInsert);
+            do
+            {
+                var considerableQueue = GetConsiderableDangerQueue(batchSize);
 
-            // Process customers for removal
-            var customersToRemove = BuildCustomersForRemoval(considerableQueue, detectConsiderable);
-            RemoveConsiderableCategories(customersToRemove);
+                isContinue = considerableQueue.LastID > 0;
 
-            // Complete the queue processing
-            CompleteConsiderableQueue(considerableQueue);
+                if (isContinue)
+                {
+                    var detectConsiderable = DetectConsiderableCustomers(considerableQueue);
+
+                    // Process customers for insertion
+                    var customersToInsert = BuildCustomersForInsertion(considerableQueue, detectConsiderable);
+                    InsertConsiderableCategories(customersToInsert);
+
+                    // Process customers for removal
+                    var customersToRemove = BuildCustomersForRemoval(considerableQueue, detectConsiderable);
+                    RemoveConsiderableCategories(customersToRemove);
+
+                    // Complete the queue processing
+                    CompleteConsiderableQueue(considerableQueue);
+                }
+            } while (isContinue);
         }
 
         private void UpdateConsiderableDangerQueue()
