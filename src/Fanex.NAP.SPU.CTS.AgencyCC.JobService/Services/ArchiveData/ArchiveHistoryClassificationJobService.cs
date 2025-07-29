@@ -31,7 +31,7 @@
                 {
                     _service.InsertHistoryClassifyArchive(JsonConvert.SerializeObject(data));
 
-                    _service.CompleteHistoryClassifyArchive(data.Max(x => x.ID));
+                    _service.CompleteHistoryClassifyArchive(data.Select(x => x.ID));
                 }
             }
             catch (Exception ex)

@@ -8,6 +8,9 @@
         [SpParam(SqlParamName = "ip_MaxArchiveID")]
         public long MaxArchiveID { get; set; }
 
+        [SpParam(SqlParamName = "ip_ListArchiveID")]
+        public string ListArchiveID { get; set; }
+
         public override string GetSettingKey()
         {
             return "CTS_DC_CustClassificationAgency_History_Archive_Complete";

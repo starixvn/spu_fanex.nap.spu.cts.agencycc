@@ -101,7 +101,7 @@
         {
             if (_customerCategories != null && _customerCategories.CustomerConsiderableDanger.IsNotNullOrEmpty())
             {
-                var cdCustChunks = _customerCategories.CustomerPADailyScan.Chunk(batchSize);
+                var cdCustChunks = _customerCategories.CustomerConsiderableDanger.Chunk(batchSize);
 
                 foreach (var custBatch in cdCustChunks)
                 {                   

@@ -1,7 +1,8 @@
 ﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.Features.ArchiveData.ClassificationHistory
 {
     using Fanex.Data.Repository;
-    using System.Collections.Generic;    
+    using System.Collections.Generic;
+    using System.Linq;
 
     public interface IArchiveHistoryClassificationDataAccess
     {
@@ -9,7 +10,7 @@
 
         void InsertHistoryClassifyArchive(string historyDataJson);
 
-        void CompleteHistoryClassifyArchive(long maxArchiveID);
+        void CompleteHistoryClassifyArchive(IEnumerable<long> archiveIDs);
     }
 
     public class ArchiveHistoryClassificationDataAccess : IArchiveHistoryClassificationDataAccess
@@ -38,11 +39,12 @@
             _repository.Execute(criteria);
         }
 
-        public void CompleteHistoryClassifyArchive(long maxArchiveID)
+        public void CompleteHistoryClassifyArchive(IEnumerable<long> archiveIDs)
         {
             var criteria = new HistoryClassificationArchiveCompleteCriteria
             {
-                MaxArchiveID = maxArchiveID
+                MaxArchiveID = archiveIDs.Max(x => x),
+                ListArchiveID = string.Join(",", archiveIDs)
             };
 
             _repository.Execute(criteria);
