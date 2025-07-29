@@ -9,7 +9,7 @@
 
         void InsertHistoryClassifyArchive(string historyDataJson);
 
-        void CompleteHistoryClassifyArchive(IEnumerable<long> IDs);
+        void CompleteHistoryClassifyArchive(long maxArchiveID);
     }
 
     public class ArchiveHistoryClassificationDataAccess : IArchiveHistoryClassificationDataAccess
@@ -38,11 +38,11 @@
             _repository.Execute(criteria);
         }
 
-        public void CompleteHistoryClassifyArchive(IEnumerable<long> IDs)
+        public void CompleteHistoryClassifyArchive(long maxArchiveID)
         {
             var criteria = new HistoryClassificationArchiveCompleteCriteria
             {
-                IDs = string.Join(",", IDs)
+                MaxArchiveID = maxArchiveID
             };
 
             _repository.Execute(criteria);

@@ -8,7 +8,7 @@
 
         void InsertHistoryClassifyArchive(string historyDataJson);
 
-        void CompleteHistoryClassifyArchive(IEnumerable<long> IDs);
+        void CompleteHistoryClassifyArchive(long maxArchiveID);
     }
 
     public class ArchiveHistoryClassificationService : IArchiveHistoryClassificationService
@@ -30,9 +30,9 @@
             _dataAccess.InsertHistoryClassifyArchive(historyDataJson);
         }
 
-        public void CompleteHistoryClassifyArchive(IEnumerable<long> IDs)
+        public void CompleteHistoryClassifyArchive(long maxArchiveID)
         {
-            _dataAccess.CompleteHistoryClassifyArchive(IDs);
+            _dataAccess.CompleteHistoryClassifyArchive(maxArchiveID);
         }
 
     }

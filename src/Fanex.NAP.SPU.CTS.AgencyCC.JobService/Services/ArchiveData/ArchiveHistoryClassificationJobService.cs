@@ -16,9 +16,9 @@
     {
         private readonly IArchiveHistoryClassificationService _service;
 
-        public ArchiveHistoryClassificationJobService(IArchiveHistoryClassificationService jobService)
+        public ArchiveHistoryClassificationJobService(IArchiveHistoryClassificationService service)
         {
-            this._service = jobService;
+            this._service = service;
         }
 
         public Task<bool> Execute()
@@ -27,11 +27,11 @@
             {
                 var data = _service.GetHistoryClassifyArchive();
 
-                if (!data.IsNullOrEmpty())
+                if (data.IsNotNullOrEmpty())
                 {
                     _service.InsertHistoryClassifyArchive(JsonConvert.SerializeObject(data));
 
-                    _service.CompleteHistoryClassifyArchive(data.Select(x=>x.ID));
+                    _service.CompleteHistoryClassifyArchive(data.Max(x => x.ID));
                 }
             }
             catch (Exception ex)

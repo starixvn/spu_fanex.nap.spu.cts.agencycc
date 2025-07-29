@@ -5,8 +5,8 @@
    
     public class HistoryClassificationArchiveCompleteCriteria : NonQueryCommand
     {
-        [SpParam(SqlParamName = "ip_IDs")]
-        public string IDs { get; set; }
+        [SpParam(SqlParamName = "ip_MaxArchiveID")]
+        public long MaxArchiveID { get; set; }
 
         public override string GetSettingKey()
         {
