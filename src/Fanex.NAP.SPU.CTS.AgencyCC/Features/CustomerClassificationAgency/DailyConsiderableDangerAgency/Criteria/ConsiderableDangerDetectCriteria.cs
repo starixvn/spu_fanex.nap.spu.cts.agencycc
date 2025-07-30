@@ -5,7 +5,7 @@
    
     public class ConsiderableDangerDetectCriteria : CriteriaBase
     {
-        [SpParam(SqlParamName = "ip_CustIDs")]
+        [SpParam(SqlParamName = "ip_Cust")]
         public string CustIDs { get; set; }
 
         [SpParam(SqlParamName = "ip_IsRescan")]

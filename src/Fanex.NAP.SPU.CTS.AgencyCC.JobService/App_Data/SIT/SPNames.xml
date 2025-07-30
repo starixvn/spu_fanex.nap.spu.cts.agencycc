@@ -63,7 +63,7 @@
   <Function name="DailyConsiderableDanger">
     <Setting Key="CTS_DC_CustClassificationAgency_CDQueue_SetMaxIDDaily" SpName="CTS_DC_CustClassificationAgency_CDQueue_SetMaxIDDaily" DbName="CTSMain.CTS_DataCenter.ctsServiceAdmin" />
     <Setting Key="CTS_DC_CustClassificationAgency_CDQueue_Get" SpName="CTS_DC_CustClassificationAgency_CDQueue_Get" DbName="CTSMain.CTS_DataCenter.ctsService" />
-    <Setting Key="CTS_DC_CustClassificationAgency_DetectCD" SpName="CTS_DC_CustClassificationAgency_DetectCD" DbName="CTSMain.CTS_DataCenter.ctsService" />
+    <Setting Key="CTS_DC_CustClassificationAgency_DetectCD" SpName="CTS_DC_CustClassificationAgency_DetectCD" DbName="CTSMain.CTS_DataCenter.ctsServiceAdmin" />
     <Setting Key="CTS_DC_CustClassificationAgency_CDQueue_Complete" SpName="CTS_DC_CustClassificationAgency_CDQueue_Complete" DbName="CTSMain.CTS_DataCenter.ctsServiceAdmin" />
   </Function>
   <Function name="CustomerClassAgencyHistoryArchive">    
