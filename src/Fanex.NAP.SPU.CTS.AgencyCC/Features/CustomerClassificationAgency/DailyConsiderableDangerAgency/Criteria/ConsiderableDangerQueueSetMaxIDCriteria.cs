@@ -6,7 +6,7 @@
     {
         public override string GetSettingKey()
         {
-            return "CTS_DC_CustClassificationAgency_CDQueue_MaxID";
+            return "CTS_DC_CustClassificationAgency_CDQueue_SetMaxIDDaily";
         }
 
         public override bool IsValid()
