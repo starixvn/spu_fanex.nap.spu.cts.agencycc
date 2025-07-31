@@ -16,6 +16,9 @@
         IEnumerable<long> InsertProblemAccountsAgencyPackage(IEnumerable<InsertProblemAccountEntity> problemAccounts,
             FunctionId funcId, AgencyCCInputFlow ccInputFlow, bool isToQueue, string serviceName);
 
+        ResultRemoveCustomerClassificationAgencyModel RemoveConsiderable(IEnumerable<RemoveProblemAccountEntity> problemAccounts
+            , AgencyCCInputFlow inputFlow, bool isFromQueue);
+
         ResultRemoveCustomerClassificationAgencyModel RemoveProblemAccount(IEnumerable<RemoveProblemAccountEntity> problemAccounts, bool isFromQueue);
 
         int? GetCategoryByCategoryTypeName(string categoryTypeName);
@@ -67,13 +70,26 @@
             return Enumerable.Empty<long>();
         }
 
+        public ResultRemoveCustomerClassificationAgencyModel RemoveConsiderable(IEnumerable<RemoveProblemAccountEntity> problemAccounts
+            , AgencyCCInputFlow inputFlow, bool isFromQueue)
+        {
+            var modelRemove = new RemoveCustomerClassificationAgencyModel
+            {
+                CustClassificationJson = JsonConvert.SerializeObject(problemAccounts),
+                IsFromQueue = isFromQueue,
+                FromAction = (int)FromFlow.CTSServices
+            };
+
+            return RemoveCustomerClassificationAgency(inputFlow, modelRemove);
+        }
+
         public ResultRemoveCustomerClassificationAgencyModel RemoveProblemAccount(IEnumerable<RemoveProblemAccountEntity> problemAccounts, bool isFromQueue)
         {
             var modelRemove = new RemoveCustomerClassificationAgencyModel
             {
                 CustClassificationJson = JsonConvert.SerializeObject(problemAccounts),
                 IsFromQueue = isFromQueue,
-                FromAction = (int)FromFlow.CTSWEB
+                FromAction = (int)FromFlow.CTSServices
             };
 
             return RemoveCustomerClassificationAgency(AgencyCCInputFlow.RemovePACategory, modelRemove);

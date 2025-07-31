@@ -2,6 +2,8 @@
 {
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.DailyConsiderableDangerAgency;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.ProblemAccountAgencyInsert;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Model;
     using FluentAssertions;
     using NSubstitute;
     using System.Collections.Generic;
@@ -14,12 +16,14 @@
         private readonly IConsiderableDangerAgencyDataAccess _dataAccess;
         private readonly IConsiderableDangerAgencyService _service;
         private readonly IProblemAccountAgencyService _problemAccountService;
+        private readonly ICustClassToMainDBService _custClassToMainDBService;
 
         public ConsiderableDangerAgencyServiceTest()
         {
             _dataAccess = Substitute.For<IConsiderableDangerAgencyDataAccess>();
             _problemAccountService = Substitute.For<IProblemAccountAgencyService>();
-            _service = new ConsiderableDangerAgencyService(_dataAccess, _problemAccountService);
+            _custClassToMainDBService = Substitute.For<ICustClassToMainDBService>();
+            _service = new ConsiderableDangerAgencyService(_dataAccess, _problemAccountService, _custClassToMainDBService);
         }
 
         [Fact]
@@ -143,7 +147,7 @@
         }
 
         [Fact]
-        public void InsertConsiderableCategory_WhenSuccess_ShouldCallProblemAccountService()
+        public void InsertConsiderableCategory_WhenSuccess_ShouldCallProblemAccountServiceAndCustClassToMainDBService()
         {
             // Arrange
             var considerableCusts = new List<ConsiderableDangerRecheckEntity>
@@ -168,8 +172,26 @@
                 }
             };
 
+            var pushDataExternal = new PushDataToExternalModel
+            {
+                IsUpdateDangerToMainDB = true,
+                ExternalBatchSize = 100,
+                ServiceName = "TestService",
+                IsWriteLog = false,
+                IsSyncAFCData = false,              
+                RoleGroup = RoleGroupType.Agency
+            };
+
+            var expectedCustIds = new List<long> { 1, 2 };
+            _problemAccountService.InsertProblemAccountsAgencyPackage(
+                Arg.Is<IEnumerable<InsertProblemAccountEntity>>(entities => entities.Count() == 2),
+                FunctionId.Default,
+                AgencyCCInputFlow.InsertConderable,
+                false,
+                nameof(ConsiderableDangerAgencyService)).Returns(expectedCustIds);
+
             // Act
-            var result = _service.InsertConsiderableCategory(considerableCusts);
+            var result = _service.InsertConsiderableCategory(considerableCusts, pushDataExternal);
 
             // Assert
             _problemAccountService.Received(1).InsertProblemAccountsAgencyPackage(
@@ -178,6 +200,8 @@
                 AgencyCCInputFlow.InsertConderable,
                 false,
                 nameof(ConsiderableDangerAgencyService));
+            
+            _custClassToMainDBService.Received(1).PushExternalProblemAcountPackage(expectedCustIds, pushDataExternal);
             result.Should().Be(_service);
         }
 
@@ -186,9 +210,18 @@
         {
             // Arrange
             var considerableCusts = Enumerable.Empty<ConsiderableDangerRecheckEntity>();
+            var pushDataExternal = new PushDataToExternalModel();
+
+            var expectedCustIds = Enumerable.Empty<long>();
+            _problemAccountService.InsertProblemAccountsAgencyPackage(
+                Arg.Is<IEnumerable<InsertProblemAccountEntity>>(entities => !entities.Any()),
+                FunctionId.Default,
+                AgencyCCInputFlow.InsertConderable,
+                false,
+                nameof(ConsiderableDangerAgencyService)).Returns(expectedCustIds);
 
             // Act
-            var result = _service.InsertConsiderableCategory(considerableCusts);
+            var result = _service.InsertConsiderableCategory(considerableCusts, pushDataExternal);
 
             // Assert
             _problemAccountService.Received(1).InsertProblemAccountsAgencyPackage(
@@ -197,7 +230,53 @@
                 AgencyCCInputFlow.InsertConderable,
                 false,
                 nameof(ConsiderableDangerAgencyService));
+            
+            _custClassToMainDBService.Received(1).PushExternalProblemAcountPackage(expectedCustIds, pushDataExternal);
             result.Should().Be(_service);
+        }
+
+        [Fact]
+        public void InsertConsiderableCategory_ShouldTransformEntitiesCorrectly()
+        {
+            // Arrange
+            var considerableCusts = new List<ConsiderableDangerRecheckEntity>
+            {
+                new ConsiderableDangerRecheckEntity 
+                { 
+                    CustID = 1, 
+                    CTSCustID = 1001, 
+                    CategoryID = 1, 
+                    RoleID = 2, 
+                    SubscriberID = 1, 
+                    IsLicensee = false 
+                }
+            };
+
+            var pushDataExternal = new PushDataToExternalModel();
+            var expectedCustIds = new List<long> { 1 };
+            _problemAccountService.InsertProblemAccountsAgencyPackage(
+                Arg.Any<IEnumerable<InsertProblemAccountEntity>>(),
+                FunctionId.Default,
+                AgencyCCInputFlow.InsertConderable,
+                false,
+                nameof(ConsiderableDangerAgencyService)).Returns(expectedCustIds);
+
+            // Act
+            _service.InsertConsiderableCategory(considerableCusts, pushDataExternal);
+
+            // Assert
+            _problemAccountService.Received(1).InsertProblemAccountsAgencyPackage(
+                Arg.Is<IEnumerable<InsertProblemAccountEntity>>(entities => 
+                    entities.First().CustID == 1 &&
+                    entities.First().CTSCustID == 1001 &&
+                    entities.First().CategoryID == 1 &&
+                    entities.First().RoleID == 2 &&
+                    entities.First().SubscriberID == 1 &&
+                    entities.First().IsLicensee == false),
+                FunctionId.Default,
+                AgencyCCInputFlow.InsertConderable,
+                false,
+                nameof(ConsiderableDangerAgencyService));
         }
 
         [Fact]
@@ -317,5 +396,45 @@
             _dataAccess.Received(1).CompleteConsiderableQueue(lastID);
             result.Should().Be(_service);
         }
+
+        [Fact]
+        public void InsertConsiderableCategory_WithNullPushDataExternal_ShouldHandleGracefully()
+        {
+            // Arrange
+            var considerableCusts = new List<ConsiderableDangerRecheckEntity>
+            {
+                new ConsiderableDangerRecheckEntity 
+                { 
+                    CustID = 1, 
+                    CTSCustID = 1001, 
+                    CategoryID = 1, 
+                    RoleID = 2, 
+                    SubscriberID = 1, 
+                    IsLicensee = false 
+                }
+            };
+
+            var expectedCustIds = new List<long> { 1 };
+            _problemAccountService.InsertProblemAccountsAgencyPackage(
+                Arg.Any<IEnumerable<InsertProblemAccountEntity>>(),
+                FunctionId.Default,
+                AgencyCCInputFlow.InsertConderable,
+                false,
+                nameof(ConsiderableDangerAgencyService)).Returns(expectedCustIds);
+
+            // Act
+            var result = _service.InsertConsiderableCategory(considerableCusts, null);
+
+            // Assert
+            _problemAccountService.Received(1).InsertProblemAccountsAgencyPackage(
+                Arg.Any<IEnumerable<InsertProblemAccountEntity>>(),
+                FunctionId.Default,
+                AgencyCCInputFlow.InsertConderable,
+                false,
+                nameof(ConsiderableDangerAgencyService));
+            
+            _custClassToMainDBService.Received(1).PushExternalProblemAcountPackage(expectedCustIds, null);
+            result.Should().Be(_service);
+        }        
     }
 }

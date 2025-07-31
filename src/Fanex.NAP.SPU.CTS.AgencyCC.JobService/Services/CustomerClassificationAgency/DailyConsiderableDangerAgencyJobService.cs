@@ -1,12 +1,13 @@
 ﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CustomerClassificationAgency
 {
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.DailyConsiderableDangerAgency;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Shares;
-    using System;
-    using System.Collections;
+    using System;  
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
 
     public interface IDailyConsiderableDangerAgencyJobService
     {
@@ -16,10 +17,13 @@
     public class DailyConsiderableDangerAgencyJobService : IDailyConsiderableDangerAgencyJobService
     {
         private readonly IConsiderableDangerAgencyService _considerableService;
-      
-        public DailyConsiderableDangerAgencyJobService(IConsiderableDangerAgencyService considerableService)
+        private readonly IAppSettings _appSettings;
+
+        public DailyConsiderableDangerAgencyJobService(IConsiderableDangerAgencyService considerableService,
+            IAppSettings appSettings)
         {
-            _considerableService = considerableService;            
+            _considerableService = considerableService;
+            _appSettings = appSettings;
         }
 
         public Task<bool> Execute(int batchSize)
@@ -48,6 +52,14 @@
         private void JobRun(int batchSize) 
         {
             var isContinue = true;
+            var pushDataExternal = new PushDataToExternalModel
+            {
+                RoleGroup = RoleGroupType.Agency,
+                ExternalBatchSize = batchSize,
+                IsUpdateDangerToMainDB = false,
+                IsWriteLog = _appSettings.ProblemAccountIsWriteLog,
+                ServiceName = nameof(DailyConsiderableDangerAgencyJobService)
+            };
 
             // Prepare data
             UpdateConsiderableDangerQueue();
@@ -64,7 +76,7 @@
 
                     // Process customers for insertion
                     var customersToInsert = BuildCustomersForInsertion(considerableQueue, detectConsiderable);
-                    InsertConsiderableCategories(customersToInsert);
+                    InsertConsiderableCategories(customersToInsert, pushDataExternal);
 
                     // Process customers for removal
                     var customersToRemove = BuildCustomersForRemoval(considerableQueue, detectConsiderable);
@@ -109,9 +121,9 @@
             return customersToInsert;
         }
 
-        private void InsertConsiderableCategories(IEnumerable<ConsiderableDangerRecheckEntity> customersToInsert)
+        private void InsertConsiderableCategories(IEnumerable<ConsiderableDangerRecheckEntity> customersToInsert, PushDataToExternalModel pushDataExternal)
         {
-            _considerableService.InsertConsiderableCategory(customersToInsert);
+            _considerableService.InsertConsiderableCategory(customersToInsert, pushDataExternal);
         }
 
         private IEnumerable<ConsiderableDangerRecheckEntity> BuildCustomersForRemoval(

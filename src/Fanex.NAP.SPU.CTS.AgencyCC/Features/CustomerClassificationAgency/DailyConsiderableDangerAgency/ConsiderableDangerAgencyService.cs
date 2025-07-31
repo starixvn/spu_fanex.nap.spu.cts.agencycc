@@ -1,6 +1,8 @@
 ﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.DailyConsiderableDangerAgency
 {
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.ProblemAccountAgencyInsert;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Shares;
     using System.Collections.Generic;
     using System.Linq;
@@ -15,7 +17,7 @@
 
         IConsiderableDangerAgencyService CompleteConsiderableQueue(long lastID);
 
-        IConsiderableDangerAgencyService InsertConsiderableCategory(IEnumerable<ConsiderableDangerRecheckEntity> considerableCusts);
+        IConsiderableDangerAgencyService InsertConsiderableCategory(IEnumerable<ConsiderableDangerRecheckEntity> considerableCusts, PushDataToExternalModel pushDataExternal);
 
         IConsiderableDangerAgencyService RemoveConsiderableCategory(IEnumerable<ConsiderableDangerRecheckEntity> considerableCusts);
     }
@@ -24,12 +26,15 @@
     {
         private readonly IConsiderableDangerAgencyDataAccess _dataAccess;
         private readonly IProblemAccountAgencyService _problemAccountService;
+        private readonly ICustClassToMainDBService _custClassToMainDBService;
 
         public ConsiderableDangerAgencyService(IConsiderableDangerAgencyDataAccess dataAccess,
-            IProblemAccountAgencyService problemAccountService)
+            IProblemAccountAgencyService problemAccountService,
+            ICustClassToMainDBService custClassToMainDBService)
         {
             _dataAccess = dataAccess;
             _problemAccountService = problemAccountService;
+            _custClassToMainDBService = custClassToMainDBService;
         }
 
         public IConsiderableDangerAgencyService UpdateConsiderableDangerQueueMaxID()
@@ -56,22 +61,25 @@
             return this;
         }
 
-        public IConsiderableDangerAgencyService InsertConsiderableCategory(IEnumerable<ConsiderableDangerRecheckEntity> considerableCusts)
+        public IConsiderableDangerAgencyService InsertConsiderableCategory(IEnumerable<ConsiderableDangerRecheckEntity> considerableCusts,
+            PushDataToExternalModel pushDataExternal)
         {           
             var problems = considerableCusts.Select(x => new InsertProblemAccountEntity(x));
 
-            _problemAccountService.InsertProblemAccountsAgencyPackage(problems, 
+            var result = _problemAccountService.InsertProblemAccountsAgencyPackage(problems, 
                 Constants.FunctionId.Default, 
                 Constants.AgencyCCInputFlow.InsertConderable, 
                 false, 
                 nameof(ConsiderableDangerAgencyService));
+
+            _custClassToMainDBService.PushExternalProblemAcountPackage(result, pushDataExternal);
 
             return this;
         }
 
         public IConsiderableDangerAgencyService RemoveConsiderableCategory(IEnumerable<ConsiderableDangerRecheckEntity> considerableCusts)
         {
-            var probAccounts = considerableCusts.Select(x => new RemoveProblemAccountEntity
+            var considerableAccounts = considerableCusts.Select(x => new RemoveProblemAccountEntity
             {
                 CustID = x.CustID,
                 CTSCustID = x.CTSCustID,
@@ -81,7 +89,7 @@
                 CreatedBy = Constants.StarixITId
             });
 
-            _problemAccountService.RemoveProblemAccount(probAccounts, false);
+            _problemAccountService.RemoveConsiderable(considerableAccounts, Constants.AgencyCCInputFlow.RemoveConderable , false);
 
             return this;
         }
