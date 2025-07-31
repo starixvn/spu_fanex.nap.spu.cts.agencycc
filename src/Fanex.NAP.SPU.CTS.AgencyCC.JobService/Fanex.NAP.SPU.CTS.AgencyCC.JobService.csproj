@@ -40,6 +40,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Content Update="appsettings.LOCAL_99.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>			
 		<Content Update="appsettings.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
