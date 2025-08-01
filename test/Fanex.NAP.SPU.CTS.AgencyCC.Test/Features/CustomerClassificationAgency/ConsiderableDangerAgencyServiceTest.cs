@@ -6,6 +6,7 @@
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Model;
     using FluentAssertions;
     using NSubstitute;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Xunit;
@@ -26,6 +27,8 @@
             _service = new ConsiderableDangerAgencyService(_dataAccess, _problemAccountService, _custClassToMainDBService);
         }
 
+        #region UpdateConsiderableDangerQueueMaxID Tests
+
         [Fact]
         public void UpdateConsiderableDangerQueueMaxID_WhenSuccess_ShouldCallDataAccess()
         {
@@ -36,6 +39,21 @@
             _dataAccess.Received(1).UpdateConsiderableDangerQueueMaxID();
             result.Should().Be(_service);
         }
+
+        [Fact]
+        public void UpdateConsiderableDangerQueueMaxID_WhenDataAccessThrowsException_ShouldPropagateException()
+        {
+            // Arrange
+            _dataAccess.When(x => x.UpdateConsiderableDangerQueueMaxID()).Throw(new InvalidOperationException("Database error"));
+
+            // Act & Assert
+            var exception = Assert.Throws<InvalidOperationException>(() => _service.UpdateConsiderableDangerQueueMaxID());
+            exception.Message.Should().Be("Database error");
+        }
+
+        #endregion
+
+        #region GetConsiderableDangerQueue Tests
 
         [Fact]
         public void GetConsiderableDangerQueue_WhenSuccess_ShouldReturnExpectedData()
@@ -91,6 +109,44 @@
             result.RecheckWLCusts.Should().BeEmpty();
         }
 
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(100)]
+        [InlineData(1000)]
+        public void GetConsiderableDangerQueue_WithDifferentBatchSizes_ShouldCallDataAccessWithCorrectParameter(int batchSize)
+        {
+            // Arrange
+            var expectedModel = new ConsiderableDangerRecheckModel();
+            _dataAccess.GetConsiderableDangerQueue(batchSize).Returns(expectedModel);
+
+            // Act
+            var result = _service.GetConsiderableDangerQueue(batchSize);
+
+            // Assert
+            _dataAccess.Received(1).GetConsiderableDangerQueue(batchSize);
+            result.Should().Be(expectedModel);
+        }
+
+        [Fact]
+        public void GetConsiderableDangerQueue_WhenDataAccessReturnsNull_ShouldHandleGracefully()
+        {
+            // Arrange
+            var batchSize = 100;
+            _dataAccess.GetConsiderableDangerQueue(batchSize).Returns((ConsiderableDangerRecheckModel)null);
+
+            // Act
+            var result = _service.GetConsiderableDangerQueue(batchSize);
+
+            // Assert
+            result.Should().BeNull();
+            _dataAccess.Received(1).GetConsiderableDangerQueue(batchSize);
+        }
+
+        #endregion
+
+        #region DetectConsiderable Tests
+
         [Fact]
         public void DetectConsiderable_WhenSuccess_ShouldReturnExpectedData()
         {
@@ -133,6 +189,43 @@
         }
 
         [Fact]
+        public void DetectConsiderable_WhenNullInput_ShouldHandleGracefully()
+        {
+            // Arrange
+            IEnumerable<long> custIDs = null;
+            var expectedEntities = Enumerable.Empty<DetectConsiderableEntity>();
+
+            _dataAccess.DetectConsiderable(custIDs).Returns(expectedEntities);
+
+            // Act
+            var result = _service.DetectConsiderable(custIDs);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Should().BeEmpty();
+            _dataAccess.Received(1).DetectConsiderable(custIDs);
+        }
+
+        [Fact]
+        public void DetectConsiderable_WhenDataAccessReturnsNull_ShouldHandleGracefully()
+        {
+            // Arrange
+            var custIDs = new List<long> { 1, 2, 3 };
+            _dataAccess.DetectConsiderable(custIDs).Returns((IEnumerable<DetectConsiderableEntity>)null);
+
+            // Act
+            var result = _service.DetectConsiderable(custIDs);
+
+            // Assert
+            result.Should().BeNull();
+            _dataAccess.Received(1).DetectConsiderable(custIDs);
+        }
+
+        #endregion
+
+        #region CompleteConsiderableQueue Tests
+
+        [Fact]
         public void CompleteConsiderableQueue_WhenSuccess_ShouldCallDataAccess()
         {
             // Arrange
@@ -145,6 +238,37 @@
             _dataAccess.Received(1).CompleteConsiderableQueue(lastID);
             result.Should().Be(_service);
         }
+
+        [Theory]
+        [InlineData(0L)]
+        [InlineData(1L)]
+        [InlineData(999999L)]
+        [InlineData(long.MaxValue)]
+        public void CompleteConsiderableQueue_WithDifferentLastIDs_ShouldCallDataAccessWithCorrectParameter(long lastID)
+        {
+            // Act
+            var result = _service.CompleteConsiderableQueue(lastID);
+
+            // Assert
+            _dataAccess.Received(1).CompleteConsiderableQueue(lastID);
+            result.Should().Be(_service);
+        }
+
+        [Fact]
+        public void CompleteConsiderableQueue_WhenDataAccessThrowsException_ShouldPropagateException()
+        {
+            // Arrange
+            var lastID = 12345L;
+            _dataAccess.When(x => x.CompleteConsiderableQueue(lastID)).Throw(new InvalidOperationException("Database error"));
+
+            // Act & Assert
+            var exception = Assert.Throws<InvalidOperationException>(() => _service.CompleteConsiderableQueue(lastID));
+            exception.Message.Should().Be("Database error");
+        }
+
+        #endregion
+
+        #region InsertConsiderableCategory Tests
 
         [Fact]
         public void InsertConsiderableCategory_WhenSuccess_ShouldCallProblemAccountServiceAndCustClassToMainDBService()
@@ -280,124 +404,6 @@
         }
 
         [Fact]
-        public void RemoveConsiderableCategory_WhenSuccess_ShouldCallProblemAccountService()
-        {
-            // Arrange
-            var considerableCusts = new List<ConsiderableDangerRecheckEntity>
-            {
-                new ConsiderableDangerRecheckEntity 
-                { 
-                    CustID = 1, 
-                    CTSCustID = 1001, 
-                    CategoryID = 1, 
-                    RoleID = 2, 
-                    SubscriberID = 1, 
-                    IsLicensee = false 
-                },
-                new ConsiderableDangerRecheckEntity 
-                { 
-                    CustID = 2, 
-                    CTSCustID = 1002, 
-                    CategoryID = 1, 
-                    RoleID = 2, 
-                    SubscriberID = 1, 
-                    IsLicensee = false 
-                }
-            };
-
-            // Act
-            var result = _service.RemoveConsiderableCategory(considerableCusts);
-
-            // Assert
-            _problemAccountService.Received(1).RemoveProblemAccount(
-                Arg.Is<IEnumerable<RemoveProblemAccountEntity>>(entities => 
-                    entities.Count() == 2 && 
-                    entities.All(e => e.IsMarkedDirectly == true && e.CreatedBy == StarixITId)),
-                false);
-            result.Should().Be(_service);
-        }
-
-        [Fact]
-        public void RemoveConsiderableCategory_WhenEmptyInput_ShouldNotCallProblemAccountService()
-        {
-            // Arrange
-            var considerableCusts = Enumerable.Empty<ConsiderableDangerRecheckEntity>();
-
-            // Act
-            var result = _service.RemoveConsiderableCategory(considerableCusts);
-
-            // Assert
-            _problemAccountService.Received(1).RemoveProblemAccount(
-                Arg.Is<IEnumerable<RemoveProblemAccountEntity>>(entities => !entities.Any()),
-                false);
-            result.Should().Be(_service);
-        }
-
-        [Fact]
-        public void RemoveConsiderableCategory_ShouldSetCorrectProperties()
-        {
-            // Arrange
-            var considerableCusts = new List<ConsiderableDangerRecheckEntity>
-            {
-                new ConsiderableDangerRecheckEntity 
-                { 
-                    CustID = 1, 
-                    CTSCustID = 1001, 
-                    CategoryID = 1, 
-                    RoleID = 2, 
-                    SubscriberID = 1, 
-                    IsLicensee = false 
-                }
-            };
-
-            // Act
-            _service.RemoveConsiderableCategory(considerableCusts);
-
-            // Assert
-            _problemAccountService.Received(1).RemoveProblemAccount(
-                Arg.Is<IEnumerable<RemoveProblemAccountEntity>>(entities => 
-                    entities.First().CustID == 1 &&
-                    entities.First().CTSCustID == 1001 &&
-                    entities.First().RoleID == 2 &&
-                    entities.First().SubscriberID == 1 &&
-                    entities.First().IsMarkedDirectly == true &&
-                    entities.First().CreatedBy == StarixITId),
-                false);
-        }
-
-        [Theory]
-        [InlineData(0)]
-        [InlineData(1)]
-        [InlineData(100)]
-        public void GetConsiderableDangerQueue_WithDifferentBatchSizes_ShouldCallDataAccessWithCorrectParameter(int batchSize)
-        {
-            // Arrange
-            var expectedModel = new ConsiderableDangerRecheckModel();
-            _dataAccess.GetConsiderableDangerQueue(batchSize).Returns(expectedModel);
-
-            // Act
-            var result = _service.GetConsiderableDangerQueue(batchSize);
-
-            // Assert
-            _dataAccess.Received(1).GetConsiderableDangerQueue(batchSize);
-            result.Should().Be(expectedModel);
-        }
-
-        [Theory]
-        [InlineData(0L)]
-        [InlineData(1L)]
-        [InlineData(999999L)]
-        public void CompleteConsiderableQueue_WithDifferentLastIDs_ShouldCallDataAccessWithCorrectParameter(long lastID)
-        {
-            // Act
-            var result = _service.CompleteConsiderableQueue(lastID);
-
-            // Assert
-            _dataAccess.Received(1).CompleteConsiderableQueue(lastID);
-            result.Should().Be(_service);
-        }
-
-        [Fact]
         public void InsertConsiderableCategory_WithNullPushDataExternal_ShouldHandleGracefully()
         {
             // Arrange
@@ -435,6 +441,214 @@
             
             _custClassToMainDBService.Received(1).PushExternalProblemAcountPackage(expectedCustIds, null);
             result.Should().Be(_service);
+        }      
+
+        [Fact]
+        public void InsertConsiderableCategory_WhenProblemAccountServiceThrowsException_ShouldPropagateException()
+        {
+            // Arrange
+            var considerableCusts = new List<ConsiderableDangerRecheckEntity>
+            {
+                new ConsiderableDangerRecheckEntity 
+                { 
+                    CustID = 1, 
+                    CTSCustID = 1001, 
+                    CategoryID = 1, 
+                    RoleID = 2, 
+                    SubscriberID = 1, 
+                    IsLicensee = false 
+                }
+            };
+
+            var pushDataExternal = new PushDataToExternalModel();
+
+            _problemAccountService.When(x => x.InsertProblemAccountsAgencyPackage(
+                Arg.Any<IEnumerable<InsertProblemAccountEntity>>(),
+                FunctionId.Default,
+                AgencyCCInputFlow.InsertConderable,
+                false,
+                nameof(ConsiderableDangerAgencyService))).Throw(new InvalidOperationException("Service error"));
+
+            // Act & Assert
+            var exception = Assert.Throws<InvalidOperationException>(() => 
+                _service.InsertConsiderableCategory(considerableCusts, pushDataExternal));
+            exception.Message.Should().Be("Service error");
+        }
+
+        #endregion
+
+        #region RemoveConsiderableCategory Tests
+
+        [Fact]
+        public void RemoveConsiderableCategory_WhenSuccess_ShouldCallProblemAccountService()
+        {
+            // Arrange
+            var considerableCusts = new List<ConsiderableDangerRecheckEntity>
+            {
+                new ConsiderableDangerRecheckEntity 
+                { 
+                    CustID = 1, 
+                    CTSCustID = 1001, 
+                    CategoryID = 1, 
+                    RoleID = 2, 
+                    SubscriberID = 1, 
+                    IsLicensee = false 
+                },
+                new ConsiderableDangerRecheckEntity 
+                { 
+                    CustID = 2, 
+                    CTSCustID = 1002, 
+                    CategoryID = 1, 
+                    RoleID = 2, 
+                    SubscriberID = 1, 
+                    IsLicensee = false 
+                }
+            };
+
+            // Act
+            var result = _service.RemoveConsiderableCategory(considerableCusts);
+
+            // Assert
+            _problemAccountService.Received(1).RemoveConsiderable(
+                Arg.Is<IEnumerable<RemoveProblemAccountEntity>>(entities => 
+                    entities.Count() == 2 && 
+                    entities.All(e => e.IsMarkedDirectly == true && e.CreatedBy == StarixITId)),
+                AgencyCCInputFlow.RemoveConderable,
+                false);
+            result.Should().Be(_service);
+        }
+
+        [Fact]
+        public void RemoveConsiderableCategory_WhenEmptyInput_ShouldNotCallProblemAccountService()
+        {
+            // Arrange
+            var considerableCusts = Enumerable.Empty<ConsiderableDangerRecheckEntity>();
+
+            // Act
+            var result = _service.RemoveConsiderableCategory(considerableCusts);
+
+            // Assert
+            _problemAccountService.Received(1).RemoveConsiderable(
+                Arg.Is<IEnumerable<RemoveProblemAccountEntity>>(entities => !entities.Any()),
+                AgencyCCInputFlow.RemoveConderable,
+                false);
+            result.Should().Be(_service);
+        }
+
+        [Fact]
+        public void RemoveConsiderableCategory_ShouldSetCorrectProperties()
+        {
+            // Arrange
+            var considerableCusts = new List<ConsiderableDangerRecheckEntity>
+            {
+                new ConsiderableDangerRecheckEntity 
+                { 
+                    CustID = 1, 
+                    CTSCustID = 1001, 
+                    CategoryID = 1, 
+                    RoleID = 2, 
+                    SubscriberID = 1, 
+                    IsLicensee = false 
+                }
+            };
+
+            // Act
+            _service.RemoveConsiderableCategory(considerableCusts);
+
+            // Assert
+            _problemAccountService.Received(1).RemoveConsiderable(
+                Arg.Is<IEnumerable<RemoveProblemAccountEntity>>(entities => 
+                    entities.First().CustID == 1 &&
+                    entities.First().CTSCustID == 1001 &&
+                    entities.First().RoleID == 2 &&
+                    entities.First().SubscriberID == 1 &&
+                    entities.First().IsMarkedDirectly == true &&
+                    entities.First().CreatedBy == StarixITId),
+                AgencyCCInputFlow.RemoveConderable,
+                false);
         }        
+
+        [Fact]
+        public void RemoveConsiderableCategory_WhenProblemAccountServiceThrowsException_ShouldPropagateException()
+        {
+            // Arrange
+            var considerableCusts = new List<ConsiderableDangerRecheckEntity>
+            {
+                new ConsiderableDangerRecheckEntity 
+                { 
+                    CustID = 1, 
+                    CTSCustID = 1001, 
+                    CategoryID = 1, 
+                    RoleID = 2, 
+                    SubscriberID = 1, 
+                    IsLicensee = false 
+                }
+            };
+
+            _problemAccountService.When(x => x.RemoveConsiderable(
+                Arg.Any<IEnumerable<RemoveProblemAccountEntity>>(),
+                AgencyCCInputFlow.RemoveConderable,
+                false)).Throw(new InvalidOperationException("Service error"));
+
+            // Act & Assert
+            var exception = Assert.Throws<InvalidOperationException>(() => 
+                _service.RemoveConsiderableCategory(considerableCusts));
+            exception.Message.Should().Be("Service error");
+        }
+
+        #endregion
+
+        #region Integration Tests
+
+        [Fact]
+        public void Service_ShouldBeAbleToChainMethods()
+        {
+            // Arrange
+            var considerableCusts = new List<ConsiderableDangerRecheckEntity>
+            {
+                new ConsiderableDangerRecheckEntity 
+                { 
+                    CustID = 1, 
+                    CTSCustID = 1001, 
+                    CategoryID = 1, 
+                    RoleID = 2, 
+                    SubscriberID = 1, 
+                    IsLicensee = false 
+                }
+            };
+
+            var pushDataExternal = new PushDataToExternalModel();
+            var expectedCustIds = new List<long> { 1 };
+            _problemAccountService.InsertProblemAccountsAgencyPackage(
+                Arg.Any<IEnumerable<InsertProblemAccountEntity>>(),
+                FunctionId.Default,
+                AgencyCCInputFlow.InsertConderable,
+                false,
+                nameof(ConsiderableDangerAgencyService)).Returns(expectedCustIds);
+
+            // Act
+            var result = _service
+                .UpdateConsiderableDangerQueueMaxID()
+                .InsertConsiderableCategory(considerableCusts, pushDataExternal)
+                .RemoveConsiderableCategory(considerableCusts)
+                .CompleteConsiderableQueue(12345L);
+
+            // Assert
+            result.Should().Be(_service);
+            _dataAccess.Received(1).UpdateConsiderableDangerQueueMaxID();
+            _problemAccountService.Received(1).InsertProblemAccountsAgencyPackage(
+                Arg.Any<IEnumerable<InsertProblemAccountEntity>>(),
+                FunctionId.Default,
+                AgencyCCInputFlow.InsertConderable,
+                false,
+                nameof(ConsiderableDangerAgencyService));
+            _problemAccountService.Received(1).RemoveConsiderable(
+                Arg.Any<IEnumerable<RemoveProblemAccountEntity>>(),
+                AgencyCCInputFlow.RemoveConderable,
+                false);
+            _dataAccess.Received(1).CompleteConsiderableQueue(12345L);
+        }
+
+        #endregion
     }
 }
