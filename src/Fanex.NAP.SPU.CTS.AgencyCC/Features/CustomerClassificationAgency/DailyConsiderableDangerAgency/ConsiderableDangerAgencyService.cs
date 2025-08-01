@@ -17,7 +17,9 @@
 
         IConsiderableDangerAgencyService CompleteConsiderableQueue(long lastID);
 
-        IConsiderableDangerAgencyService InsertConsiderableCategory(IEnumerable<ConsiderableDangerRecheckEntity> considerableCusts, PushDataToExternalModel pushDataExternal);
+        IConsiderableDangerAgencyService InsertConsiderableCategory(IEnumerable<ConsiderableDangerRecheckEntity> considerableCusts, 
+            PushDataToExternalModel pushDataExternal, 
+            Constants.AgencyCCInputFlow inputFlow);
 
         IConsiderableDangerAgencyService RemoveConsiderableCategory(IEnumerable<ConsiderableDangerRecheckEntity> considerableCusts);
     }
@@ -62,13 +64,14 @@
         }
 
         public IConsiderableDangerAgencyService InsertConsiderableCategory(IEnumerable<ConsiderableDangerRecheckEntity> considerableCusts,
-            PushDataToExternalModel pushDataExternal)
+            PushDataToExternalModel pushDataExternal,
+            Constants.AgencyCCInputFlow inputFlow)
         {           
             var problems = considerableCusts.Select(x => new InsertProblemAccountEntity(x));
 
             var result = _problemAccountService.InsertProblemAccountsAgencyPackage(problems, 
-                Constants.FunctionId.Default, 
-                Constants.AgencyCCInputFlow.InsertConderable, 
+                Constants.FunctionId.Default,
+                inputFlow, 
                 false, 
                 nameof(ConsiderableDangerAgencyService));
 

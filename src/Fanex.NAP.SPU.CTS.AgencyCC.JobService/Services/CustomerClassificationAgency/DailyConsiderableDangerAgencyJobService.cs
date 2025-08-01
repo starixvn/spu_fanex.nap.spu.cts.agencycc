@@ -74,13 +74,21 @@
                 {
                     var detectConsiderable = DetectConsiderableCustomers(considerableQueue);
 
-                    // Process customers for insertion
-                    var customersToInsert = BuildCustomersForInsertion(considerableQueue, detectConsiderable);
-                    InsertConsiderableCategories(customersToInsert, pushDataExternal);
+                    // Process customers for insertion with WL
+                    var custInsertWithWL = BuildCustomersForInsertWithWL(considerableQueue);
+                    _considerableService.InsertConsiderableCategory(custInsertWithWL, pushDataExternal, AgencyCCInputFlow.RecanConsiderable);
+
+                    // Process customers for insertion with not exist CD
+                    var custInsertWithNotExistCD = BuildCustomersForInsertWithDetectCD(considerableQueue, detectConsiderable, false);
+                    _considerableService.InsertConsiderableCategory(custInsertWithNotExistCD, pushDataExternal, AgencyCCInputFlow.InsertConderable);
+
+                    // Process customers for insertion with exist CD
+                    var custInsertWithExistCD = BuildCustomersForInsertWithDetectCD(considerableQueue, detectConsiderable, true);
+                    _considerableService.InsertConsiderableCategory(custInsertWithExistCD, pushDataExternal, AgencyCCInputFlow.RecanConsiderable);
 
                     // Process customers for removal
                     var customersToRemove = BuildCustomersForRemoval(considerableQueue, detectConsiderable);
-                    RemoveConsiderableCategories(customersToRemove);
+                    RemoveConsiderableCategories(customersToRemove);                    
 
                     // Complete the queue processing
                     CompleteConsiderableQueue(considerableQueue);
@@ -104,37 +112,39 @@
             return _considerableService.DetectConsiderable(customerIds);
         }
 
-        private IEnumerable<ConsiderableDangerRecheckEntity> BuildCustomersForInsertion(
-            ConsiderableDangerRecheckModel considerableQueue, 
-            IEnumerable<DetectConsiderableEntity> detectConsiderable)
+        private IEnumerable<ConsiderableDangerRecheckEntity> BuildCustomersForInsertWithWL(ConsiderableDangerRecheckModel considerableQueue)
         {
             var customersToInsert = new List<ConsiderableDangerRecheckEntity>();
 
-            // Add WL customers
-            customersToInsert.AddRange(AddConsiderableRecheckWL(considerableQueue));
-
-            // Add ratio customers
-            customersToInsert.AddRange(AddConsiderableRecheckRatio(
-                considerableQueue.RecheckRatioCusts, 
-                detectConsiderable));
-
+            if (considerableQueue != null && considerableQueue.RecheckWLCusts.IsNotNullOrEmpty())
+            {
+                customersToInsert.AddRange(considerableQueue.RecheckWLCusts);
+            }
+          
             return customersToInsert;
         }
 
-        private void InsertConsiderableCategories(IEnumerable<ConsiderableDangerRecheckEntity> customersToInsert, PushDataToExternalModel pushDataExternal)
+        private IEnumerable<ConsiderableDangerRecheckEntity> BuildCustomersForInsertWithDetectCD(
+            ConsiderableDangerRecheckModel considerableQueue,
+            IEnumerable<DetectConsiderableEntity> detectConsiderable,
+            bool isExitingCD)
         {
-            _considerableService.InsertConsiderableCategory(customersToInsert, pushDataExternal);
-        }
+            var customersToInsert = new List<ConsiderableDangerRecheckEntity>();
+
+            var custDetectCD = detectConsiderable.Where(x => x.IsExistingCD == isExitingCD);
+           
+            customersToInsert.AddRange(AddConsiderableRecheckRatio(considerableQueue.RecheckRatioCusts, custDetectCD, true));
+
+            return customersToInsert;
+        }              
 
         private IEnumerable<ConsiderableDangerRecheckEntity> BuildCustomersForRemoval(
             ConsiderableDangerRecheckModel considerableQueue, 
             IEnumerable<DetectConsiderableEntity> detectConsiderable)
         {
-            var customersPassingConsiderableRule = detectConsiderable.Where(x => x.IsPassRuleConsiderable);
+            var custPassIsExitingCD = detectConsiderable.Where(x => x.IsExistingCD);
             
-            return AddConsiderableRecheckRatio(
-                considerableQueue.RecheckRatioCusts, 
-                customersPassingConsiderableRule);
+            return AddConsiderableRecheckRatio(considerableQueue.RecheckRatioCusts, custPassIsExitingCD, false);
         }
 
         private void RemoveConsiderableCategories(IEnumerable<ConsiderableDangerRecheckEntity> customersToRemove)
@@ -146,23 +156,14 @@
         {
             _considerableService.CompleteConsiderableQueue(considerableQueue.LastID);
         }
-
-        private IEnumerable<ConsiderableDangerRecheckEntity> AddConsiderableRecheckWL(ConsiderableDangerRecheckModel data)
-        {
-            if (data != null && data.RecheckWLCusts.IsNotNullOrEmpty())
-            {
-                return data.RecheckWLCusts;
-            }
-
-            return Enumerable.Empty<ConsiderableDangerRecheckEntity>();
-        }
-
+       
         private IEnumerable<ConsiderableDangerRecheckEntity> AddConsiderableRecheckRatio(IEnumerable<ConsiderableDangerRecheckEntity> recheckRatioCusts,
-            IEnumerable<DetectConsiderableEntity> detectConsiderables)
+            IEnumerable<DetectConsiderableEntity> detectConsiderables,
+            bool isPassRuleRatio)
         {
             var recheckRatioCustsDict = recheckRatioCusts.ToDictionary(d => d.CustID);
 
-            var result = detectConsiderables.Where(x => x.IsPassRuleRatio)
+            var result = detectConsiderables.Where(x => x.IsPassRuleRatio == isPassRuleRatio)
                 .Select(x => {
                     var cust = new ConsiderableDangerRecheckEntity();
 
@@ -173,7 +174,7 @@
                         cust.CategoryID = recheckRatio.CategoryID;
                         cust.RoleID = recheckRatio.RoleID;
                         cust.SubscriberID = recheckRatio.SubscriberID;  
-                        cust.IsLicensee = recheckRatio.IsLicensee;                                              
+                        cust.IsLicensee = recheckRatio.IsLicensee;                             
                     }
                     return cust;
                 }).Where(x=>x.CustID != 0);

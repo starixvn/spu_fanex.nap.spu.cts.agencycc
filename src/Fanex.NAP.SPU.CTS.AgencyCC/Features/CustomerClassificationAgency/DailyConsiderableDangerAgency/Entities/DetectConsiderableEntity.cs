@@ -4,7 +4,7 @@
     {
         public long CustID { get; set; }
 
-        public bool IsPassRuleConsiderable { get; set; }
+        public bool IsExistingCD { get; set; }
 
         public bool IsPassRuleRatio { get; set; }
     }
