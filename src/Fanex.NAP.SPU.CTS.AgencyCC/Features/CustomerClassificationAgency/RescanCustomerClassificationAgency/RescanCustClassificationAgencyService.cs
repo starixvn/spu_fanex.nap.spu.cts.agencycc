@@ -139,9 +139,11 @@
 
         private IEnumerable<long> RescanConsiderableDanger(IEnumerable<RescanCustomerClassificationAgencyEntity> custConsiderable, RescanParametersModel paras, AgencyCCInputFlow ccInputFlow)
         {
-            paras.IsToQueue = false;
+            var resultCustRescans = base.RescanCustomerClassification(custConsiderable, paras.FunctionId, ccInputFlow, false, paras.ServiceName);
 
-            return RescanProblemAccount(custConsiderable, paras, ccInputFlow);
+            PushExternalProblemAccounts(resultCustRescans, paras.PushDataExternal);
+
+            return resultCustRescans;
         }
         #endregion
     }
