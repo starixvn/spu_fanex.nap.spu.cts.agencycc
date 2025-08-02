@@ -17,7 +17,7 @@
 
         IConsiderableDangerAgencyService CompleteConsiderableQueue(long lastID);
 
-        IConsiderableDangerAgencyService InsertConsiderableCategory(IEnumerable<ConsiderableDangerRecheckEntity> considerableCusts, 
+        bool InsertConsiderableCategory(IEnumerable<ConsiderableDangerRecheckEntity> considerableCusts, 
             PushDataToExternalModel pushDataExternal, 
             Constants.AgencyCCInputFlow inputFlow);
 
@@ -63,7 +63,7 @@
             return this;
         }
 
-        public IConsiderableDangerAgencyService InsertConsiderableCategory(IEnumerable<ConsiderableDangerRecheckEntity> considerableCusts,
+        public bool InsertConsiderableCategory(IEnumerable<ConsiderableDangerRecheckEntity> considerableCusts,
             PushDataToExternalModel pushDataExternal,
             Constants.AgencyCCInputFlow inputFlow)
         {           
@@ -75,9 +75,7 @@
                 false, 
                 nameof(ConsiderableDangerAgencyService));
 
-            _custClassToMainDBService.PushExternalProblemAcountPackage(result, pushDataExternal);
-
-            return this;
+            return _custClassToMainDBService.PushExternalProblemAcountPackage(result, pushDataExternal);
         }
 
         public IConsiderableDangerAgencyService RemoveConsiderableCategory(IEnumerable<ConsiderableDangerRecheckEntity> considerableCusts)

@@ -32,7 +32,7 @@
             {
                 if (batchSize > 0)
                 {
-                    JobRun(batchSize);
+                    return Task.FromResult(JobRun(batchSize)); 
                 }
                 else
                 {
@@ -49,17 +49,10 @@
             return Task.FromResult(true);
         }
 
-        private void JobRun(int batchSize) 
+        private bool JobRun(int batchSize) 
         {
             var isContinue = true;
-            var pushDataExternal = new PushDataToExternalModel
-            {
-                RoleGroup = RoleGroupType.Agency,
-                ExternalBatchSize = batchSize,
-                IsUpdateDangerToMainDB = false,
-                IsWriteLog = _appSettings.ProblemAccountIsWriteLog,
-                ServiceName = nameof(DailyConsiderableDangerAgencyJobService)
-            };
+            var isSuccess = true;
 
             // Prepare data
             UpdateConsiderableDangerQueue();
@@ -72,19 +65,11 @@
 
                 if (isContinue)
                 {
-                    var detectConsiderable = DetectConsiderableCustomers(considerableQueue);
+                    var detectConsiderable = DetectConsiderableCustomers(considerableQueue);                    
 
-                    // Process customers for insertion with WL
-                    var custInsertWithWL = BuildCustomersForInsertWithWL(considerableQueue);
-                    _considerableService.InsertConsiderableCategory(custInsertWithWL, pushDataExternal, AgencyCCInputFlow.RecanConsiderable);
+                    isSuccess = ProcessInsertWithBreakHandling(batchSize, considerableQueue, detectConsiderable);
 
-                    // Process customers for insertion with not exist CD
-                    var custInsertWithNotExistCD = BuildCustomersForInsertWithDetectCD(considerableQueue, detectConsiderable, false);
-                    _considerableService.InsertConsiderableCategory(custInsertWithNotExistCD, pushDataExternal, AgencyCCInputFlow.InsertConderable);
-
-                    // Process customers for insertion with exist CD
-                    var custInsertWithExistCD = BuildCustomersForInsertWithDetectCD(considerableQueue, detectConsiderable, true);
-                    _considerableService.InsertConsiderableCategory(custInsertWithExistCD, pushDataExternal, AgencyCCInputFlow.RecanConsiderable);
+                    if (!isSuccess) break;
 
                     // Process customers for removal
                     var customersToRemove = BuildCustomersForRemoval(considerableQueue, detectConsiderable);
@@ -94,6 +79,40 @@
                     CompleteConsiderableQueue(considerableQueue);
                 }
             } while (isContinue);
+
+            return isSuccess;
+        }
+
+        private bool ProcessInsertWithBreakHandling(int batchSize, ConsiderableDangerRecheckModel considerableQueue, IEnumerable<DetectConsiderableEntity> detectConsiderable)
+        {
+            var pushDataExternal = new PushDataToExternalModel
+            {
+                RoleGroup = RoleGroupType.Agency,
+                ExternalBatchSize = batchSize,
+                IsUpdateDangerToMainDB = false,
+                IsWriteLog = _appSettings.ProblemAccountIsWriteLog,
+                ServiceName = nameof(DailyConsiderableDangerAgencyJobService)
+            };
+
+            // Process customers for insertion with WL
+            var custInsertWithWL = BuildCustomersForInsertWithWL(considerableQueue);
+            var isSuccess = _considerableService.InsertConsiderableCategory(custInsertWithWL, pushDataExternal, AgencyCCInputFlow.RecanConsiderable);
+            if (!isSuccess)
+            {
+                return false;
+            }
+            // Process customers for insertion with not exist CD
+            var custInsertWithNotExistCD = BuildCustomersForInsertWithDetectCD(considerableQueue, detectConsiderable, false);
+            isSuccess = _considerableService.InsertConsiderableCategory(custInsertWithNotExistCD, pushDataExternal, AgencyCCInputFlow.InsertConderable);
+            if (!isSuccess)
+            {
+                return false;
+            }
+            // Process customers for insertion with exist CD
+            var custInsertWithExistCD = BuildCustomersForInsertWithDetectCD(considerableQueue, detectConsiderable, true);
+            isSuccess = _considerableService.InsertConsiderableCategory(custInsertWithExistCD, pushDataExternal, AgencyCCInputFlow.RecanConsiderable);
+
+            return isSuccess;
         }
 
         private void UpdateConsiderableDangerQueue()
