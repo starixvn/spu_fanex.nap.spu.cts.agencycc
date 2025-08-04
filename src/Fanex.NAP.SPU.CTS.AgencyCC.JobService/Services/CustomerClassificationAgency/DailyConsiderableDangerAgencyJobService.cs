@@ -1,6 +1,7 @@
 ﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CustomerClassificationAgency
 {
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.DailyConsiderableDangerAgency;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RescanCustomerClassificationAgency.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Shares;
     using System;  
@@ -55,7 +56,8 @@
             var isSuccess = true;
 
             // Prepare data
-            UpdateConsiderableDangerQueue();
+            var rescanParameter = BuildRescanParameters(batchSize);
+            UpdateConsiderableDangerQueue();            
 
             do
             {
@@ -67,13 +69,13 @@
                 {
                     var detectConsiderable = DetectConsiderableCustomers(considerableQueue);                    
 
-                    isSuccess = ProcessInsertWithBreakHandling(batchSize, considerableQueue, detectConsiderable);
+                    isSuccess = ProcessInsertWithBreakHandling(rescanParameter.PushDataExternal, considerableQueue, detectConsiderable);
 
                     if (!isSuccess) break;
 
                     // Process customers for removal
                     var customersToRemove = BuildCustomersForRemoval(considerableQueue, detectConsiderable);
-                    RemoveConsiderableCategories(customersToRemove);                    
+                    RemoveConsiderableCategories(customersToRemove, rescanParameter);                    
 
                     // Complete the queue processing
                     CompleteConsiderableQueue(considerableQueue);
@@ -83,17 +85,8 @@
             return isSuccess;
         }
 
-        private bool ProcessInsertWithBreakHandling(int batchSize, ConsiderableDangerRecheckModel considerableQueue, IEnumerable<DetectConsiderableEntity> detectConsiderable)
-        {
-            var pushDataExternal = new PushDataToExternalModel
-            {
-                RoleGroup = RoleGroupType.Agency,
-                ExternalBatchSize = batchSize,
-                IsUpdateDangerToMainDB = false,
-                IsWriteLog = _appSettings.ProblemAccountIsWriteLog,
-                ServiceName = nameof(DailyConsiderableDangerAgencyJobService)
-            };
-
+        private bool ProcessInsertWithBreakHandling(PushDataToExternalModel pushDataExternal, ConsiderableDangerRecheckModel considerableQueue, IEnumerable<DetectConsiderableEntity> detectConsiderable)
+        {               
             // Process customers for insertion with WL
             var custInsertWithWL = BuildCustomersForInsertWithWL(considerableQueue);
             var isSuccess = _considerableService.InsertConsiderableCategory(custInsertWithWL, pushDataExternal, AgencyCCInputFlow.RecanConsiderable);
@@ -166,9 +159,31 @@
             return AddConsiderableRecheckRatio(considerableQueue.RecheckRatioCusts, custPassIsExitingCD, false);
         }
 
-        private void RemoveConsiderableCategories(IEnumerable<ConsiderableDangerRecheckEntity> customersToRemove)
+        private RescanParametersModel BuildRescanParameters(int batchSize)
         {
-            _considerableService.RemoveConsiderableCategory(customersToRemove);
+            return new RescanParametersModel()
+            {
+                IsToQueue = false,
+                FunctionId = FunctionId.RescanConsiderable,
+                RescanNormalType = RescanNormalType.Auto_RescanConsiderable,
+                InternalBatchSize = batchSize,
+                ServiceName = nameof(DailyConsiderableDangerAgencyJobService),
+                PushDataExternal = new PushDataToExternalModel
+                {
+                    RoleGroup = RoleGroupType.Agency,
+                    IsUpdateDangerToMainDB = false, // not update for sma
+                    ExternalBatchSize = batchSize,
+                    ServiceName = nameof(DailyConsiderableDangerAgencyJobService),
+                    IsSyncAFCData = _appSettings.IsSyncAFCData,
+                    AFCInsertAccountURL = _appSettings.AFCInsertAccountURL,
+                    AFCDeleteAccountURL = _appSettings.AFCDeleteAccountURL
+                }
+            };
+        }
+
+        private void RemoveConsiderableCategories(IEnumerable<ConsiderableDangerRecheckEntity> customersToRemove, RescanParametersModel rescanParameter)
+        {            
+            _considerableService.RemoveConsiderableCategory(customersToRemove, rescanParameter);
         }
 
         private void CompleteConsiderableQueue(ConsiderableDangerRecheckModel considerableQueue)

@@ -1,6 +1,8 @@
 ﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.DailyConsiderableDangerAgency
 {
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.ProblemAccountAgencyInsert;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RescanCustomerClassificationAgency;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RescanCustomerClassificationAgency.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Shares;
@@ -21,7 +23,7 @@
             PushDataToExternalModel pushDataExternal, 
             Constants.AgencyCCInputFlow inputFlow);
 
-        IConsiderableDangerAgencyService RemoveConsiderableCategory(IEnumerable<ConsiderableDangerRecheckEntity> considerableCusts);
+        IConsiderableDangerAgencyService RemoveConsiderableCategory(IEnumerable<ConsiderableDangerRecheckEntity> considerableCusts, RescanParametersModel rescanParameter);
     }
 
     public class ConsiderableDangerAgencyService : IConsiderableDangerAgencyService
@@ -29,14 +31,17 @@
         private readonly IConsiderableDangerAgencyDataAccess _dataAccess;
         private readonly IProblemAccountAgencyService _problemAccountService;
         private readonly ICustClassToMainDBService _custClassToMainDBService;
+        private readonly IRescanCustClassificationAgencyService _rescanCustClassificationService;
 
         public ConsiderableDangerAgencyService(IConsiderableDangerAgencyDataAccess dataAccess,
             IProblemAccountAgencyService problemAccountService,
-            ICustClassToMainDBService custClassToMainDBService)
+            ICustClassToMainDBService custClassToMainDBService,
+            IRescanCustClassificationAgencyService rescanCustClassificationService)
         {
             _dataAccess = dataAccess;
             _problemAccountService = problemAccountService;
             _custClassToMainDBService = custClassToMainDBService;
+            _rescanCustClassificationService = rescanCustClassificationService;
         }
 
         public IConsiderableDangerAgencyService UpdateConsiderableDangerQueueMaxID()
@@ -78,7 +83,7 @@
             return _custClassToMainDBService.PushExternalProblemAcountPackage(result, pushDataExternal);
         }
 
-        public IConsiderableDangerAgencyService RemoveConsiderableCategory(IEnumerable<ConsiderableDangerRecheckEntity> considerableCusts)
+        public IConsiderableDangerAgencyService RemoveConsiderableCategory(IEnumerable<ConsiderableDangerRecheckEntity> considerableCusts, RescanParametersModel rescanParameter)
         {
             var considerableAccounts = considerableCusts.Select(x => new RemoveProblemAccountEntity
             {
@@ -90,7 +95,12 @@
                 CreatedBy = Constants.StarixITId
             });
 
-            _problemAccountService.RemoveConsiderable(considerableAccounts, Constants.AgencyCCInputFlow.RemoveConderable , false);
+            var result = _problemAccountService.RemoveConsiderable(considerableAccounts, Constants.AgencyCCInputFlow.RemoveConderable , false);
+            
+            if (result != null && string.IsNullOrEmpty(result.ErrorMessage) && result.CustInfos.IsNotNullOrEmpty())
+            {
+                _rescanCustClassificationService.RescanCustomerClassificationAgency(result.CustInfos.Select(c => c.CustID).Distinct(), rescanParameter);
+            }
 
             return this;
         }

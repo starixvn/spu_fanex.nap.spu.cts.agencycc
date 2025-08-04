@@ -71,10 +71,12 @@ namespace Fanex.NAP.SPU.CTS.AgencyCC.Shares
             InactivateNewCustomer = 11,            
             RobotUserJob = 23,
             DownlineCustomerClassification = 52,
+            RescanConsiderable = 4
         }
 
         public enum RescanNormalType
         {
+            Auto_RescanConsiderable = 4,
             Auto_Customer = 5,
             Auto_AfftectedDownline = 6,
             Auto_InactiveCustomer = 8

@@ -1,7 +1,11 @@
 ﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.Tests.Features.CustomerClassificationAgency
 {
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.DailyConsiderableDangerAgency;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.ProblemAccountAgencyInsert;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RescanCustomerClassificationAgency;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RescanCustomerClassificationAgency.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB.Model;
     using FluentAssertions;
@@ -18,13 +22,15 @@
         private readonly IConsiderableDangerAgencyService _service;
         private readonly IProblemAccountAgencyService _problemAccountService;
         private readonly ICustClassToMainDBService _custClassToMainDBService;
+        private readonly IRescanCustClassificationAgencyService _rescanCustClassificationService;
 
         public ConsiderableDangerAgencyServiceTest()
         {
             _dataAccess = Substitute.For<IConsiderableDangerAgencyDataAccess>();
             _problemAccountService = Substitute.For<IProblemAccountAgencyService>();
             _custClassToMainDBService = Substitute.For<ICustClassToMainDBService>();
-            _service = new ConsiderableDangerAgencyService(_dataAccess, _problemAccountService, _custClassToMainDBService);
+            _rescanCustClassificationService = Substitute.For<IRescanCustClassificationAgencyService>();
+            _service = new ConsiderableDangerAgencyService(_dataAccess, _problemAccountService, _custClassToMainDBService, _rescanCustClassificationService);
         }
 
         #region UpdateConsiderableDangerQueueMaxID Tests
@@ -731,8 +737,10 @@
                 }
             };
 
+            var rescanParameters = new RescanParametersModel();
+
             // Act
-            var result = _service.RemoveConsiderableCategory(considerableCusts);
+            var result = _service.RemoveConsiderableCategory(considerableCusts, rescanParameters);
 
             // Assert
             _problemAccountService.Received(1).RemoveConsiderable(
@@ -749,9 +757,10 @@
         {
             // Arrange
             var considerableCusts = Enumerable.Empty<ConsiderableDangerRecheckEntity>();
+            var rescanParameters = new RescanParametersModel();
 
             // Act
-            var result = _service.RemoveConsiderableCategory(considerableCusts);
+            var result = _service.RemoveConsiderableCategory(considerableCusts, rescanParameters);
 
             // Assert
             _problemAccountService.Received(1).RemoveConsiderable(
@@ -759,7 +768,7 @@
                 AgencyCCInputFlow.RemoveConderable,
                 false);
             result.Should().Be(_service);
-        }       
+        }
 
         [Fact]
         public void RemoveConsiderableCategory_WhenProblemAccountServiceThrowsException_ShouldPropagateException()
@@ -778,6 +787,7 @@
                 }
             };
 
+            var rescanParameters = new RescanParametersModel();
             _problemAccountService.When(x => x.RemoveConsiderable(
                 Arg.Any<IEnumerable<RemoveProblemAccountEntity>>(),
                 AgencyCCInputFlow.RemoveConderable,
@@ -785,7 +795,7 @@
 
             // Act & Assert
             var exception = Assert.Throws<InvalidOperationException>(() => 
-                _service.RemoveConsiderableCategory(considerableCusts));
+                _service.RemoveConsiderableCategory(considerableCusts, rescanParameters));
             exception.Message.Should().Be("Service error");
         }
 
@@ -794,9 +804,10 @@
         {
             // Arrange
             var considerableCusts = new List<ConsiderableDangerRecheckEntity>();
+            var rescanParameters = new RescanParametersModel();
 
             // Act
-            var result = _service.RemoveConsiderableCategory(considerableCusts);
+            var result = _service.RemoveConsiderableCategory(considerableCusts, rescanParameters);
 
             // Assert
             _problemAccountService.Received(1).RemoveConsiderable(
@@ -832,8 +843,9 @@
                 }
             };
 
+            var rescanParameters = new RescanParametersModel();
             // Act
-            _service.RemoveConsiderableCategory(considerableCusts);
+            _service.RemoveConsiderableCategory(considerableCusts, rescanParameters);
 
             // Assert
             _problemAccountService.Received(1).RemoveConsiderable(
@@ -844,7 +856,7 @@
                     entities.All(e => e.IsMarkedDirectly == true && e.CreatedBy == StarixITId)),
                 AgencyCCInputFlow.RemoveConderable,
                 false);
-        }        
+        }
 
         [Fact]
         public void RemoveConsiderableCategory_WithLargeCollection_ShouldHandleGracefully()
@@ -862,8 +874,9 @@
                 })
                 .ToList();
 
+            var rescanParameters = new RescanParametersModel();
             // Act
-            var result = _service.RemoveConsiderableCategory(considerableCusts);
+            var result = _service.RemoveConsiderableCategory(considerableCusts, rescanParameters);
 
             // Assert
             _problemAccountService.Received(1).RemoveConsiderable(
@@ -875,6 +888,216 @@
             result.Should().Be(_service);
         }
 
+        [Fact]
+        public void RemoveConsiderableCategory_WhenSuccessfulRemoval_ShouldCallRescanService()
+        {
+            // Arrange
+            var considerableCusts = new List<ConsiderableDangerRecheckEntity>
+            {
+                new ConsiderableDangerRecheckEntity 
+                { 
+                    CustID = 1, 
+                    CTSCustID = 1001, 
+                    CategoryID = 1, 
+                    RoleID = 2, 
+                    SubscriberID = 1, 
+                    IsLicensee = false 
+                }
+            };
+
+            var rescanParameters = new RescanParametersModel();
+            var removeResult = new ResultRemoveCustomerClassificationAgencyModel
+            {
+                ErrorMessage = null,
+                CustInfos = new List<ResultRemoveCustomerClassificationEntity>()
+            };
+
+            _problemAccountService.RemoveConsiderable(
+                Arg.Any<IEnumerable<RemoveProblemAccountEntity>>(),
+                AgencyCCInputFlow.RemoveConderable,
+                false).Returns(removeResult);
+
+            // Act
+            var result = _service.RemoveConsiderableCategory(considerableCusts, rescanParameters);
+
+            // Assert           
+            result.Should().Be(_service);
+        }
+
+        [Fact]
+        public void RemoveConsiderableCategory_WhenRemovalHasErrorMessage_ShouldNotCallRescanService()
+        {
+            // Arrange
+            var considerableCusts = new List<ConsiderableDangerRecheckEntity>
+            {
+                new ConsiderableDangerRecheckEntity 
+                { 
+                    CustID = 1, 
+                    CTSCustID = 1001, 
+                    CategoryID = 1, 
+                    RoleID = 2, 
+                    SubscriberID = 1, 
+                    IsLicensee = false 
+                }
+            };
+
+            var rescanParameters = new RescanParametersModel();
+            var removeResult = new ResultRemoveCustomerClassificationAgencyModel
+            {
+                ErrorMessage = "Error occurred",
+                CustInfos = new List<ResultRemoveCustomerClassificationEntity>()
+            };            
+
+            _problemAccountService.RemoveConsiderable(
+                Arg.Any<IEnumerable<RemoveProblemAccountEntity>>(),
+                AgencyCCInputFlow.RemoveConderable,
+                false).Returns(removeResult);
+
+            // Act
+            var result = _service.RemoveConsiderableCategory(considerableCusts, rescanParameters);
+
+            // Assert
+            _rescanCustClassificationService.DidNotReceive().RescanCustomerClassificationAgency(
+                Arg.Any<IEnumerable<long>>(),
+                Arg.Any<RescanParametersModel>());
+            result.Should().Be(_service);
+        }
+
+        [Fact]
+        public void RemoveConsiderableCategory_WhenRemovalHasEmptyCustInfos_ShouldNotCallRescanService()
+        {
+            // Arrange
+            var considerableCusts = new List<ConsiderableDangerRecheckEntity>
+            {
+                new ConsiderableDangerRecheckEntity 
+                { 
+                    CustID = 1, 
+                    CTSCustID = 1001, 
+                    CategoryID = 1, 
+                    RoleID = 2, 
+                    SubscriberID = 1, 
+                    IsLicensee = false 
+                }
+            };
+
+            var rescanParameters = new RescanParametersModel();
+            var removeResult = new ResultRemoveCustomerClassificationAgencyModel
+            {
+                ErrorMessage = null,
+                CustInfos = new List<ResultRemoveCustomerClassificationEntity>()
+            };
+
+            _problemAccountService.RemoveConsiderable(
+                Arg.Any<IEnumerable<RemoveProblemAccountEntity>>(),
+                AgencyCCInputFlow.RemoveConderable,
+                false).Returns(removeResult);
+
+            // Act
+            var result = _service.RemoveConsiderableCategory(considerableCusts, rescanParameters);
+
+            // Assert
+            _rescanCustClassificationService.DidNotReceive().RescanCustomerClassificationAgency(
+                Arg.Any<IEnumerable<long>>(),
+                Arg.Any<RescanParametersModel>());
+            result.Should().Be(_service);
+        }
+
+        [Fact]
+        public void RemoveConsiderableCategory_WhenRemovalHasNullCustInfos_ShouldNotCallRescanService()
+        {
+            // Arrange
+            var considerableCusts = new List<ConsiderableDangerRecheckEntity>
+            {
+                new ConsiderableDangerRecheckEntity 
+                { 
+                    CustID = 1, 
+                    CTSCustID = 1001, 
+                    CategoryID = 1, 
+                    RoleID = 2, 
+                    SubscriberID = 1, 
+                    IsLicensee = false 
+                }
+            };
+
+            var rescanParameters = new RescanParametersModel();
+            var removeResult = new ResultRemoveCustomerClassificationAgencyModel
+            {
+                ErrorMessage = null,
+                CustInfos = null
+            };
+
+            _problemAccountService.RemoveConsiderable(
+                Arg.Any<IEnumerable<RemoveProblemAccountEntity>>(),
+                AgencyCCInputFlow.RemoveConderable,
+                false).Returns(removeResult);
+
+            // Act
+            var result = _service.RemoveConsiderableCategory(considerableCusts, rescanParameters);
+
+            // Assert
+            _rescanCustClassificationService.DidNotReceive().RescanCustomerClassificationAgency(
+                Arg.Any<IEnumerable<long>>(),
+                Arg.Any<RescanParametersModel>());
+            result.Should().Be(_service);
+        }      
+
+        [Fact]
+        public void RemoveConsiderableCategory_WithMultipleCustomers_ShouldCallRescanServiceWithDistinctCustIds()
+        {
+            // Arrange
+            var considerableCusts = new List<ConsiderableDangerRecheckEntity>
+            {
+                new ConsiderableDangerRecheckEntity 
+                { 
+                    CustID = 1, 
+                    CTSCustID = 1001, 
+                    CategoryID = 1, 
+                    RoleID = 2, 
+                    SubscriberID = 1, 
+                    IsLicensee = false 
+                },
+                new ConsiderableDangerRecheckEntity 
+                { 
+                    CustID = 2, 
+                    CTSCustID = 1002, 
+                    CategoryID = 1, 
+                    RoleID = 2, 
+                    SubscriberID = 1, 
+                    IsLicensee = false 
+                }
+            };
+
+            var rescanParameters = new RescanParametersModel();
+            var removeResult = new ResultRemoveCustomerClassificationAgencyModel
+            {
+                ErrorMessage = null,
+                CustInfos = new List<ResultRemoveCustomerClassificationEntity>
+                {
+                    new ResultRemoveCustomerClassificationEntity { CustID = 1 },
+                    new ResultRemoveCustomerClassificationEntity { CustID = 2 },
+                    new ResultRemoveCustomerClassificationEntity { CustID = 1 } // Duplicate
+                }
+            };          
+
+            _problemAccountService.RemoveConsiderable(
+                Arg.Any<IEnumerable<RemoveProblemAccountEntity>>(),
+                AgencyCCInputFlow.RemoveConderable,
+                false).Returns(removeResult);
+
+            // Act
+            var result = _service.RemoveConsiderableCategory(considerableCusts, rescanParameters);
+
+            // Assert
+            _rescanCustClassificationService.Received(1).RescanCustomerClassificationAgency(
+                Arg.Is<IEnumerable<long>>(custIds => 
+                    custIds.Count() == 2 && 
+                    custIds.Contains(1) && 
+                    custIds.Contains(2)),
+                rescanParameters);
+            result.Should().Be(_service);
+        }
+
         #endregion
+       
     }
 }
