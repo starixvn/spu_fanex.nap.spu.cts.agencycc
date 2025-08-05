@@ -1,25 +1,28 @@
 ﻿namespace Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services
 {
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.AntiFraudCenter;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.ArchiveData.ClassificationHistory;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CTSCustomer;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.AffectDownlineCustomerClassification;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.AffectDownlineCustomerClassification.NewCustomerClassificationAgency;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.BaseCustomerClassificationAgency;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.DailyConsiderableDangerAgency;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.DailyProblemClassificationAgency;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.NormalAccountClassificationAgency;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.NormalAccountInsertAgency;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.NormalClassificationAgency;
-    using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB;
-    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RealtimeClassificationAgency;
-    using Fanex.NAP.SPU.CTS.AgencyCC.Features.SystemParameter;
-    using Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CustomerClassificationAgency;
-    using Microsoft.Extensions.DependencyInjection;
-    using Fanex.NAP.SPU.CTS.AgencyCC.Features.AntiFraudCenter;
-    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CTSCustomer;
-    using Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CTSCustomerAgency;
-    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RescanCustomerClassificationAgency;
-    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.AffectDownlineCustomerClassification.NewCustomerClassificationAgency;
-    using Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CustomerClassificationAgency.AffectDownlineCustomerClassification;
-    using Fanex.NAP.SPU.CTS.AgencyCC.Features.DataLogTracking;
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.ProblemAccountAgencyInsert;
-    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.AffectDownlineCustomerClassification;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RealtimeClassificationAgency;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RescanCustomerClassificationAgency;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.DataLogTracking;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.PushDataToExternal.CustClassificationToMainDB;
+    using Fanex.NAP.SPU.CTS.AgencyCC.Features.SystemParameter;
+    using Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.ArchiveData;
+    using Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CTSCustomerAgency;
+    using Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CustomerClassificationAgency;
+    using Fanex.NAP.SPU.CTS.AgencyCC.JobService.Services.CustomerClassificationAgency.AffectDownlineCustomerClassification;
+    using Microsoft.Extensions.DependencyInjection;
     using System;
-    using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.DailyProblemClassificationAgency;
 
     public static class InitService
     {
@@ -50,6 +53,24 @@
             RegisterRobotAgency(services);
 
             RegisterProblemClassificationAgency(services);
+
+            RegisterConsiderableDangerAgency(services);
+
+            RegisterArchiveHistoryClassificationAgency(services);
+        }
+
+        private static void RegisterArchiveHistoryClassificationAgency(IServiceCollection services)
+        {
+            services.AddSingleton<IArchiveHistoryClassificationDataAccess, ArchiveHistoryClassificationDataAccess>();
+            services.AddSingleton<IArchiveHistoryClassificationService, ArchiveHistoryClassificationService>();
+            services.AddSingleton<IArchiveHistoryClassificationJobService, ArchiveHistoryClassificationJobService>();
+        }
+
+        private static void RegisterConsiderableDangerAgency(IServiceCollection services)
+        {
+            services.AddSingleton<IConsiderableDangerAgencyDataAccess, ConsiderableDangerAgencyDataAccess>();
+            services.AddSingleton<IConsiderableDangerAgencyService, ConsiderableDangerAgencyService>();
+            services.AddSingleton<IDailyConsiderableDangerAgencyJobService, DailyConsiderableDangerAgencyJobService>();
         }
 
         private static void RegisterProblemClassificationAgency(IServiceCollection services)

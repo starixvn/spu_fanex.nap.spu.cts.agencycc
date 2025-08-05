@@ -15,19 +15,22 @@
         private readonly INormalAccountClassificationAgencyJobService _normalAccountClassification;
         private readonly INormalAccountInsertAgencyJobService _normalAccountInsert;
         private readonly IDailyProblemClassificationAgencyJobService _problemClassificationAgencyJobService;
+        private readonly IDailyConsiderableDangerAgencyJobService _considerableDangerAgencyJobService;
 
         public ClassificationAgencyJobController(
             IRealtimeClassificationAgencyJobService realtimeClassification,
             IDailyNormalClassificationAgencyJobService dailyNormalClassification,
             INormalAccountClassificationAgencyJobService normalAccountClassification,
             INormalAccountInsertAgencyJobService normalAccountInsert,
-            IDailyProblemClassificationAgencyJobService problemClassificationAgencyJobService)
+            IDailyProblemClassificationAgencyJobService problemClassificationAgencyJobService,
+            IDailyConsiderableDangerAgencyJobService considerableDangerAgencyJobService)
         {
             _realtimeClassification = realtimeClassification;
             _dailyNormalClassification = dailyNormalClassification;
             _normalAccountClassification = normalAccountClassification;
             _normalAccountInsert = normalAccountInsert;
             _problemClassificationAgencyJobService = problemClassificationAgencyJobService;
+            _considerableDangerAgencyJobService = considerableDangerAgencyJobService;
         }
 
         [HttpPost("scanningRealtimeClassificationAgency")]
@@ -60,6 +63,12 @@
         {
             LogExtension.LogInfo($"Daily Problem Agency Service is running at {DateTime.Now}");
             return await _problemClassificationAgencyJobService.Execute(batchSize);
+        }
+
+        [HttpPost("scanDailyConsiderableDangerAgency")]
+        public async Task<bool> ScanDailyConsiderableDangerAgency([FromForm] int batchSize)
+        {
+            return await _considerableDangerAgencyJobService.Execute(batchSize);
         }
     }
 }

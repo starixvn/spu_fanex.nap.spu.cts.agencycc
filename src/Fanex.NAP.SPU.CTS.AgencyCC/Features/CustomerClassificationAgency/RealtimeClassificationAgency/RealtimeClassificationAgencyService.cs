@@ -3,6 +3,7 @@
     using Fanex.NAP.SPU.CTS.AgencyCC.Features.CustomerClassificationAgency.RealtimeClassificationAgency.Model;
     using Fanex.NAP.SPU.CTS.AgencyCC.Shares;
     using System.Linq;
+    using static Fanex.NAP.SPU.CTS.AgencyCC.Shares.Constants;
 
     public interface IRealtimeClassificationAgencyService
     {
@@ -15,6 +16,8 @@
         IRealtimeClassificationAgencyService PreprocessCustomerClassRealtime(int batchSize);
 
         IRealtimeClassificationAgencyService InsertToQueuePaAgencyRealtime(int batchSize);
+
+        IRealtimeClassificationAgencyService InsertToQueueConsiderableDanger(int batchSize, AgencyScanType agencyScanType);
 
         IRealtimeClassificationAgencyService CompleteCustomerRealtime();
     }
@@ -57,8 +60,7 @@
 
                     var custCategory = _dataAccess.GetCustomerCategory(custIDs);
 
-                    _customerCategories.CustomerCategory.AddRange(custCategory.CustomerCategory);
-                    _customerCategories.CustomerPADailyScan.AddRange(custCategory.CustomerPADailyScan);
+                    _customerCategories.AddItems(custCategory);
                 }
             }
 
@@ -72,10 +74,8 @@
                 var customerChunks = _customerCategories.CustomerCategory.Chunk(batchSize);
 
                 foreach (var custBatch in customerChunks)
-                {
-                    var custIdList = string.Join(",", custBatch);
-
-                    _dataAccess.PreprocessCustomerClassRealtime(custIdList);
+                {                    
+                    _dataAccess.PreprocessCustomerClassRealtime(string.Join(",", custBatch));
                 }
             }
 
@@ -89,10 +89,23 @@
                 var paCustChunks = _customerCategories.CustomerPADailyScan.Chunk(batchSize);
 
                 foreach (var custBatch in paCustChunks)
-                {
-                    var custIdList = string.Join(",", custBatch);
+                {                    
+                    _dataAccess.InsertToQueuePaAgencyRealtime(string.Join(",", custBatch));
+                }
+            }
 
-                    _dataAccess.InsertToQueuePaAgencyRealtime(custIdList);
+            return this;
+        }
+
+        public IRealtimeClassificationAgencyService InsertToQueueConsiderableDanger(int batchSize, AgencyScanType agencyScanType)
+        {
+            if (_customerCategories != null && _customerCategories.CustomerConsiderableDanger.IsNotNullOrEmpty())
+            {
+                var cdCustChunks = _customerCategories.CustomerConsiderableDanger.Chunk(batchSize);
+
+                foreach (var custBatch in cdCustChunks)
+                {                   
+                    _dataAccess.InsertToQueueConsiderableDanger(string.Join(",", custBatch), agencyScanType);
                 }
             }
 
