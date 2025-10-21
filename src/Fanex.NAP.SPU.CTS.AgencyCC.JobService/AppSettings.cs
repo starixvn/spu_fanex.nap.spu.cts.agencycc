@@ -53,9 +53,6 @@
             environment = GetValue<string>(nameof(Environment));
             evironmentName = GetValue<string>(nameof(Environment));
             spName = GetValue<string>(nameof(SPName));
-            afcInsertAccountURL = GetValue<string>("AntiFraudCenter:AFCInsertAccountURL");
-            afcDeleteAccountURL = GetValue<string>("AntiFraudCenter:AFCDeleteAccountURL");
-            isSyncAFCData = GetValue<bool>("AntiFraudCenter:IsSyncAFCData");
             sentryDsn = GetValue<string>("Sentry:Dsn");          
             sentryCategory = GetValue<string>("Sentry:Category");
             apiHelperConfig = new APIHelperConfig
