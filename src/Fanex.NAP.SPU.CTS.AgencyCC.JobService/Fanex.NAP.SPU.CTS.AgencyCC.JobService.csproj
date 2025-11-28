@@ -11,13 +11,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Folder Include="App_Data\AWS\" />
 		<Folder Include="App_Data\DEV\" />
 		<Folder Include="App_Data\KLDR\" />
 		<Folder Include="App_Data\LOCAL\" />
-		<Folder Include="App_Data\UAT\" />
 		<Folder Include="App_Data\SIT\" />
-		<Folder Include="App_Data\PROD\" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -55,13 +52,7 @@
 		<Content Update="appsettings.LOCAL_2.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
-		<Content Update="appsettings.PROD.json">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
 		<Content Update="appsettings.SIT.json">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Update="appsettings.UAT.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
@@ -76,13 +67,7 @@
 		<None Update="App_Data\LOCAL\SPNames.xml">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
-		<None Update="App_Data\PROD\SPNames.xml">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
 		<None Update="App_Data\SIT\SPNames.xml">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</None>
-		<None Update="App_Data\UAT\SPNames.xml">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
